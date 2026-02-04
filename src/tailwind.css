@@ -1,2 +1,133 @@
 @import "tailwindcss";
 
+@theme {
+    /* Branding Colors from Image */
+    --color-brand-gold: #F1E5D1;
+    /* The primary "Champagne" color */
+    --color-brand-indigo: #6366f1;
+    /* The Indigo glow from the logo */
+    --color-brand-light-gold: #FFF9F0;
+    /* The light "Champagne" color */
+
+    /* Backgrounds */
+    --color-canvas: #0a0a0a;
+    /* Deep black background */
+    --color-surface: #1a1a1a;
+    /* Secondary surface */
+
+    /* Layout */
+    --radius-uimolder: 10px;
+    /* Signature 10px rounding */
+    --font-sans: "Tomorrow", sans-serif;
+}
+
+@layer base {
+    body {
+        /* Apply our high-end defaults globally */
+        @apply bg-canvas text-slate-200 font-sans antialiased;
+    }
+
+    button {
+        @apply cursor-pointer;
+    }
+
+    /* High-end scrollbar for our dark theme */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-slate-950;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-slate-800 rounded-full hover:bg-slate-700 transition-colors;
+    }
+
+    @keyframes reveal-up {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: -200% center;
+        }
+
+        100% {
+            background-position: 200% center;
+        }
+    }
+
+    .animate-reveal {
+        animation: reveal-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        opacity: 0;
+        /* Ensure it doesn't clip its own animation */
+        will-change: transform, opacity;
+    }
+
+    .animate-shimmer {
+        background-size: 200% auto;
+        /* Force the browser to respect the clip during animation */
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation: shimmer 5s linear infinite;
+    }
+
+    /* Stagger delays */
+    .delay-1 {
+        animation-delay: 0.2s;
+    }
+
+    .delay-2 {
+        animation-delay: 0.4s;
+    }
+
+    .delay-3 {
+        animation-delay: 0.6s;
+    }
+}
+
+@layer utilities {
+    .animate-reveal {
+        opacity: 0;
+        animation: reveal-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    .uimolder-gradient-text {
+        /* Essential for visibility */
+        display: inline-block;
+        background-size: 200% auto;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        /* Use this instead of text-transparent for better clip support */
+        color: transparent;
+
+        /* The Shine Animation */
+        animation: shimmer 5s linear infinite;
+
+        /* Fix for clipping issues */
+        line-height: 1.1;
+        padding-bottom: 0.1em;
+    }
+}
+
+@layer components {
+
+    /* Creating a custom class for that specific button in the image */
+    .btn-primary {
+        @apply bg-brand-gold text-black font-semibold py-3 px-6 rounded-uimolder transition-all duration-200 hover:bg-brand-gold/10 hover:scale-[1.02] active:scale-95 hover:border hover:border-brand-gold hover:text-brand-gold;
+    }
+
+    .btn-outline {
+        @apply border border-brand-gold text-brand-gold font-semibold py-3 px-6 rounded-uimolder transition-all hover:bg-brand-gold/10;
+    }
+}
