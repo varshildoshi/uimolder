@@ -8,6 +8,7 @@
     /* The Indigo glow from the logo */
     --color-brand-light-gold: #FFF9F0;
     /* The light "Champagne" color */
+    --color-brand-dark-gold: #d5b276;
 
     /* Backgrounds */
     --color-canvas: #0a0a0a;
@@ -117,6 +118,33 @@
         /* Fix for clipping issues */
         line-height: 1.1;
         padding-bottom: 0.1em;
+    }
+
+    /* The trapezoid shape from the Rive reference */
+    .flavor-segment {
+        @apply relative flex flex-col items-center justify-center transition-all duration-500 cursor-pointer;
+        clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* The glowing active state */
+    .flavor-segment.active {
+        background: linear-gradient(to bottom, rgba(99, 102, 241, 0.2), transparent);
+        border-top: 2px solid var(--color-brand-indigo);
+    }
+
+    /* Arc Positioning */
+    .arc-left {
+        transform: rotate(-15deg) translateY(-10px);
+    }
+
+    .arc-center {
+        transform: rotate(0deg) translateY(-30px);
+    }
+
+    .arc-right {
+        transform: rotate(15deg) translateY(-10px);
     }
 }
 

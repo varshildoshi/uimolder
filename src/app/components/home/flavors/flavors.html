@@ -1,0 +1,135 @@
+<section class="relative bg-[#02040a] py-24 overflow-hidden">
+
+    <div class="max-w-7xl mx-auto px-6 relative z-30">
+
+        <div class="text-center space-y-3">
+            <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/10 border border-brand-gold/20">
+                <span class="text-[12px] font-mono uppercase tracking-[0.3em] text-brand-gold">The Three Flavors</span>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold text-white tracking-tight">
+                One Design, <span class="text-brand-gold">Three Flavors.</span>
+            </h2>
+        </div>
+
+        <!-- <div class="flex flex-col items-start border-l-2 border-brand-dark-gold/50 pl-6">
+            <h4 class="text-brand-dark-gold font-medium text-[15px] tracking-[0.5em] uppercase mb-2">The Three Flavors
+            </h4>
+            <h2 class="text-4xl md:text-5xl font-black text-indigo-100/60 tracking-tighter">
+                One Design, <span class="text-brand-gold">Three Flavors.</span>
+            </h2>
+        </div> -->
+    </div>
+
+    <div class="relative min-h-[600px] bg-[#02040a] flex items-center justify-center overflow-hidden py-20">
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div
+                class="absolute w-[600px] h-[600px] rounded-full border border-white/[0.1] shadow-[inset_0_0_50px_rgba(255,255,255,0.02)]">
+            </div>
+            <div
+                class="absolute w-[500px] h-[500px] rounded-full border border-white/[0.05] shadow-[inset_0_0_50px_rgba(255,255,255,0.02)]">
+            </div>
+            <div class="absolute w-[300px] h-[300px] rounded-full transition-all duration-1000 blur-[120px] opacity-20"
+                [style.background]="activeFlavor.color"></div>
+        </div>
+
+        <svg [attr.width]="size" [attr.height]="size" viewBox="0 0 600 600" class="relative z-10 overflow-visible">
+            <defs>
+                <filter id="activeGlow" x="-100%" y="-100%" width="300%" height="300%">
+                    <feGaussianBlur stdDeviation="15" result="coloredBlur" />
+                    <feMerge>
+                        <feMergeNode in="coloredBlur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+
+                <linearGradient id="needleGradient" gradientUnits="userSpaceOnUse" [attr.x1]="center" [attr.y1]="center"
+                    [attr.x2]="center" [attr.y2]="center - innerRadius">
+                    <stop offset="0%" stop-color="transparent" />
+                    <stop offset="100%" [style.stop-color]="activeFlavor.color" />
+                </linearGradient>
+            </defs>
+
+            <g class="opacity-20">
+                @for (s of segments; track s.id) {
+                <line [attr.x1]="center" [attr.y1]="center"
+                    [attr.x2]="polarToCartesian(center, center, innerRadius, segmentMidAngle($index)).x"
+                    [attr.y2]="polarToCartesian(center, center, innerRadius, segmentMidAngle($index)).y" stroke="white"
+                    stroke-width="0.5" stroke-dasharray="4 4" />
+                }
+            </g>
+
+            <g class="cursor-pointer">
+                @for (s of segments; track s.id) {
+                <path [attr.d]="segmentPath($index)" (click)="setActive($index)"
+                    class="transition-all duration-500 hover:brightness-125"
+                    [attr.fill]="$index === activeIndex ? s.color + '33' : 'rgba(255,255,255,0.02)'"
+                    [attr.stroke]="$index === activeIndex ? s.color : 'rgba(255,255,255,0.1)'" stroke-width="1.5"
+                    [attr.filter]="$index === activeIndex ? 'url(#activeGlow)' : null" />
+                }
+            </g>
+
+            <g [style.transition]="'all 0.7s cubic-bezier(0.4, 0, 0.2, 1)'"
+                [style.transform]="'rotate(' + segmentMidAngle(activeIndex) + 'deg)'"
+                [style.transform-origin]="center + 'px ' + center + 'px'">
+
+                <line [attr.x1]="center" [attr.y1]="center" [attr.x2]="center" [attr.y2]="center - innerRadius + 15"
+                    stroke="url(#needleGradient)" stroke-width="2" stroke-linecap="round" />
+
+                <circle [attr.cx]="center" [attr.cy]="center - innerRadius + 15" r="4" [style.fill]="activeFlavor.color"
+                    filter="url(#activeGlow)" />
+            </g>
+
+            <g>
+                @for (s of segments; track s.id) {
+                <g (click)="setActive($index)" class="cursor-pointer group">
+                    <circle
+                        [attr.cx]="polarToCartesian(center, center, (innerRadius + outerRadius)/2, segmentMidAngle($index)).x"
+                        [attr.cy]="polarToCartesian(center, center, (innerRadius + outerRadius)/2, segmentMidAngle($index)).y"
+                        r="28" [attr.fill]="$index === activeIndex ? s.color : 'rgba(255,255,255,0.05)'"
+                        [attr.stroke]="$index === activeIndex ? 'white' : 'transparent'" stroke-width="1.5"
+                        class="transition-all duration-500" />
+
+                    <g
+                        [attr.transform]="'translate(' + 
+        (polarToCartesian(center, center, (innerRadius + outerRadius)/2, segmentMidAngle($index)).x - 18) + ',' + 
+        (polarToCartesian(center, center, (innerRadius + outerRadius)/2, segmentMidAngle($index)).y - 18) + ') scale(1.5)'">
+
+                        <svg width="24" height="24" viewBox="0 0 24 24">
+                            <path [attr.d]="s.iconPath"
+                                [attr.fill]="$index === activeIndex ? 'white' : 'rgba(255,255,255,0.5)'"
+                                class="transition-all duration-500" />
+                        </svg>
+                    </g>
+
+                    <text [attr.x]="polarToCartesian(center, center, outerRadius + 45, segmentMidAngle($index)).x"
+                        [attr.y]="polarToCartesian(center, center, outerRadius + 45, segmentMidAngle($index)).y"
+                        text-anchor="middle" [attr.fill]="$index === activeIndex ? '#fff' : 'rgba(255,255,255,0.3)'"
+                        class="text-[14px] font-bold uppercase tracking-[0.2em] transition-all duration-500">
+                        {{ s.label }}
+                    </text>
+                </g>
+                }
+            </g>
+        </svg>
+
+        <div class="absolute text-center z-20 w-full max-w-lg px-6 mt-32 pointer-events-none">
+            <div class="inline-flex items-center px-4 py-1 mb-2 rounded border border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl transition-all duration-500"
+                [style.border-left]="'4px solid ' + activeFlavor.color">
+                <span class="text-brand-gold font-mono text-[12px] tracking-[0.3em] uppercase opacity-100">
+                    {{ activeFlavor.badge }}
+                </span>
+            </div>
+
+            <h2
+                class="text-brand-gold text-5xl md:text-6xl font-black tracking-tighter mb-6 leading-none transition-all duration-500">
+                {{ activeFlavor.title }}
+            </h2>
+
+            <p
+                class="text-slate-500 text-lg md:text-xl font-light leading-relaxed max-w-md mx-auto transition-all duration-500">
+                {{ activeFlavor.description }}
+            </p>
+        </div>
+    </div>
+</section>

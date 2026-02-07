@@ -1,0 +1,89 @@
+<section class="w-full py-24 px-6 bg-canvas">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-16 space-y-4">
+            <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/10 border border-brand-gold/20">
+                <span class="text-[12px] font-mono uppercase tracking-[0.3em] text-brand-gold">System
+                    Documentation</span>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold text-white tracking-tight">
+                Frequently Asked <span class="text-brand-gold">Queries</span>
+            </h2>
+        </div>
+
+        <div class="space-y-4">
+            @for (item of faqItems; track item.id) {
+            <div (click)="toggle(item.id)"
+                class="relative overflow-hidden border rounded-2xl transition-all duration-500 cursor-pointer group"
+                [class]="activeId() === item.id 
+            ? 'border-brand-gold/50 bg-brand-gold/[0.03] shadow-[0_0_30px_rgba(251,191,36,0.1)]' 
+            : 'border-white/5 bg-white/[0.02]'">
+                <div class="flex items-center justify-between p-6">
+                    <span class="text-lg font-medium transition-colors duration-300"
+                        [class.text-brand-gold]="activeId() === item.id"
+                        [class.text-slate-200]="activeId() !== item.id">
+                        {{ item.question }}
+                    </span>
+
+                    <div class="transition-all duration-500" [class.rotate-[135deg]]="activeId() === item.id"
+                        [class.text-brand-gold]="activeId() === item.id"
+                        [class.text-slate-500]="activeId() !== item.id">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-7">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+
+                    </div>
+                </div>
+
+                <div class="overflow-hidden transition-all duration-500 ease-in-out"
+                    [style.max-height]="activeId() === item.id ? '500px' : '0px'">
+                    <div class="px-6 pb-6 text-slate-400 leading-relaxed border-t border-white/5 pt-4">
+                        {{ item.answer }}
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+
+        <div
+            class="mt-20 relative p-8 rounded-3xl overflow-hidden border border-white/5 bg-gradient-to-b from-white/[0.03] to-transparent text-center">
+            <div class="absolute -top-24 -left-24 w-48 h-48 bg-brand-gold/10 blur-[80px] rounded-full"></div>
+            <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-brand-indigo/10 blur-[80px] rounded-full"></div>
+
+            <div class="relative z-10 space-y-6">
+                <h3 class="text-2xl font-bold text-white tracking-tight">
+                    Still have <span class="text-brand-gold">Questions?</span>
+                </h3>
+                <p class="text-slate-400 max-w-md mx-auto text-sm leading-relaxed">
+                    Our technical architects are active 24/7 on the community terminal to help you optimize your
+                    recursive builds.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                    <a href="https://discord.gg/uimolder" target="_blank"
+                        class="w-full sm:w-auto px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-brand-gold transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.027-.07 9.036 9.036 0 0 1-1.29-.614.051.051 0 0 1-.006-.085c.085-.064.17-.132.252-.202a.05.05 0 0 1 .051-.007c2.635 1.208 5.486 1.208 8.09 0a.05.05 0 0 1 .051.007c.082.07.167.138.252.202a.05.05 0 0 1-.006.085 8.412 8.412 0 0 1-1.29.614.05.05 0 0 0-.027.07c.236.465.51.908.817 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z" />
+                        </svg>
+                        Join Discord
+                    </a>
+
+                    <a href="mailto:support@uimolder.io"
+                        class="w-full sm:w-auto px-8 py-3 bg-white/5 text-white border border-white/10 rounded-full hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                            </path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        Direct Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
