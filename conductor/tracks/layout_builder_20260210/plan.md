@@ -5,16 +5,16 @@
     - [x] Create `layout-builder` component directory and files (`.ts`, `.html`, `.scss`, `.spec.ts`) in `src/app/components/`.
     - [x] Configure routing to access the builder at `/builder`.
     - [x] Implement basic layout shell (Header, Sidebar, Canvas area) matching the design guidelines.
-- [ ] Task: Implement Signal-based State Management
-    - [ ] Define interfaces for `ComponentNode`, `CanvasState`, and `Flavor`.
-    - [ ] Initialize signals for `canvasItems`, `selectedElementId`, `viewMode`, and `activeFlavor`.
-- [ ] Task: specific Drag & Drop Implementation
-    - [ ] Import `DragDropModule`.
-    - [ ] Create the `Toolbox` array with initial basic elements (Input, Button, Card).
-    - [ ] Implement `cdkDropList` for the Toolbox (source) and Canvas (target).
-    - [ ] Implement `onDrop` logic to handle adding new items and reordering existing ones.
-    - [ ] Write tests to verify adding and reordering items.
-- [ ] Task: Conductor - User Manual Verification 'Core Architecture & Drag-and-Drop Engine' (Protocol in workflow.md)
+- [x] Task: Implement Signal-based State Management
+    - [x] Define interfaces for `ComponentNode`, `CanvasState`, and `Flavor`.
+    - [x] Initialize signals for `canvasItems`, `selectedElementId`, `viewMode`, and `activeFlavor`.
+- [x] Task: specific Drag & Drop Implementation
+    - [x] Import `DragDropModule`.
+    - [x] Create the `Toolbox` array with initial basic elements (Input, Button, Card).
+    - [x] Implement `cdkDropList` for the Toolbox (source) and Canvas (target).
+    - [x] Implement `onDrop` logic to handle adding new items and reordering existing ones.
+    - [x] Write tests to verify adding and reordering items.
+- [~] Task: Conductor - User Manual Verification 'Core Architecture & Drag-and-Drop Engine' (Protocol in workflow.md)
 
 ## Phase 2: Expanded Component Library & Nested Layouts
 - [ ] Task: Implement Form Elements

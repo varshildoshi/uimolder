@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LayoutBuilder } from './layout-builder';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { LayoutService } from '../../services/layout.service';
 
 describe('LayoutBuilder', () => {
   let component: LayoutBuilder;
@@ -10,7 +11,10 @@ describe('LayoutBuilder', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LayoutBuilder, DragDropModule],
-      providers: [provideZonelessChangeDetection()]
+      providers: [
+        provideZonelessChangeDetection(),
+        LayoutService
+      ]
     })
     .compileComponents();
 
@@ -27,12 +31,12 @@ describe('LayoutBuilder', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('header')).toBeTruthy();
     expect(compiled.querySelector('aside')).toBeTruthy(); // Sidebar
-    expect(compiled.querySelector('main')).toBeTruthy(); // Canvas area
+    expect(compiled.querySelector('section')).toBeTruthy(); // Canvas area
   });
 
   it('should have state management signals initialized', () => {
-    // @ts-ignore - access protected/private for testing if needed, or make them public
-    expect(component.canvasItems).toBeDefined();
+    // @ts-ignore
+    expect(component.formRows).toBeDefined();
     // @ts-ignore
     expect(component.selectedElementId).toBeDefined();
     // @ts-ignore
@@ -41,35 +45,39 @@ describe('LayoutBuilder', () => {
     expect(component.activeFlavor).toBeDefined();
   });
 
-  it('should add an item to canvasItems when dropped from toolbox', () => {
+  it('should add an item to formRows when dropped from toolbox', () => {
     const toolboxItem = { type: 'input', label: 'Text Field', props: {} };
+    const rowId = component.formRows()[0].id;
     // @ts-ignore
     component.onDrop({
-      previousContainer: { data: [toolboxItem] } as any,
-      container: { data: component.canvasItems() } as any,
+      previousContainer: { id: 'toolbox-list', data: [toolboxItem] } as any,
+      container: { data: component.formRows()[0].fields } as any,
       previousIndex: 0,
       currentIndex: 0
-    } as any);
+    } as any, rowId);
 
-    expect(component.canvasItems().length).toBe(1);
-    expect(component.canvasItems()[0].type).toBe('input');
+    expect(component.formRows()[0].fields.length).toBe(1);
+    expect(component.formRows()[0].fields[0].type).toBe('input');
   });
 
-  it('should reorder items in canvasItems when dropped within same container', () => {
+  it('should reorder items in formRows when dropped within same container', () => {
     const item1 = { id: '1', type: 'input', label: 'Field 1', props: {} };
     const item2 = { id: '2', type: 'button', label: 'Button 2', props: {} };
-    component.canvasItems.set([item1, item2]);
+    const rowId = component.formRows()[0].id;
+    
+    component.formRows.update(rows => rows.map(r => r.id === rowId ? { ...r, fields: [item1, item2] } : r));
 
-    const container = { data: component.canvasItems() };
+    const fields = component.formRows()[0].fields;
+    const container = { data: fields };
     // @ts-ignore
     component.onDrop({
       previousContainer: container as any,
       container: container as any,
       previousIndex: 0,
       currentIndex: 1
-    } as any);
+    } as any, rowId);
 
-    expect(component.canvasItems()[0].id).toBe('2');
-    expect(component.canvasItems()[1].id).toBe('1');
+    expect(component.formRows()[0].fields[0].id).toBe('2');
+    expect(component.formRows()[0].fields[1].id).toBe('1');
   });
 });

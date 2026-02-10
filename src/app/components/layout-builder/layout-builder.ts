@@ -1,6 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { FormsModule } from '@angular/forms';
+import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { LayoutService } from '../../services/layout.service';
 
 export interface ComponentNode {
   id: string;
@@ -10,53 +14,185 @@ export interface ComponentNode {
   children?: ComponentNode[];
 }
 
+export interface FormRow {
+  id: string;
+  fields: ComponentNode[];
+}
+
 export type ViewMode = 'editor' | 'preview';
 export type FlavorName = 'html' | 'tailwind' | 'material';
 
 export interface Flavor {
   name: FlavorName;
   label: string;
-  icon?: string;
+  iconPath: string;
+  color: string;
 }
 
 @Component({
   selector: 'app-layout-builder',
   standalone: true,
-  imports: [CommonModule, DragDropModule],
+  imports: [CommonModule, FormsModule, DragDropModule, MatIconModule, MatButtonModule],
   templateUrl: './layout-builder.html',
   styleUrl: './layout-builder.scss'
 })
 export class LayoutBuilder {
-  public readonly canvasItems = signal<ComponentNode[]>([]);
+  private readonly layoutService = inject(LayoutService);
+  public readonly headerHeight = this.layoutService.headerHeight;
+
+  public readonly formRows = signal<FormRow[]>([
+    { id: 'row_initial', fields: [] }
+  ]);
+  public readonly rowIds = computed(() => this.formRows().map(r => r.id));
   public readonly selectedElementId = signal<string | null>(null);
   public readonly viewMode = signal<ViewMode>('editor');
   public readonly activeFlavor = signal<FlavorName>('html');
 
-  public readonly toolbox = [
-    { type: 'input', label: 'Text Field', props: { placeholder: 'Enter text...' } },
-    { type: 'button', label: 'Action Button', props: { text: 'Click Me' } },
-    { type: 'card', label: 'Content Card', props: { title: 'Card Title' } }
+  public readonly flavors: Flavor[] = [
+    {
+      name: 'html',
+      label: 'HTML',
+      color: '#e34f26',
+      iconPath: 'm3 2 1.578 17.824L12 22l7.467-2.175L21 2H3Zm14.049 6.048H9.075l.172 2.016h7.697l-.626 6.565-4.246 1.381-4.281-1.455-.288-2.932h2.024l.16 1.411 2.4.815 2.346-.763.297-3.005H7.416l-.562-6.05h10.412l-.217 2.017Z'
+    },
+    {
+      name: 'tailwind',
+      label: 'Tailwind',
+      color: '#38bdf8',
+      iconPath: 'M11.782 5.72a4.773 4.773 0 0 0-4.8 4.173 3.43 3.43 0 0 1 2.741-1.687c1.689 0 2.974 1.972 3.758 2.587a5.733 5.733 0 0 0 5.382.935c2-.638 2.934-2.865 3.137-3.921-.969 1.379-2.44 2.207-4.259 1.231-1.253-.673-2.19-3.438-5.959-3.318ZM6.8 11.979A4.772 4.772 0 0 0 2 16.151a3.431 3.431 0 0 1 2.745-1.687c1.689 0 2.974 1.972 3.758 2.587a5.733 5.733 0 0 0 5.382.935c2-.638 2.933-2.865 3.137-3.921-.97 1.379-2.44 2.208-4.259 1.231-1.253-.673-2.19-3.443-5.963-3.317Z'
+    },
+    {
+      name: 'material',
+      label: 'Material',
+      color: '#dd0031',
+      iconPath: 'M12 2L3.8 4.9l1.2 10.9L12 21l7-5.2 1.2-10.9L12 2zm0 2l5.1 11.5h-1.9l-1-2.6H9.8l-1 2.6H6.9L12 4zm1.5 7.4L12 7.8l-1.5 3.6h3z'
+    }
   ];
 
-  public onDrop(event: CdkDragDrop<ComponentNode[]>) {
+  public readonly toolbox = [
+    { type: 'heading', label: 'Section Heading', props: { text: 'New Section', level: 'h2' } },
+    { type: 'input', label: 'Text Field', props: { placeholder: 'Enter text...', required: false } },
+    { type: 'textarea', label: 'Text Area', props: { placeholder: 'Enter long description...', rows: 4 } },
+    { type: 'dropdown', label: 'Select Menu', props: { options: ['Option 1', 'Option 2'], placeholder: 'Choose...' } },
+    { type: 'checkbox', label: 'Toggle/Check', props: { checked: false, text: 'Accept Terms' } },
+    { type: 'radio', label: 'Radio Group', props: { options: ['Yes', 'No'], selected: 'Yes' } },
+    { type: 'datepicker', label: 'Date Picker', props: { placeholder: 'Pick a date' } },
+    { type: 'button', label: 'Action Button', props: { text: 'Click Me', color: 'primary' } },
+    { type: 'buttongroup', label: 'Button Group', props: { buttons: ['Save', 'Cancel'] } },
+    { type: 'card', label: 'Content Card', props: { text: 'Card content goes here...' } }
+  ];
+
+  public readonly activeComponent = computed(() => {
+    for (const row of this.formRows()) {
+      const item = row.fields.find(i => i.id === this.selectedElementId());
+      if (item) return item;
+    }
+    return null;
+  });
+
+  public readonly generatedCode = computed(() => {
+    const flavor = this.activeFlavor();
+    const rows = this.formRows();
+    if (rows.length === 0) return '';
+
+    return rows.map(row => {
+      const rowCode = row.fields.map(item => {
+        const val = item.props.value || '';
+        if (flavor === 'html') {
+          return `<ui-field [label]="${item.label}" [html]="${item.id}" [value]="${val}" />`;
+        } else if (flavor === 'material') {
+          switch (item.type) {
+            case 'heading': return `<h2 class="mat-headline-medium">${item.label}</h2>`;
+            case 'textarea': return `<mat-form-field class="w-full">\n  <mat-label>${item.label}</mat-label>\n  <textarea matInput rows="${item.props.rows || 4}">${val}</textarea>\n</mat-form-field>`;
+            case 'input': return `<mat-form-field class="w-full">\n  <mat-label>${item.label}</mat-label>\n  <input matInput [placeholder]="${item.props.placeholder || ''}" [value]="${val}">\n</mat-form-field>`;
+            case 'dropdown': return `<mat-form-field class="w-full">\n  <mat-label>${item.label}</mat-label>\n  <mat-select [value]="${val}">\n    <mat-option value="1">Option 1</mat-option>\n  </mat-select>\n</mat-form-field>`;
+            case 'checkbox': return `<mat-checkbox [checked]="${!!val}">${item.label}</mat-checkbox>`;
+            case 'datepicker': return `<mat-form-field class="w-full">\n  <mat-label>${item.label}</mat-label>\n  <input matInput [matDatepicker]="picker" [value]="${val}">\n  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>\n  <mat-datepicker #picker></mat-datepicker>\n</mat-form-field>`;
+            case 'radio': return `<mat-radio-group [value]="${val}">\n  <mat-radio-button value="1">Yes</mat-radio-button>\n  <mat-radio-button value="2">No</mat-radio-button>\n</mat-radio-group>`;
+            default: return `<ui-field [label]="${item.label}" />`;
+          }
+        } else {
+          return `<div class="p-4 border border-brand-gold bg-slate-900">\n  <p class="text-white font-mono">${item.label}: ${val}</p>\n</div>`;
+        }
+      }).join('\n');
+      return `<!-- Row: ${row.id} -->\n<div class="row">\n${rowCode}\n</div>`;
+    }).join('\n\n');
+  });
+
+  public onDrop(event: CdkDragDrop<ComponentNode[]>, rowId: string) {
     if (event.previousContainer === event.container) {
-      // Reordering
-      const items = [...this.canvasItems()];
-      moveItemInArray(items, event.previousIndex, event.currentIndex);
-      this.canvasItems.set(items);
-    } else {
-      // Adding new item from toolbox
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else if (event.previousContainer.id === 'toolbox-list') {
       const blueprint = event.previousContainer.data[event.previousIndex];
       const newItem: ComponentNode = {
         ...JSON.parse(JSON.stringify(blueprint)),
-        id: `node_${Math.random().toString(36).substring(2, 9)}`
+        id: `node_${Math.random().toString(36).substring(2, 9)}`,
+        props: { ...blueprint.props, value: '' }
       };
       
-      this.canvasItems.update(items => {
-        const copy = [...items];
-        copy.splice(event.currentIndex, 0, newItem);
-        return copy;
-      });
+      this.formRows.update(rows => rows.map(row => {
+        if (row.id === rowId) {
+          const newFields = [...row.fields];
+          newFields.splice(event.currentIndex, 0, newItem);
+          return { ...row, fields: newFields };
+        }
+        return row;
+      }));
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+      this.formRows.set([...this.formRows()]);
     }
+  }
+
+  public addNewRow() {
+    const newRow: FormRow = {
+      id: 'row_' + Math.random().toString(36).substring(2, 9),
+      fields: []
+    };
+    this.formRows.update(rows => [...rows, newRow]);
+  }
+
+  public removeRow(rowId: string) {
+    if (this.formRows().length > 1) {
+      this.formRows.update(rows => rows.filter(r => r.id !== rowId));
+    }
+  }
+
+  public updateProp(key: string, val: any) {
+    this.formRows.update(rows => rows.map(row => ({
+      ...row,
+      fields: row.fields.map(i => i.id === this.selectedElementId() ? { ...i, props: { ...i.props, [key]: val } } : i)
+    })));
+  }
+
+  public updateLabel(val: string) {
+    this.formRows.update(rows => rows.map(row => ({
+      ...row,
+      fields: row.fields.map(i => i.id === this.selectedElementId() ? { ...i, label: val } : i)
+    })));
+  }
+
+  public removeItem(id: string, event: MouseEvent) {
+    event.stopPropagation();
+    this.formRows.update(rows => rows.map(row => ({
+      ...row,
+      fields: row.fields.filter(i => i.id !== id)
+    })));
+    if (this.selectedElementId() === id) this.selectedElementId.set(null);
+  }
+
+  public exportLayout() {
+    const data = JSON.stringify(this.formRows(), null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `uimolder-layout-${Date.now()}.json`;
+    a.click();
   }
 }
