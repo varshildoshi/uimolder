@@ -1,0 +1,37 @@
+.cdk-drag-preview {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    opacity: 0.9;
+}
+
+.cdk-drag-placeholder {
+    opacity: 0.2;
+    border: 2px dashed #fbbf24 !important;
+    background: rgba(251, 191, 36, 0.05) !important;
+}
+
+.cdk-drop-list-dragging .cdk-drag {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-animating {
+    transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.group\/row {
+    margin-top: 2rem;
+
+    &:first-child {
+        margin-top: 0;
+    }
+}
+
+// Element reordering smoothness
+.cdk-drop-list-dragging .group\/field {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+// Placeholder styling during drag
+.cdk-drag-placeholder {
+    opacity: 0.2;
+}

@@ -1,12 +1,12 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, afterNextRender, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   imports: [NgOptimizedImage, RouterLink],
   template: `
-    <header class="fixed top-0 w-full z-[100] border-b border-white/5 bg-canvas/60 backdrop-blur-xl transition-all duration-300">
+    <header #headerElement class="fixed top-0 w-full z-[100] border-b border-white/5 bg-canvas/60 backdrop-blur-xl transition-all duration-300">
       <div class="max-w-7xl mx-auto px-6 h-32 flex items-center justify-between">
         <a routerLink="/" class="flex items-center group py-4">
           <img 
@@ -30,7 +30,7 @@ import { RouterLink } from '@angular/router';
 
           <div class="flex items-center gap-4">
              <button class="text-slate-400 text-sm font-medium hover:text-brand-gold transition-colors">Sign In</button>
-             <button class="btn-primary px-6 py-2.5 font-semibold text-xs uppercase tracking-tight transition-all shadow-lg">
+             <button routerLink="/builder1" class="btn-primary px-6 py-2.5 font-semibold text-xs uppercase tracking-tight transition-all shadow-lg">
                Launch Builder
              </button>
           </div>
@@ -53,5 +53,16 @@ import { RouterLink } from '@angular/router';
   `,
 })
 export class Header {
+  @ViewChild('headerElement', { read: ElementRef })
+  private headerElement!: ElementRef<HTMLElement>;
 
+  public readonly headerHeight = signal(0);
+
+  public constructor() {
+    afterNextRender(() => {
+      if (this.headerElement?.nativeElement) {
+        this.headerHeight.set(this.headerElement.nativeElement.offsetHeight);
+      }
+    });
+  }
 }

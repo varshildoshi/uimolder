@@ -1,2 +1,101 @@
-/* You can add global styles to this file, and also import other style files */
+// // Include theming for Angular Material with `mat.theme()`.
+// // This Sass mixin will define CSS variables that are used for styling Angular Material
+// // components according to the Material 3 design spec.
+// // Learn more about theming and how to use it for your application's
+// // custom components at https://material.angular.dev/guide/theming
+// @use '@angular/material' as mat;
+
+// html {
+//   // Overriding Azure/Blue to match UiMolder Gold
+//   @include mat.theme((color: (theme-type: dark,
+//         primary: #fbbf24, // Your Brand Gold
+//         tertiary: #fbbf24,
+//       ),
+//       typography: Roboto,
+//       density: 0,
+//     ));
+// }
+
+// /* Ensure the background stays true to your dark mission-control vibe */
+// body {
+//   background: #020617;
+//   /* Slate-950 */
+//   color: #f1f5f9;
+//   /* Slate-100 */
+// }
+
+// /* You can add global styles to this file, and also import other style files */
+// @use "tailwind.css";
+
+// html,
+// body {
+//   height: 100%;
+// }
+
+// body {
+//   margin: 0;
+//   font-family: Roboto, "Helvetica Neue", sans-serif;
+// }
+
+/* 1. Module Imports (Must be at the very top) */
+@use '@angular/material' as mat;
 @use "tailwind.css";
+
+/* 2. Define the UiMolder Brand Palettes */
+// We create a proper Sass map so Material can generate all the required shades
+$brand-gold-palette: (
+  0: #000000,
+  10: #261900,
+  20: #402d00,
+  30: #5c4300,
+  40: #7a5900,
+  50: #997000,
+  60: #bc8a00,
+  70: #e0a400,
+  80: #fbbf24,
+  // Main Gold
+  90: #ffde9f,
+  95: #ffefd7,
+  98: #fff8f1,
+  99: #fffbff,
+  100: #ffffff,
+);
+
+/* 3. Apply the Theme */
+html {
+  @include mat.theme((color: (theme-type: dark,
+        primary: $brand-gold-palette,
+        tertiary: $brand-gold-palette,
+      ),
+      typography: (brand-family: 'Tomorrow, sans-serif',
+        plain-family: 'Tomorrow, sans-serif',
+        bold-weight: 700,
+        medium-weight: 500,
+        regular-weight: 400,
+      ),
+      density: 0,
+    ));
+}
+
+/* 4. Global Structural Styles */
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #020617;
+  /* Slate-950 */
+  color: #f1f5f9;
+  /* Slate-100 */
+  // Ensure the whole app uses Tomorrow
+  font-family: 'Tomorrow', sans-serif !important;
+}
+
+/* Ensure Material headings also follow the brand font */
+.mat-typography h1,
+.mat-typography h2,
+.mat-typography h3 {
+  font-family: 'Tomorrow', sans-serif;
+}
