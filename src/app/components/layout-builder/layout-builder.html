@@ -133,19 +133,19 @@
             <!-- Drop List -->
             <div [id]="row.id" cdkDropList [cdkDropListData]="row.fields" [cdkDropListConnectedTo]="rowIds()"
               [cdkDropListDisabled]="viewMode() === 'preview'" [cdkDropListOrientation]="'horizontal'"
-              (cdkDropListDropped)="onDrop($event, row.id)" class="min-h-[100px] transition-all relative flex flex-wrap"
+              (cdkDropListDropped)="onDrop($event, row.id)"
+              class="min-h-[100px] transition-all relative flex flex-wrap border-2 border-dashed border-slate-800 rounded-3xl p-8 gap-6"
               [ngClass]="{
                   'border-2 border-dashed border-slate-800 rounded-3xl p-8 gap-6': viewMode() === 'editor',
                   'justify-center': viewMode() === 'editor' && row.fields.length === 0,
                   'gap-6': viewMode() === 'preview'
                 }">
 
-              @if (row.fields.length === 0 && viewMode() === 'editor') {
-              <div class="w-full flex items-center justify-center text-slate-700 pointer-events-none empty-placeholder">
-                <p class="font-mono text-[14px] uppercase tracking-widest">Drop elements here</p>
-              </div>
-              }
-
+                              @if (row.fields.length === 0 && viewMode() === 'editor') {
+                                <div class="absolute inset-0 flex items-center justify-center text-slate-700 pointer-events-none empty-placeholder">
+                                  <p class="font-mono text-[14px] uppercase tracking-widest transition-all duration-300">Drop elements here</p>
+                                </div>
+                              }
               @for (item of row.fields; track item.id) {
               <div (click)="viewMode() === 'editor' ? selectedElementId.set(item.id) : null" cdkDrag
                 [cdkDragDisabled]="viewMode() === 'preview'"
