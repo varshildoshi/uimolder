@@ -31,24 +31,25 @@
 
 /* Enhanced Drag & Drop Visual Feedback */
 
-// Reset border for ALL rows during dragging to ensure NO global highlight
+// 1. Highlight ALL rows when a drag starts to show they are valid drop zones
 .cdk-drop-list-dragging:not(#toolbox-list) {
-    border-color: #1e293b !important; // slate-800
+    border-color: rgba(251, 191, 36, 0.3) !important; // Subtle gold
     border-style: dashed !important;
-}
+    transition: all 0.2s ease;
 
-// Apply highlight ONLY to the specific row receiving the item
-.cdk-drop-list-receiving:not(#toolbox-list) {
-    border-color: #fbbf24 !important; // brand-gold
-    border-style: dashed !important;
-    border-width: 2px !important;
-    background-color: rgba(251, 191, 36, 0.04) !important;
-    box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.02);
-
-    // Hide the empty placeholder text when receiving an element
+    // Hide the empty placeholder text in ALL rows when dragging starts
+    // to ensure the drag placeholder can take its place immediately at the top.
     .empty-placeholder {
         display: none !important;
     }
+}
+
+// 2. Apply a stronger highlight ONLY to the specific row receiving the item
+.cdk-drop-list-receiving:not(#toolbox-list) {
+    border-color: #fbbf24 !important; // Primary brand-gold
+    border-width: 2px !important;
+    background-color: rgba(251, 191, 36, 0.06) !important;
+    box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.02);
 }
 
 // Ensure transition smoothness
