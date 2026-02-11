@@ -70,10 +70,10 @@
     <section
       class="flex-1 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] bg-[size:30px_30px] flex flex-col overflow-hidden">
 
-      <div class="flex-1 p-8 overflow-y-auto flex flex-col gap-8">
+      <div class="flex-1 p-8 overflow-y-auto flex flex-col gap-8 scroll-container">
 
         <!-- Canvas Controls -->
-        <div class="max-w-5xl mx-auto w-full flex items-center justify-between">
+        <div class="max-w-5xl mx-auto w-full flex items-center justify-between shrink-0">
           <!-- View Toggle (Left) -->
           <div class="flex items-center gap-1 bg-white/[0.05] p-1 rounded-xl border border-white/10 backdrop-blur-md">
             <button (click)="viewMode.set('editor')" [class.bg-brand-gold]="viewMode() === 'editor'"
@@ -100,46 +100,57 @@
           }
         </div>
 
-        <!-- Rows Container -->
-        <div class="flex flex-col" [ngClass]="viewMode() === 'editor' ? 'gap-4' : 'gap-4'">
+        <!-- Unified Rows Container -->
+        <div class="max-w-5xl mx-auto w-full transition-all duration-500 pb-20" [ngClass]="{
+            'flex flex-col gap-12': viewMode() === 'editor',
+            'bg-white/[0.02] border border-white/5 shadow-2xl rounded-[32px] p-10 flex flex-col gap-6': viewMode() === 'preview'
+          }">
+
+          @if (viewMode() === 'preview') {
+          <h2
+            class="text-[15px] tracking-[0.3em] mb-4 text-brand-gold border-b border-brand-gold/10 pb-2 animate-in fade-in duration-300">
+            Molding Result</h2>
+          }
+
           @for (row of formRows(); track row.id) {
-          <div class="relative group/row max-w-5xl mx-auto w-full">
+          <div class="relative group/row w-full">
+            <!-- Row Header (Only in Editor) -->
+            @if (viewMode() === 'editor') {
+            <div
+              class="absolute -top-8 left-2 right-2 flex items-center justify-between mb-2 animate-in fade-in duration-300">
+              <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono text-brand-gold/50 uppercase tracking-widest">Row Layout</span>
+              </div>
+              @if (formRows().length > 1) {
+              <button (click)="removeRow(row.id)"
+                class="opacity-0 group-hover/row:opacity-100 transition-opacity text-slate-600 hover:text-red-500">
+                <mat-icon class="text-sm">delete</mat-icon>
+              </button>
+              }
+            </div>
+            }
+
             <!-- Drop List -->
             <div [id]="row.id" cdkDropList [cdkDropListData]="row.fields" [cdkDropListConnectedTo]="rowIds()"
-              [cdkDropListDisabled]="viewMode() === 'preview'" (cdkDropListDropped)="onDrop($event, row.id)"
-              class="min-h-[100px] rounded-3xl transition-all relative" [ngClass]="{
-                  'border-2 border-dashed border-slate-800 p-8 flex flex-col gap-6': viewMode() === 'editor',
+              [cdkDropListDisabled]="viewMode() === 'preview'" [cdkDropListOrientation]="'horizontal'"
+              (cdkDropListDropped)="onDrop($event, row.id)" class="min-h-[100px] transition-all relative flex flex-wrap"
+              [ngClass]="{
+                  'border-2 border-dashed border-slate-800 rounded-3xl p-8 gap-6': viewMode() === 'editor',
                   'justify-center': viewMode() === 'editor' && row.fields.length === 0,
-                  'bg-white/[0.02] border border-white/5 shadow-xl p-6 flex flex-col gap-4': viewMode() === 'preview'
+                  'gap-6': viewMode() === 'preview'
                 }">
-
-              <!-- Row Header (Inside, Only in Editor) -->
-              @if (viewMode() === 'editor') {
-              <div class="flex items-center justify-between mb-2 animate-in fade-in duration-300">
-                <div class="flex items-center gap-3">
-                  <span class="text-[12px] font-medium text-brand-gold/50 uppercase tracking-widest">Row</span>
-                </div>
-                @if (formRows().length > 1) {
-                <button (click)="removeRow(row.id)" class="text-slate-600 hover:text-red-500">
-                  <mat-icon class="text-sm">delete</mat-icon>
-                </button>
-                }
-              </div>
-              }
 
               @if (row.fields.length === 0 && viewMode() === 'editor') {
               <div class="w-full flex items-center justify-center text-slate-700 pointer-events-none empty-placeholder">
-                <p
-                  class="font-mono text-[14px] uppercase tracking-widest transition-all duration-300 border-b-2 border-transparent">
-                  Drop elements here</p>
+                <p class="font-mono text-[14px] uppercase tracking-widest">Drop elements here</p>
               </div>
               }
 
               @for (item of row.fields; track item.id) {
               <div (click)="viewMode() === 'editor' ? selectedElementId.set(item.id) : null" cdkDrag
                 [cdkDragDisabled]="viewMode() === 'preview'"
-                class="rounded-lg relative group/field transition-all w-full" [ngClass]="{
-                      'bg-white/[0.02] border border-white/10 cursor-pointer p-4': viewMode() === 'editor',
+                class="rounded-lg relative group/field transition-all flex-1 min-w-[250px]" [ngClass]="{
+                      'bg-white/[0.02] border border-white/10 cursor-pointer p-6': viewMode() === 'editor',
                       'ring-2 ring-brand-gold': viewMode() === 'editor' && selectedElementId() === item.id,
                       'bg-transparent border-0 p-2': viewMode() === 'preview'
                     }">
@@ -162,7 +173,7 @@
                   </div>
                 </div>
                 } @else {
-                <!-- Labels in Preview (Only for inputs) -->
+                <!-- Labels in Preview -->
                 @if (item.type !== 'heading' && item.type !== 'button' && item.type !== 'card') {
                 <label class="block text-sm font-medium text-slate-400 mb-2">{{item.label}}</label>
                 }
@@ -244,11 +255,10 @@
           }
         </div>
       </div>
-
     </section>
 
     <!-- Right Sidebar / Properties (Always visible) -->
-    <aside class="w-80 border-l border-white/5 bg-white/[0.01] p-6 overflow-y-auto transition-all">
+    <aside class="w-80 border-l border-white/5 bg-white/[0.01] p-6 overflow-y-auto transition-all shrink-0">
       <h3
         class="text-[14px] font-medium uppercase tracking-widest text-brand-gold border-b border-brand-gold/10 pb-2 mb-6">
         Fields Configuration</h3>
