@@ -1,0 +1,14 @@
+<div
+    class="max-w-6xl mx-auto w-full transition-all duration-500 pb-20 bg-white/2 border border-white/5 shadow-2xl rounded-xl p-5 flex flex-col gap-6">
+    <h2
+        class="text-[15px] tracking-[0.3em] mb-4 text-brand-gold border-b border-brand-gold/10 pb-2 animate-in fade-in duration-300">
+        Molding Result</h2>
+
+    @for (row of elementService.rows(); track row.id) {
+    <div class="flex gap-4 flex-wrap">
+        @for (element of row.elements; track element.id) {
+        <app-field-preview class="flex-1" [element]="element" />
+        }
+    </div>
+    }
+</div>

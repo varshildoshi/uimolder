@@ -1,0 +1,35 @@
+<div class="py-5">
+    @for(row of elementService.rows(); track row.id) {
+    <div cdkDropList [cdkDropListData]="row.id" (cdkDropListDropped)="onDropInRow($event, row.id)"
+        [cdkDropListOrientation]="'mixed'"
+        class="p-5 mb-4 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] bg-size[30px_30px] rounded-lg border-2 border-dashed border-slate-800">
+
+        <div class="flex justify-between items-center my-2">
+            <span>Row</span>
+            @if(elementService.rows().length > 1) {
+            <button (click)="elementService.deleteRow(row.id)"
+                class="p-1 rounded-full text-slate-500 hover:text-red-500 transition-colors hover:bg-red-500/30">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-x">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M18 6l-12 12" />
+                    <path d="M6 6l12 12" />
+                </svg>
+            </button>
+            }
+        </div>
+        <div class="flex flex-wrap gap-4">
+            @for (element of row.elements; track element.id) {
+            <app-element-form-field cdkDrag [cdkDragData]="element" class="flex-1 cursor-pointer" [element]="element" />
+            } @empty{
+            <div
+                class="w-full p-4 border border-dashed border-slate-700 rounded-xl flex items-center justify-center pointer-events-none">
+                <p class="text-[12px] font-medium text-slate-600 text-center italic">Drag & Drop elements
+                    here</p>
+            </div>
+            }
+        </div>
+    </div>
+    }
+</div>

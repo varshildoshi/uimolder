@@ -99,3 +99,8 @@ body {
 .mat-typography h3 {
   font-family: 'Tomorrow', sans-serif;
 }
+
+.cdk-drop-list-dragging:not(.elements-menu) {
+  border: 2px solid color-mix(in oklab, var(--color-white) 20%, transparent) !important;
+  background-color: color-mix(in oklab, var(--color-white) 5%, transparent) !important;
+}

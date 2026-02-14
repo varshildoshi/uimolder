@@ -5,6 +5,9 @@ import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { LayoutService } from '../../services/layout.service';
+import { ElementsMenu } from '../elements-menu/elements-menu';
+import { ElementsCanvas } from '../elements-canvas/elements-canvas';
+import { ElementsSettings } from '../elements-settings/elements-settings';
 
 export interface ComponentNode {
   id: string;
@@ -32,7 +35,16 @@ export interface Flavor {
 @Component({
   selector: 'app-layout-builder',
   standalone: true,
-  imports: [CommonModule, FormsModule, DragDropModule, MatIconModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DragDropModule,
+    MatIconModule,
+    MatButtonModule,
+    ElementsMenu,
+    ElementsCanvas,
+    ElementsSettings
+  ],
   templateUrl: './layout-builder.html',
   styleUrl: './layout-builder.scss'
 })
@@ -46,7 +58,7 @@ export class LayoutBuilder {
   public readonly rowIds = computed(() => this.formRows().map(r => r.id));
   public readonly selectedElementId = signal<string | null>(null);
   public readonly viewMode = signal<ViewMode>('editor');
-  public readonly activeFlavor = signal<FlavorName>('html');
+  public readonly activeFlavor = signal<FlavorName>('material');
 
   public readonly flavors: Flavor[] = [
     {
@@ -69,54 +81,12 @@ export class LayoutBuilder {
     }
   ];
 
-  public readonly toolbox = [
-    { type: 'heading', label: 'Section Heading', props: { text: 'New Section', level: 'h2' } },
-    { type: 'input', label: 'Text Field', props: { placeholder: 'Enter text...', required: false } },
-    { type: 'textarea', label: 'Text Area', props: { placeholder: 'Enter long description...', rows: 4 } },
-    { type: 'dropdown', label: 'Select Menu', props: { options: ['Option 1', 'Option 2'], placeholder: 'Choose...' } },
-    { type: 'checkbox', label: 'Toggle/Check', props: { checked: false, text: 'Accept Terms' } },
-    { type: 'radio', label: 'Radio Group', props: { options: ['Yes', 'No'], selected: 'Yes' } },
-    { type: 'datepicker', label: 'Date Picker', props: { placeholder: 'Pick a date' } },
-    { type: 'button', label: 'Action Button', props: { text: 'Click Me', color: 'primary' } },
-    { type: 'buttongroup', label: 'Button Group', props: { buttons: ['Save', 'Cancel'] } },
-    { type: 'card', label: 'Content Card', props: { text: 'Card content goes here...' } }
-  ];
-
   public readonly activeComponent = computed(() => {
     for (const row of this.formRows()) {
       const item = row.fields.find(i => i.id === this.selectedElementId());
       if (item) return item;
     }
     return null;
-  });
-
-  public readonly generatedCode = computed(() => {
-    const flavor = this.activeFlavor();
-    const rows = this.formRows();
-    if (rows.length === 0) return '';
-
-    return rows.map(row => {
-      const rowCode = row.fields.map(item => {
-        const val = item.props.value || '';
-        if (flavor === 'html') {
-          return `<ui-field [label]="${item.label}" [html]="${item.id}" [value]="${val}" />`;
-        } else if (flavor === 'material') {
-          switch (item.type) {
-            case 'heading': return `<h2 class="mat-headline-medium">${item.label}</h2>`;
-            case 'textarea': return `<mat-form-field class="w-full">\n  <mat-label>${item.label}</mat-label>\n  <textarea matInput rows="${item.props.rows || 4}">${val}</textarea>\n</mat-form-field>`;
-            case 'input': return `<mat-form-field class="w-full">\n  <mat-label>${item.label}</mat-label>\n  <input matInput [placeholder]="${item.props.placeholder || ''}" [value]="${val}">\n</mat-form-field>`;
-            case 'dropdown': return `<mat-form-field class="w-full">\n  <mat-label>${item.label}</mat-label>\n  <mat-select [value]="${val}">\n    <mat-option value="1">Option 1</mat-option>\n  </mat-select>\n</mat-form-field>`;
-            case 'checkbox': return `<mat-checkbox [checked]="${!!val}">${item.label}</mat-checkbox>`;
-            case 'datepicker': return `<mat-form-field class="w-full">\n  <mat-label>${item.label}</mat-label>\n  <input matInput [matDatepicker]="picker" [value]="${val}">\n  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>\n  <mat-datepicker #picker></mat-datepicker>\n</mat-form-field>`;
-            case 'radio': return `<mat-radio-group [value]="${val}">\n  <mat-radio-button value="1">Yes</mat-radio-button>\n  <mat-radio-button value="2">No</mat-radio-button>\n</mat-radio-group>`;
-            default: return `<ui-field [label]="${item.label}" />`;
-          }
-        } else {
-          return `<div class="p-4 border border-brand-gold bg-slate-900">\n  <p class="text-white font-mono">${item.label}: ${val}</p>\n</div>`;
-        }
-      }).join('\n');
-      return `<!-- Row: ${row.id} -->\n<div class="row">\n${rowCode}\n</div>`;
-    }).join('\n\n');
   });
 
   public onDrop(event: CdkDragDrop<ComponentNode[]>, rowId: string) {
@@ -129,7 +99,7 @@ export class LayoutBuilder {
         id: `node_${Math.random().toString(36).substring(2, 9)}`,
         props: { ...blueprint.props, value: '' }
       };
-      
+
       this.formRows.update(rows => rows.map(row => {
         if (row.id === rowId) {
           const newFields = [...row.fields];
@@ -177,8 +147,7 @@ export class LayoutBuilder {
     })));
   }
 
-  public removeItem(id: string, event: MouseEvent) {
-    event.stopPropagation();
+  public removeItem(id: string) {
     this.formRows.update(rows => rows.map(row => ({
       ...row,
       fields: row.fields.filter(i => i.id !== id)

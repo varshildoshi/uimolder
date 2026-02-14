@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 import { Hero } from './hero/hero';
 import { Flavors } from './flavors/flavors';
 import { Recursive } from './recursive/recursive';
-import { Faq } from "../faq/faq";
-import { Footer } from "../layout/footer/footer";
+import { FaqComponent } from '../../shared/faq/faq';
+import { Footer } from '../../shared/footer/footer';
 
 @Component({
   selector: 'app-home',
@@ -14,19 +14,11 @@ import { Footer } from "../layout/footer/footer";
     Hero,
     Flavors,
     Recursive,
-    Faq,
+    FaqComponent,
     Footer
   ],
-  template: `
-    <main class="relative pt-32 pb-20 overflow-hidden bg-canvas">
-      <app-hero />
-      <app-flavors />
-      <app-recursive />
-      <app-faq />
-      <app-footer />
-    </main>
-  `,
-  styles: ``,
+  templateUrl: './home.html',
+  styleUrl: './home.scss'
 })
 export class Home {
 

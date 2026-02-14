@@ -1,0 +1,76 @@
+<aside
+  class="w-80 border-l border-white/5 bg-white/1 p-6 h-[calc(100vh-150px)] overflow-y-auto transition-all shrink-0">
+  <h3 class="text-[14px] font-medium uppercase tracking-widest text-brand-gold border-b border-brand-gold/10 pb-2 mb-6">
+    Elements Configuration</h3>
+
+  @if(elementService.selectedElement(); as selectedElement) {
+  <div class="flex flex-col gap-6">
+    @for (configElement of elementConfigs(); track configElement.key) {
+    @switch (configElement.type) {
+    @case ('text') {
+    <!-- <app-text-field [isConfig]="true" [configElement]="configElement" [element]="selectedElement" /> -->
+    <mat-form-field class="w-full" appearance="fill">
+      <mat-label>{{configElement.label}}</mat-label>
+      <input matInput [ngModel]="elementValues()[configElement.key]"
+        (ngModelChange)="updateElement(selectedElement.id, configElement.key, $event)" />
+    </mat-form-field>
+    }
+    @case('checkbox') {
+    <div class="flex items-center">
+      <mat-checkbox [ngModel]="elementValues()[configElement.key]"
+        (ngModelChange)="updateElement(selectedElement.id, configElement.key, $event)">{{configElement.label}}</mat-checkbox>
+    </div>
+    }
+    @case('select') {
+    <mat-form-field class="w-full" appearance="fill">
+      <mat-label>{{configElement.label}}</mat-label>
+      <mat-select [ngModel]="elementValues()[configElement.key]"
+        (ngModelChange)="updateElement(selectedElement.id, configElement.key, $event)">
+        @for (option of configElement.options || []; track option.value) {
+        <mat-option [value]="option.value">{{option.label}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    }
+    @case('dynamic-options') {
+    <app-dynamic-options [title]="configElement.label" [options]="elementValues()[configElement.key]"
+      (optionsChange)="updateElement(selectedElement.id, configElement.key, $event)" />
+    }
+    }
+    }
+  </div>
+  } @else{
+  <div class="text-[14px] text-slate-600 text-center mt-20 italic">Select an element to configure</div>
+  }
+
+  <!-- @if (activeComponent(); as comp) {
+  <div class="space-y-6 animate-in fade-in duration-300">
+    <div class="space-y-2">
+      <label class="text-[10px] text-slate-500 uppercase font-bold">Label</label>
+      <input [ngModel]="comp.label" (ngModelChange)="updateLabel($event)"
+        class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-sm text-white focus:border-brand-gold outline-none"
+        [disabled]="viewMode() === 'preview'">
+    </div>
+
+    @if (comp.type === 'input' || comp.type === 'textarea') {
+    <div class="space-y-2">
+      <label class="text-[10px] text-slate-500 uppercase font-bold">Placeholder</label>
+      <input [ngModel]="comp.props.placeholder" (ngModelChange)="updateProp('placeholder', $event)"
+        class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-sm text-white focus:border-brand-gold outline-none"
+        [disabled]="viewMode() === 'preview'">
+    </div>
+    }
+
+    @if (comp.type === 'card') {
+    <div class="space-y-2">
+      <label class="text-[10px] text-slate-500 uppercase font-bold">Card Title</label>
+      <input [ngModel]="comp.props.title" (ngModelChange)="updateProp('title', $event)"
+        class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-sm text-white focus:border-brand-gold outline-none"
+        [disabled]="viewMode() === 'preview'">
+    </div>
+    }
+  </div>
+  } @else {
+  <div class="text-[14px] text-slate-600 text-center mt-20 italic">Select an element to configure</div>
+  } -->
+</aside>

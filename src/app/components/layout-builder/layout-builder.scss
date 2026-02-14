@@ -1,61 +1,61 @@
-.cdk-drag-preview {
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(251, 191, 36, 0.5) !important;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    padding: 10px 15px;
-    color: white;
-    z-index: 1000;
-    box-sizing: border-box !important;
-}
+// .cdk-drag-preview {
+//     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+//     background: rgba(255, 255, 255, 0.05) !important;
+//     backdrop-filter: blur(8px);
+//     border: 1px solid rgba(251, 191, 36, 0.5) !important;
+//     border-radius: 12px;
+//     display: flex;
+//     align-items: center;
+//     padding: 10px 15px;
+//     color: white;
+//     z-index: 1000;
+//     box-sizing: border-box !important;
+// }
 
-.cdk-drag-placeholder {
-    border: 2px dashed rgba(251, 191, 36, 0.4) !important;
-    background: rgba(251, 191, 36, 0.05) !important;
-    min-height: 80px;
-    border-radius: 12px;
-    flex: 1;
-    min-width: 250px;
-}
+// .cdk-drag-placeholder {
+//     border: 2px dashed rgba(251, 191, 36, 0.4) !important;
+//     background: rgba(251, 191, 36, 0.05) !important;
+//     min-height: 80px;
+//     border-radius: 12px;
+//     flex: 1;
+//     min-width: 250px;
+// }
 
-.cdk-drop-list-dragging .cdk-drag {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
+// .cdk-drop-list-dragging .cdk-drag {
+//     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+// }
 
-.cdk-drag-animating {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
+// .cdk-drag-animating {
+//     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+// }
 
-/* 1. Reset border for ALL rows during dragging to ensure NO global highlight */
-.cdk-drop-list-dragging:not(#toolbox-list) {
-    border-color: #1e293b !important; // slate-800
-    border-style: dashed !important;
-}
+// /* 1. Reset border for ALL rows during dragging to ensure NO global highlight */
+// .cdk-drop-list-dragging:not(#toolbox-list) {
+//     border-color: #1e293b !important; // slate-800
+//     border-style: dashed !important;
+// }
 
-/* 2. Highlight ONLY the specific row that is currently receiving the element */
-.cdk-drop-list-receiving:not(#toolbox-list) {
-    border-color: #fbbf24 !important; // brand-gold
-    background-color: rgba(251, 191, 36, 0.05) !important;
-    border-width: 2px !important;
+// /* 2. Highlight ONLY the specific row that is currently receiving the element */
+// .cdk-drop-list-receiving:not(#toolbox-list) {
+//     border-color: #fbbf24 !important; // brand-gold
+//     background-color: rgba(251, 191, 36, 0.05) !important;
+//     border-width: 2px !important;
 
-    // Hide the empty placeholder text when receiving an element
-    // This ensures the drag placeholder starts at the very top.
-    .empty-placeholder {
-        display: none !important;
-    }
-}
+//     // Hide the empty placeholder text when receiving an element
+//     // This ensures the drag placeholder starts at the very top.
+//     .empty-placeholder {
+//         display: none !important;
+//     }
+// }
 
-// Ensure transition smoothness
-.transition-all {
-    transition-property: all;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-}
+// // Ensure transition smoothness
+// .transition-all {
+//     transition-property: all;
+//     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+//     transition-duration: 150ms;
+// }
 
-// Ensure scroll behavior works well during drag
-.scroll-container {
-    scroll-behavior: smooth;
-}
+// // Ensure scroll behavior works well during drag
+// .scroll-container {
+//     scroll-behavior: smooth;
+// }

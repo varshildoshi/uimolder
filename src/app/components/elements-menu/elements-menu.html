@@ -1,0 +1,11 @@
+<aside class="w-72 border-r border-white/5 bg-white/1 p-6 h-[calc(100vh-150px)] overflow-y-auto transition-all">
+  <h2 class="text-[14px] font-medium uppercase tracking-widest text-brand-gold border-b border-brand-gold/10 pb-2 mb-6">
+    Elements</h2>
+
+  <div class="flex flex-col gap-4 elements-menu" cdkDropList cdkDropListSortingDisabled="true"
+    [cdkDropListData]="'element-selector'" [cdkDropListEnterPredicate]="noDropAllowed">
+    @for (item of elementTypes; track item.type) {
+    <app-element-button [element]="item" />
+    }
+  </div>
+</aside>

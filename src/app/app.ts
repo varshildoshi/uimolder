@@ -1,19 +1,14 @@
 import { Component, ViewChild, afterNextRender, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Header } from './components/layout/header/header';
 import { LayoutService } from './services/layout.service';
+import { Header } from './shared/header/header';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [Header, RouterOutlet],
-  template: `
-    <app-header #appHeader />
-
-    <main>
-      <router-outlet />
-    </main>
-    `
+  imports: [RouterOutlet, Header],
+  templateUrl: './app.html',
+  styleUrl: './app.scss'
 })
 export class App {
   protected readonly title = signal('uimolder');

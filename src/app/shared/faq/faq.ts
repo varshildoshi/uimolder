@@ -6,7 +6,7 @@ import { Component, signal } from '@angular/core';
   templateUrl: './faq.html',
   styleUrl: './faq.scss',
 })
-export class Faq {
+export class FaqComponent {
 
   // Track which item is open
   activeId = signal<number | null>(null);
