@@ -10,7 +10,6 @@ import { ElementService } from '../../../../services/element.service';
 })
 export class ElementPreview {
 
-
   elementService = inject(ElementService);
 
 }

@@ -7,7 +7,7 @@
 
     <!-- Centered Flavor Selector -->
     <div
-      class="flex items-center gap-4 px-4 py-2 rounded-xl border border-white/10 bg-white/[0.05] backdrop-blur-xl animate-in fade-in duration-300">
+      class="flex items-center gap-4 px-4 py-2 rounded-xl border border-white/10 bg-white/5 backdrop-blur-xl animate-in fade-in duration-300">
       @for (flavor of flavors; track flavor.name) {
       <button (click)="activeFlavor.set(flavor.name)"
         class="flex items-center gap-2 text-sm font-medium transition-all px-3 py-1 rounded-lg" [ngClass]="{
