@@ -42,6 +42,7 @@ export const CHECKBOX_ELEMENT_DEFINITION: ElementTypeDefinition = {
     defaultConfig: {
         required: false,
         label: 'Checkbox Group',
+        alignment: 'vertical',
         options: [
             { label: 'Option 1', value: 'option1' },
             { label: 'Option 2', value: 'option2' },
@@ -49,6 +50,13 @@ export const CHECKBOX_ELEMENT_DEFINITION: ElementTypeDefinition = {
     },
     elementConfig: [
         { type: 'text', label: 'Label', key: 'label' },
+        {
+            type: 'select', key: 'alignment', label: 'Alignment',
+            options: [
+                { label: 'Vertical', value: 'vertical' },
+                { label: 'Horizontal', value: 'horizontal' },
+            ]
+        },
         { type: 'checkbox', label: 'Required', key: 'required' },
         { type: 'dynamic-options', key: 'options', label: 'Checkbox Options' }
     ],

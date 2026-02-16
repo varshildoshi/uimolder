@@ -4,12 +4,10 @@ import { FormElement } from '../../../models/element';
 import { LayoutService } from '../../../services/layout.service';
 import { FormsModule } from '@angular/forms';
 import { ElementService } from '../../../services/element.service';
-import { MatLabel } from "@angular/material/form-field";
-
 @Component({
   selector: 'app-checkbox-field',
   standalone: true,
-  imports: [MatCheckboxModule, FormsModule, MatLabel],
+  imports: [MatCheckboxModule, FormsModule],
   templateUrl: './checkbox-field.html',
   styleUrl: './checkbox-field.scss',
 })

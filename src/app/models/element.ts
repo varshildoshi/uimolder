@@ -33,5 +33,6 @@ export interface FormElement {
     inputType?: string;
     placeholder?: string;
     rows?: number;
+    alignment?: 'vertical' | 'horizontal';
     options?: OptionsItem[]; // For select, radio, checkbox
 }
