@@ -15,6 +15,7 @@ export const TEXT_ELEMENT_DEFINITION: ElementTypeDefinition = {
         placeholder: 'Enter text',
         required: false,
         label: 'Text Field',
+        value: '',
     },
     elementConfig: [
         { type: 'text', label: 'Label', key: 'label' },
@@ -36,15 +37,20 @@ export const TEXT_ELEMENT_DEFINITION: ElementTypeDefinition = {
 export const CHECKBOX_ELEMENT_DEFINITION: ElementTypeDefinition = {
     type: 'checkbox',
     elementType: 'formField',
-    label: 'Checkbox',
+    label: 'Checkbox Group',
     icon: 'check_box',
     defaultConfig: {
         required: false,
-        label: 'Checkbox',
+        label: 'Checkbox Group',
+        options: [
+            { label: 'Option 1', value: 'option1' },
+            { label: 'Option 2', value: 'option2' },
+        ]
     },
     elementConfig: [
         { type: 'text', label: 'Label', key: 'label' },
         { type: 'checkbox', label: 'Required', key: 'required' },
+        { type: 'dynamic-options', key: 'options', label: 'Checkbox Options' }
     ],
     component: CheckboxFieldComponent
 }
@@ -56,7 +62,9 @@ export const SELECT_ELEMENT_DEFINITION: ElementTypeDefinition = {
     icon: 'arrow_drop_down_circle',
     defaultConfig: {
         label: 'Select',
+        placeholder: 'Select an option',
         required: false,
+        value: '',
         options: [
             { label: 'Option 1', value: 'option1' },
             { label: 'Option 2', value: 'option2' },
@@ -65,6 +73,7 @@ export const SELECT_ELEMENT_DEFINITION: ElementTypeDefinition = {
     },
     elementConfig: [
         { type: 'text', label: 'Label', key: 'label' },
+        { type: 'text', label: 'Placeholder', key: 'placeholder' },
         { type: 'checkbox', label: 'Required', key: 'required' },
         { type: 'dynamic-options', key: 'options', label: 'Dropdown Options' }
     ],

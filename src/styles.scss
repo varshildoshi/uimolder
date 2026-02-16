@@ -63,6 +63,7 @@ $brand-gold-palette: (
 
 /* 3. Apply the Theme */
 html {
+  color-scheme: dark;
   @include mat.theme((color: (theme-type: dark,
         primary: $brand-gold-palette,
         tertiary: $brand-gold-palette,
@@ -77,7 +78,55 @@ html {
     ));
 }
 
+/* Material Select Panel Overrides */
+.mat-mdc-select-panel {
+  background-color: #1e293b !important; /* Slate 800 */
+  border: 1px solid #334155 !important; /* Slate 700 */
+}
+
+.mat-mdc-option {
+  color: #f1f5f9 !important; /* Slate 100 */
+  
+  &:hover:not(.mdc-list-item--disabled) {
+    background-color: rgba(251, 191, 36, 0.1) !important;
+  }
+  
+  &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+    background-color: rgba(251, 191, 36, 0.2) !important;
+    .mdc-list-item__primary-text {
+      color: #fbbf24 !important; /* Brand Gold */
+    }
+  }
+}
+
+/* Native Select/Option Global Styling (Tailwind/HTML Flavors) */
+select option {
+  background-color: #0f172a; /* Slate 900 */
+  color: #f1f5f9; /* Slate 100 */
+}
+
+
 /* 4. Global Structural Styles */
+:root {
+  --uim-label-color: #94a3b8;
+  /* Slate 400 */
+  --uim-text-color: #f1f5f9;
+  /* Slate 100 */
+  --uim-placeholder-color: #475569;
+  /* Slate 600 */
+  --uim-bg-input: rgba(30, 41, 59, 0.5);
+  /* Slate 800 with 50% opacity */
+  --uim-border-color: #334155;
+  /* Slate 700 */
+  --uim-accent-color: #fbbf24;
+  /* Brand Gold */
+  --uim-red-accent-color: #ef4444;
+  /* Red-500 for errors */
+  --uim-accent-glow: rgba(251, 191, 36, 0.2);
+  --uim-radius: 0.5rem;
+  --uim-font: 'Tomorrow', sans-serif;
+}
+
 html,
 body {
   height: 100%;
@@ -96,8 +145,14 @@ body {
 /* Ensure Material headings also follow the brand font */
 .mat-typography h1,
 .mat-typography h2,
-.mat-typography h3 {
-  font-family: 'Tomorrow', sans-serif;
+.mat-typography h3,
+.cdk-overlay-container {
+  font-family: 'Tomorrow', sans-serif !important;
+}
+
+.cdk-overlay-container {
+  // This ensures overlays (like dropdown panels) use the dark color scheme
+  color-scheme: dark;
 }
 
 .cdk-drop-list-dragging:not(.elements-menu) {

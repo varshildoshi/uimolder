@@ -1,14 +1,59 @@
-<mat-form-field appearance="fill" class="w-full">
-    <mat-label>{{element().label}}</mat-label>
-    <mat-select [required]="element().required">
-        @if(element().options){
-        @for(option of element().options; track option.value){
+@switch (flavor()) {
+@case ('material') {
+<mat-form-field class="w-full" hideRequiredMarker>
+    <mat-label>
+        {{element().label}}
+        @if (element().required) { <span style="color: var(--uim-red-accent-color)">*</span> }
+    </mat-label>
+    <mat-select [required]="element().required" [ngModel]="element().value" (ngModelChange)="updateValue($event)"
+        [placeholder]="element().placeholder || 'Select an option'">
+        @for (option of element().options; track option.value) {
         <mat-option [value]="option.value">{{option.label}}</mat-option>
-        }
-        } @else {
-        <mat-option value="option1">Option 1</mat-option>
-        <mat-option value="option2">Option 2</mat-option>
-        <mat-option value="option3">Option 3</mat-option>
         }
     </mat-select>
 </mat-form-field>
+}
+
+@case ('tailwind') {
+<div class="flex flex-col gap-2 w-full font-['Tomorrow']">
+    <h3 class="text-sm font-medium text-(--uim-label-color)">
+        {{element().label}}
+        @if (element().required) { <span style="color: var(--uim-red-accent-color)">*</span> }
+    </h3>
+    <div class="relative">
+        <select [required]="element().required" [ngModel]="element().value" (ngModelChange)="updateValue($event)"
+            class="w-full appearance-none px-4 py-2 bg-(--uim-bg-input) border border-(--uim-border-color) 
+            rounded-(--uim-radius) text-(--uim-text-color) focus:outline-none focus:ring-2 focus:ring-(--uim-accent-glow) focus:border-(--uim-accent-color) transition-all shadow-sm cursor-pointer">
+            <option value="" disabled selected class="text-(--uim-placeholder-color)">
+                {{element().placeholder || 'Select an option'}}
+            </option>
+            @for (option of element().options; track option.value) {
+            <option [value]="option.value" class="bg-slate-900 text-white">{{option.label}}</option>
+            }
+        </select>
+        <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-(--uim-placeholder-color)">
+            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </div>
+    </div>
+</div>
+}
+
+@case ('html') {
+<div style="display: flex; flex-direction: column; gap: 8px; width: 100%; font-family: var(--uim-font);">
+    <h3 style="font-size: 14px; font-weight: 500; color: var(--uim-label-color); margin: 0;">
+        {{element().label}}
+        @if (element().required) { <span style="color: var(--uim-red-accent-color);">*</span> }
+    </h3>
+    <select [required]="element().required" [ngModel]="element().value" (ngModelChange)="updateValue($event)"
+        style="padding: 8px 16px; background: var(--uim-bg-input); border: 1px solid var(--uim-border-color); border-radius: var(--uim-radius); font-size: 14px; color: var(--uim-text-color); outline: none;">
+        <option value="" disabled selected>{{element().placeholder || 'Select an option'}}</option>
+        @for (option of element().options; track option.value) {
+        <option [value]="option.value">{{option.label}}</option>
+        }
+    </select>
+</div>
+}
+}

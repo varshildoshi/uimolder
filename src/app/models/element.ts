@@ -29,7 +29,9 @@ export interface FormElement {
     type: string;
     label: string;
     required: boolean;
+    value?: any;
     inputType?: string;
     placeholder?: string;
+    rows?: number;
     options?: OptionsItem[]; // For select, radio, checkbox
 }

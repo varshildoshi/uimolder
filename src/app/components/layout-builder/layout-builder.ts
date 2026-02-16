@@ -58,7 +58,8 @@ export class LayoutBuilder {
   public readonly rowIds = computed(() => this.formRows().map(r => r.id));
   public readonly selectedElementId = signal<string | null>(null);
   public readonly viewMode = signal<ViewMode>('editor');
-  public readonly activeFlavor = signal<FlavorName>('material');
+  
+  public readonly activeFlavor = this.layoutService.activeFlavor;
 
   public readonly flavors: Flavor[] = [
     {

@@ -1,20 +1,37 @@
-<!-- @if(isConfig()) {
-<div class="space-y-2">
-    <label class="text-[10px] text-slate-500 uppercase font-bold">Label</label>
-    <input [ngModel]="element().label"
-        (ngModelChange)="elementService.updateSelectedElementProp(element().id, configElement().key, $event)"
-        class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-sm text-white focus:border-brand-gold outline-none">
-</div>
-} @else {
-<mat-form-field class="w-full">
-    <mat-label>{{element().label}}</mat-label>
+@switch (flavor()) {
+@case ('material') {
+<mat-form-field class="w-full" hideRequiredMarker>
+    <mat-label>
+        {{element().label}}
+        @if (element().required) { <span style="color: var(--uim-red-accent-color)">*</span> }
+    </mat-label>
     <input matInput [type]="element().inputType || 'text'" [required]="element().required"
-        [placeholder]="element().placeholder" />
+        [placeholder]="element().placeholder || ''" [ngModel]="element().value" (ngModelChange)="updateValue($event)" />
 </mat-form-field>
-} -->
+}
 
-<mat-form-field class="w-full">
-    <mat-label>{{element().label}}</mat-label>
-    <input matInput [type]="element().inputType || 'text'" [required]="element().required"
-        [placeholder]="element().placeholder || ''" />
-</mat-form-field>
+@case ('tailwind') {
+<div class="flex flex-col gap-2 w-full font-['Tomorrow']">
+    <h3 class="text-sm font-medium text-(--uim-label-color)">
+        {{element().label}}
+        @if (element().required) { <span style="color: var(--uim-red-accent-color)">*</span> }
+    </h3>
+    <input [type]="element().inputType || 'text'" [placeholder]="element().placeholder || ''"
+        [ngModel]="element().value" (ngModelChange)="updateValue($event)" class="w-full px-4 py-2 bg-(--uim-bg-input) border border-(--uim-border-color) rounded-(--uim-radius) 
+        text-(--uim-text-color) placeholder:text-(--uim-placeholder-color) focus:outline-none focus:ring-2 
+        focus:ring-(--uim-accent-glow) focus:border-(--uim-accent-color) transition-all shadow-sm" />
+</div>
+}
+
+@case ('html') {
+<div style="display: flex; flex-direction: column; gap: 8px; width: 100%; font-family: var(--uim-font);">
+    <h3 style="font-size: 14px; font-weight: 500; color: var(--uim-label-color); margin: 0;">
+        {{element().label}}
+        @if (element().required) { <span style="color: var(--uim-red-accent-color);">*</span> }
+    </h3>
+    <input [type]="element().inputType || 'text'" [placeholder]="element().placeholder || ''"
+        [ngModel]="element().value" (ngModelChange)="updateValue($event)"
+        style="padding: 8px 16px; background: var(--uim-bg-input); border: 1px solid var(--uim-border-color); border-radius: var(--uim-radius); font-size: 14px; color: var(--uim-text-color); outline: none;" />
+</div>
+}
+}

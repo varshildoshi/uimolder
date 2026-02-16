@@ -1,21 +1,27 @@
 import { Component, inject, input } from '@angular/core';
-import { MatFormField } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ElementConfigDefinition, FormElement } from '../../../models/element';
+import { FormElement } from '../../../models/element';
 import { FormsModule } from '@angular/forms';
 import { ElementService } from '../../../services/element.service';
+import { LayoutService } from '../../../services/layout.service';
 
 @Component({
   selector: 'app-text-field',
-  imports: [FormsModule, MatFormField, MatInputModule],
+  standalone: true,
+  imports: [FormsModule, MatFormFieldModule, MatInputModule],
   templateUrl: './text-field.html',
   styleUrl: './text-field.scss',
 })
 export class TextFieldComponent {
 
   element = input.required<FormElement>();
-  isConfig = input.required<boolean>();
-  configElement = input.required<ElementConfigDefinition>();
   elementService = inject(ElementService);
+  layoutService = inject(LayoutService);
 
+  public readonly flavor = this.layoutService.activeFlavor;
+
+  updateValue(val: any) {
+    this.elementService.updateElement(this.element().id, { value: val });
+  }
 }
