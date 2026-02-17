@@ -3,9 +3,64 @@
     width: 100%;
 }
 
-/* Fix for native date input appearance in dark mode across browsers */
-input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-    opacity: 0.5;
-    cursor: pointer;
+/* Material Datepicker Overrides (Reinforced at component level) */
+::ng-deep {
+
+    .mat-datepicker-content {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+
+        .mat-calendar-next-button,
+        .mat-calendar-previous-button {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 50% !important;
+            font-size: 0 !important;
+            position: relative !important;
+            overflow: hidden !important;
+
+            .mdc-button__label,
+            .mat-mdc-button-touch-target,
+            .cdk-visually-hidden {
+                display: none !important;
+            }
+
+            &:hover {
+                background-color: var(--uim-accent-glow) !important;
+
+                &::after {
+                    color: var(--uim-accent-color) !important;
+                }
+            }
+
+            &::after {
+                font-size: 24px !important;
+                color: #f1f5f9 !important;
+            }
+        }
+    }
+
+    /* Selected Date and Today styles for Material */
+    .mat-calendar-body-selected {
+        background-color: var(--uim-accent-color) !important;
+        color: #000 !important;
+    }
+
+    .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+        border-color: var(--uim-accent-color) !important;
+    }
+
+    /* Tooltip styling reinforced */
+    .mat-mdc-tooltip {
+        --mdc-plain-tooltip-container-color: #1e293b !important;
+        --mdc-plain-tooltip-label-text-color: var(--uim-text-color) !important;
+        font-family: 'Tomorrow', sans-serif !important;
+        border: 1px solid #334155 !important;
+        font-size: 12px !important;
+
+        .mdc-tooltip__surface {
+            background-color: #1e293b !important;
+            opacity: 1 !important;
+        }
+    }
 }

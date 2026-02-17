@@ -1,69 +1,63 @@
 @switch (flavor()) {
-    @case ('material') {
-        <div class="flex flex-col gap-2 w-full">
-            <h3 class="text-sm font-medium text-[var(--uim-label-color)] mb-1">
-                {{element().label}}
-                @if (element().required) { <span style="color: var(--uim-red-accent-color)">*</span> }
-            </h3>
-            <mat-button-toggle-group [ngModel]="element().value" 
-                                    (ngModelChange)="updateValue($event)"
-                                    class="!border-[var(--uim-border-color)]">
-                @for (option of element().options; track option.value) {
-                    <mat-button-toggle [value]="option.value" class="!font-['Tomorrow'] !text-[var(--uim-text-color)]">
-                        {{option.label}}
-                    </mat-button-toggle>
-                }
-            </mat-button-toggle-group>
-        </div>
-    }
+@case ('material') {
+<div class="flex flex-col gap-2 w-full">
+    <h3 class="text-sm font-medium text-[var(--uim-label-color)] mb-1">
+        {{element().label}}
+        @if (element().required) { <span style="color: var(--uim-red-accent-color)">*</span> }
+    </h3>
+    <mat-button-toggle-group [ngModel]="element().value" (ngModelChange)="updateValue($event)"
+        class="!border-[var(--uim-border-color)]">
+        @for (option of element().options; track option.value) {
+        <mat-button-toggle [value]="option.value" class="!font-['Tomorrow'] !text-[var(--uim-text-color)]">
+            {{option.label}}
+        </mat-button-toggle>
+        }
+    </mat-button-toggle-group>
+</div>
+}
 
-    @case ('tailwind') {
-        <div class="flex flex-col gap-3 w-full font-['Tomorrow']">
-            <h3 class="text-sm font-medium text-[var(--uim-label-color)]">
-                {{element().label}}
-                @if (element().required) { <span style="color: var(--uim-red-accent-color)">*</span> }
-            </h3>
-            <div class="inline-flex rounded-lg shadow-sm" role="group">
-                @for (option of element().options; track option.value; let first = $first; let last = $last) {
-                    <button type="button" 
-                            (click)="updateValue(option.value)"
-                            [ngClass]="{
+@case ('tailwind') {
+<div class="flex flex-col gap-3 w-full font-['Tomorrow']">
+    <h3 class="text-sm font-medium text-[var(--uim-label-color)]">
+        {{element().label}}
+        @if (element().required) { <span style="color: var(--uim-red-accent-color)">*</span> }
+    </h3>
+    <div class="inline-flex rounded-lg shadow-sm" role="group">
+        @for (option of element().options; track option.value; let first = $first; let last = $last) {
+        <button type="button" (click)="updateValue(option.value)" [ngClass]="{
                                 'rounded-s-lg': first,
                                 'rounded-e-lg': last,
                                 'border-e-0': !last,
                                 'bg-[var(--uim-accent-color)] text-black': element().value === option.value,
                                 'bg-[var(--uim-bg-input)] text-[var(--uim-text-color)] hover:bg-slate-700': element().value !== option.value
                             }"
-                            class="px-4 py-2 text-sm font-bold border border-[var(--uim-border-color)] transition-all">
-                        {{option.label}}
-                    </button>
-                }
-            </div>
-        </div>
-    }
+            class="px-4 py-2 text-sm font-bold border border-[var(--uim-border-color)] transition-all">
+            {{option.label}}
+        </button>
+        }
+    </div>
+</div>
+}
 
-    @case ('html') {
-        <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; font-family: var(--uim-font);">
-            <h3 style="font-size: 14px; font-weight: 500; color: var(--uim-label-color); margin: 0;">
-                {{element().label}}
-                @if (element().required) { <span style="color: var(--uim-red-accent-color);">*</span> }
-            </h3>
-            <div style="display: flex;">
-                @for (option of element().options; track option.value; let first = $first; let last = $last) {
-                    <button type="button" 
-                            (click)="updateValue(option.value)"
-                            [style.background]="element().value === option.value ? 'var(--uim-accent-color)' : 'var(--uim-bg-input)'"
-                            [style.color]="element().value === option.value ? 'black' : 'var(--uim-text-color)'"
-                            [style.border]="'1px solid var(--uim-border-color)'"
-                            [style.border-right]="last ? '1px solid var(--uim-border-color)' : 'none'"
-                            [style.padding]="'8px 16px'"
-                            [style.cursor]="'pointer'"
-                            [style.font-weight]="'bold'"
-                            [style.border-radius]="first ? '4px 0 0 4px' : (last ? '0 4px 4px 0' : '0')">
-                        {{option.label}}
-                    </button>
-                }
-            </div>
-        </div>
-    }
+@case ('html') {
+<div style="display: flex; flex-direction: column; gap: 8px; width: 100%; font-family: var(--uim-font);">
+    <h3 style="font-size: 14px; font-weight: 500; color: var(--uim-label-color); margin: 0;">
+        {{element().label}}
+        @if (element().required) { <span style="color: var(--uim-red-accent-color);">*</span> }
+    </h3>
+    <div style="display: flex;">
+        @for (option of element().options; track option.value; let first = $first; let last = $last) {
+        <button type="button" (click)="updateValue(option.value)"
+            [style.background]="element().value === option.value ? 'var(--uim-accent-color)' : 'var(--uim-bg-input)'"
+            [style.color]="element().value === option.value ? 'black' : 'var(--uim-text-color)'"
+            [style.border]="'1px solid var(--uim-border-color)'"
+            [style.border-right]="last ? '1px solid var(--uim-border-color)' : 'none'" [style.padding]="'8px 16px'"
+            [style.cursor]="'pointer'" [style.font-weight]="'bold'"
+            [style.border-radius]="first ? '4px 0 0 4px' : (last ? '0 4px 4px 0' : '0')">
+            {{option.label}}
+        </button>
+        }
+    </div>
+</div>
+}
 }
