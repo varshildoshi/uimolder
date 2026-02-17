@@ -1,0 +1,45 @@
+@switch (flavor()) {
+    @case ('material') {
+        <div [class.text-center]="element().textAlign === 'center'"
+             [class.text-right]="element().textAlign === 'right'"
+             class="w-full">
+            @switch (element().level || 'h2') {
+                @case ('h1') { <h1 class="mat-display-large !m-0 !text-[var(--uim-text-color)]">{{element().label}}</h1> }
+                @case ('h2') { <h2 class="mat-headline-large !m-0 !text-[var(--uim-text-color)]">{{element().label}}</h2> }
+                @case ('h3') { <h3 class="mat-headline-medium !m-0 !text-[var(--uim-text-color)]">{{element().label}}</h3> }
+                @case ('h4') { <h4 class="mat-title-large !m-0 !text-[var(--uim-text-color)]">{{element().label}}</h4> }
+                @case ('h5') { <h5 class="mat-title-medium !m-0 !text-[var(--uim-text-color)]">{{element().label}}</h5> }
+                @case ('h6') { <h6 class="mat-title-small !m-0 !text-[var(--uim-text-color)]">{{element().label}}</h6> }
+            }
+        </div>
+    }
+
+    @case ('tailwind') {
+        <div [class.text-center]="element().textAlign === 'center'"
+             [class.text-right]="element().textAlign === 'right'"
+             class="w-full font-['Tomorrow'] text-[var(--uim-text-color)]">
+            @switch (element().level || 'h2') {
+                @case ('h1') { <h1 class="text-4xl font-bold tracking-tight">{{element().label}}</h1> }
+                @case ('h2') { <h2 class="text-3xl font-bold tracking-tight">{{element().label}}</h2> }
+                @case ('h3') { <h3 class="text-2xl font-semibold tracking-tight">{{element().label}}</h3> }
+                @case ('h4') { <h4 class="text-xl font-semibold">{{element().label}}</h4> }
+                @case ('h5') { <h5 class="text-lg font-medium">{{element().label}}</h5> }
+                @case ('h6') { <h6 class="text-base font-medium">{{element().label}}</h6> }
+            }
+        </div>
+    }
+
+    @case ('html') {
+        <div [style.text-align]="element().textAlign || 'left'"
+             style="width: 100%; font-family: var(--uim-font); color: var(--uim-text-color);">
+            @switch (element().level || 'h2') {
+                @case ('h1') { <h1 style="margin: 0; font-size: 32px;">{{element().label}}</h1> }
+                @case ('h2') { <h2 style="margin: 0; font-size: 24px;">{{element().label}}</h2> }
+                @case ('h3') { <h3 style="margin: 0; font-size: 20px;">{{element().label}}</h3> }
+                @case ('h4') { <h4 style="margin: 0; font-size: 18px;">{{element().label}}</h4> }
+                @case ('h5') { <h5 style="margin: 0; font-size: 16px;">{{element().label}}</h5> }
+                @case ('h6') { <h6 style="margin: 0; font-size: 14px;">{{element().label}}</h6> }
+            }
+        </div>
+    }
+}

@@ -1,0 +1,11 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+/* Fix for native date input appearance in dark mode across browsers */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.5;
+    cursor: pointer;
+}

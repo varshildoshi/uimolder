@@ -104,7 +104,7 @@ export class ElementService {
     this._rows.set(newRows);
   }
 
-  setSelectedElement(elementId: string) {
+  setSelectedElement(elementId: string | null) {
     this._selectedElementId.set(elementId);
   }
 
@@ -115,6 +115,14 @@ export class ElementService {
       elements: row.elements.map(el => el.id === elementId ? { ...el, ...data } : el)
     }));
     this._rows.set(newRows);
+  }
+
+  clearLayout() {
+    this._rows.set([{
+      id: crypto.randomUUID(),
+      elements: []
+    }]);
+    this._selectedElementId.set(null);
   }
 
 }

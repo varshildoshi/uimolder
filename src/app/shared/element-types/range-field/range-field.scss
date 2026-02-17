@@ -1,0 +1,27 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+/* Custom styling for tailwind range input to make it look modern in dark mode */
+input[type="range"]::-webkit-slider-runnable-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 999px;
+    height: 6px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    height: 18px;
+    width: 18px;
+    background: var(--uim-accent-color);
+    border-radius: 50%;
+    margin-top: -6px; /* Center thumb on track */
+    box-shadow: 0 0 10px var(--uim-accent-glow);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+    transform: scale(1.2);
+}

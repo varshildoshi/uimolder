@@ -5,15 +5,16 @@
                 {{element().label}}
                 @if (element().required) { <span style="color: var(--uim-red-accent-color)">*</span> }
             </h3>
-            <div class="flex flex-wrap gap-x-6 gap-y-2" 
-                 [class.flex-col]="element().alignment !== 'horizontal'"
-                 [class.flex-row]="element().alignment === 'horizontal'">
+            <mat-radio-group [ngModel]="element().value" (ngModelChange)="updateValue($event)"
+                            class="flex flex-wrap gap-x-6 gap-y-2"
+                            [class.flex-col]="element().alignment !== 'horizontal'"
+                            [class.flex-row]="element().alignment === 'horizontal'">
                 @for (option of element().options; track option.value) {
-                    <mat-checkbox [required]="element().required">
+                    <mat-radio-button [value]="option.value">
                         {{option.label}}
-                    </mat-checkbox>
+                    </mat-radio-button>
                 }
-            </div>
+            </mat-radio-group>
         </div>
     }
 
@@ -29,12 +30,13 @@
                 @for (option of element().options; track option.value) {
                     <label class="flex items-center gap-3 cursor-pointer group w-fit">
                         <div class="relative flex items-center justify-center">
-                            <input type="checkbox" 
-                                   class="peer appearance-none w-5 h-5 border-2 border-[var(--uim-border-color)] rounded bg-[var(--uim-bg-input)] checked:bg-[var(--uim-accent-color)] checked:border-[var(--uim-accent-color)] transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--uim-accent-glow)]" />
-                            <svg class="absolute w-3.5 h-3.5 text-black opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" 
-                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
+                            <input type="radio" 
+                                   [name]="element().id"
+                                   [value]="option.value"
+                                   [ngModel]="element().value"
+                                   (ngModelChange)="updateValue($event)"
+                                   class="peer appearance-none w-5 h-5 border-2 border-[var(--uim-border-color)] rounded-full bg-[var(--uim-bg-input)] checked:border-[var(--uim-accent-color)] transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--uim-accent-glow)]" />
+                            <div class="absolute w-2.5 h-2.5 bg-[var(--uim-accent-color)] rounded-full opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></div>
                         </div>
                         <span class="text-sm font-medium text-[var(--uim-label-color)] group-hover:text-[var(--uim-text-color)] transition-colors">
                             {{option.label}}
@@ -55,7 +57,12 @@
                  [style.flex-direction]="element().alignment === 'horizontal' ? 'row' : 'column'">
                 @for (option of element().options; track option.value) {
                     <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                        <input type="checkbox" style="width: 18px; height: 18px; accent-color: var(--uim-accent-color);" />
+                        <input type="radio" 
+                               [name]="element().id"
+                               [value]="option.value"
+                               [ngModel]="element().value"
+                               (ngModelChange)="updateValue($event)"
+                               style="width: 18px; height: 18px; accent-color: var(--uim-accent-color);" />
                         <span style="font-size: 14px; color: var(--uim-label-color);">{{option.label}}</span>
                     </label>
                 }

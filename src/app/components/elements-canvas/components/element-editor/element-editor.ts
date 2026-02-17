@@ -6,6 +6,7 @@ import { ElementTypeDefinition, FormElement } from '../../../../models/element';
 
 @Component({
   selector: 'app-element-editor',
+  standalone: true,
   imports: [DragDropModule, ElementFormField],
   templateUrl: './element-editor.html',
   styleUrl: './element-editor.scss',

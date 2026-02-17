@@ -1,0 +1,45 @@
+@switch (flavor()) {
+    @case ('material') {
+        <div class="w-full" 
+             [class.text-center]="element().textAlign === 'center'"
+             [class.text-right]="element().textAlign === 'right'">
+            @switch (element().variant || 'primary') {
+                @case ('secondary') { <button mat-flat-button color="accent" class="!font-['Tomorrow']">{{element().label}}</button> }
+                @case ('outline') { <button mat-stroked-button class="!font-['Tomorrow'] !border-[var(--uim-border-color)] !text-[var(--uim-text-color)]">{{element().label}}</button> }
+                @case ('ghost') { <button mat-button class="!font-['Tomorrow'] !text-[var(--uim-label-color)]">{{element().label}}</button> }
+                @default { <button mat-flat-button color="primary" class="!font-['Tomorrow'] !bg-[var(--uim-accent-color)] !text-black">{{element().label}}</button> }
+            }
+        </div>
+    }
+
+    @case ('tailwind') {
+        <div class="w-full flex"
+             [class.justify-center]="element().textAlign === 'center'"
+             [class.justify-end]="element().textAlign === 'right'">
+            <button class="px-6 py-2 rounded-[var(--uim-radius)] font-['Tomorrow'] font-bold transition-all active:scale-95 shadow-lg"
+                    [ngClass]="{
+                        'bg-[var(--uim-accent-color)] text-black hover:brightness-110 shadow-[var(--uim-accent-glow)]': element().variant === 'primary' || !element().variant,
+                        'bg-slate-700 text-white hover:bg-slate-600': element().variant === 'secondary',
+                        'border-2 border-[var(--uim-border-color)] text-[var(--uim-text-color)] hover:bg-white/5': element().variant === 'outline',
+                        'text-[var(--uim-label-color)] hover:text-white hover:bg-white/5': element().variant === 'ghost'
+                    }">
+                {{element().label}}
+            </button>
+        </div>
+    }
+
+    @case ('html') {
+        <div [style.text-align]="element().textAlign || 'left'" style="width: 100%;">
+            <button [style.background]="element().variant === 'primary' || !element().variant ? 'var(--uim-accent-color)' : (element().variant === 'secondary' ? '#334155' : 'transparent')"
+                    [style.color]="element().variant === 'primary' || !element().variant ? 'black' : 'var(--uim-text-color)'"
+                    [style.border]="element().variant === 'outline' ? '2px solid var(--uim-border-color)' : 'none'"
+                    [style.padding]="'10px 24px'"
+                    [style.border-radius]="'var(--uim-radius)'"
+                    [style.font-family]="'var(--uim-font)'"
+                    [style.font-weight]="'bold'"
+                    [style.cursor]="'pointer'">
+                {{element().label}}
+            </button>
+        </div>
+    }
+}

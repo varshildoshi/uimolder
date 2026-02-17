@@ -1,48 +1,8 @@
-// // Include theming for Angular Material with `mat.theme()`.
-// // This Sass mixin will define CSS variables that are used for styling Angular Material
-// // components according to the Material 3 design spec.
-// // Learn more about theming and how to use it for your application's
-// // custom components at https://material.angular.dev/guide/theming
-// @use '@angular/material' as mat;
-
-// html {
-//   // Overriding Azure/Blue to match UiMolder Gold
-//   @include mat.theme((color: (theme-type: dark,
-//         primary: #fbbf24, // Your Brand Gold
-//         tertiary: #fbbf24,
-//       ),
-//       typography: Roboto,
-//       density: 0,
-//     ));
-// }
-
-// /* Ensure the background stays true to your dark mission-control vibe */
-// body {
-//   background: #020617;
-//   /* Slate-950 */
-//   color: #f1f5f9;
-//   /* Slate-100 */
-// }
-
-// /* You can add global styles to this file, and also import other style files */
-// @use "tailwind.css";
-
-// html,
-// body {
-//   height: 100%;
-// }
-
-// body {
-//   margin: 0;
-//   font-family: Roboto, "Helvetica Neue", sans-serif;
-// }
-
 /* 1. Module Imports (Must be at the very top) */
 @use '@angular/material' as mat;
 @use "tailwind.css";
 
 /* 2. Define the UiMolder Brand Palettes */
-// We create a proper Sass map so Material can generate all the required shades
 $brand-gold-palette: (
   0: #000000,
   10: #261900,
@@ -78,50 +38,118 @@ html {
     ));
 }
 
-/* Material Select Panel Overrides */
+/* Material Select & Overlay Overrides */
 .mat-mdc-select-panel {
-  background-color: #1e293b !important; /* Slate 800 */
-  border: 1px solid #334155 !important; /* Slate 700 */
+  background-color: #1e293b !important;
+  /* Slate 800 */
+  border: 1px solid #334155 !important;
+  /* Slate 700 */
 }
 
 .mat-mdc-option {
-  color: #f1f5f9 !important; /* Slate 100 */
-  
+  color: #f1f5f9 !important;
+
   &:hover:not(.mdc-list-item--disabled) {
     background-color: rgba(251, 191, 36, 0.1) !important;
   }
-  
+
   &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
     background-color: rgba(251, 191, 36, 0.2) !important;
+
     .mdc-list-item__primary-text {
-      color: #fbbf24 !important; /* Brand Gold */
+      color: #fbbf24 !important;
     }
   }
 }
 
-/* Native Select/Option Global Styling (Tailwind/HTML Flavors) */
-select option {
-  background-color: #0f172a; /* Slate 900 */
-  color: #f1f5f9; /* Slate 100 */
+/* Textarea & Radio Overrides */
+.mat-mdc-form-field {
+  .mat-mdc-text-field-wrapper {
+    background-color: var(--uim-bg-input) !important;
+  }
+
+  .mat-mdc-form-field-focus-overlay {
+    background-color: transparent !important;
+  }
+
+  textarea.mat-mdc-input-element {
+    resize: vertical;
+    min-height: 80px;
+    color: var(--uim-text-color) !important;
+  }
+
+  input.mat-mdc-input-element {
+    color: var(--uim-text-color) !important;
+  }
 }
 
+.mat-mdc-radio-button {
+  &.mat-accent {
+    --mdc-radio-selected-icon-color: var(--uim-accent-color);
+    --mdc-radio-selected-focus-icon-color: var(--uim-accent-color);
+    --mdc-radio-selected-hover-icon-color: var(--uim-accent-color);
+    --mdc-radio-selected-pressed-icon-color: var(--uim-accent-color);
+  }
+
+  .mdc-label {
+    color: #f1f5f9 !important;
+  }
+}
+
+/* Datepicker Overrides */
+.mat-datepicker-toggle {
+  color: var(--uim-label-color) !important;
+}
+
+.mat-datepicker-content {
+  background-color: #1e293b !important;
+  border: 1px solid #334155 !important;
+
+  .mat-calendar-period-button,
+  .mat-calendar-body-label,
+  .mat-calendar-body-cell-content {
+    color: #f1f5f9 !important;
+  }
+
+  .mat-calendar-arrow {
+    fill: #f1f5f9 !important;
+  }
+
+  .mat-calendar-next-button,
+  .mat-calendar-previous-button {
+    color: #f1f5f9 !important;
+
+    &::after {
+      color: #f1f5f9 !important;
+    }
+  }
+
+  .mat-calendar-body-selected {
+    background-color: var(--uim-accent-color) !important;
+    color: #000 !important;
+  }
+
+  .mat-calendar-body-today:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+    border-color: var(--uim-accent-color) !important;
+  }
+}
+
+
+/* Native Select/Option Global Styling */
+select option {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
 
 /* 4. Global Structural Styles */
 :root {
   --uim-label-color: #94a3b8;
-  /* Slate 400 */
   --uim-text-color: #f1f5f9;
-  /* Slate 100 */
   --uim-placeholder-color: #475569;
-  /* Slate 600 */
   --uim-bg-input: rgba(30, 41, 59, 0.5);
-  /* Slate 800 with 50% opacity */
   --uim-border-color: #334155;
-  /* Slate 700 */
   --uim-accent-color: #fbbf24;
-  /* Brand Gold */
   --uim-red-accent-color: #ef4444;
-  /* Red-500 for errors */
   --uim-accent-glow: rgba(251, 191, 36, 0.2);
   --uim-radius: 0.5rem;
   --uim-font: 'Tomorrow', sans-serif;
@@ -135,14 +163,10 @@ body {
 
 body {
   background: #020617;
-  /* Slate-950 */
   color: #f1f5f9;
-  /* Slate-100 */
-  // Ensure the whole app uses Tomorrow
   font-family: 'Tomorrow', sans-serif !important;
 }
 
-/* Ensure Material headings also follow the brand font */
 .mat-typography h1,
 .mat-typography h2,
 .mat-typography h3,
@@ -151,11 +175,42 @@ body {
 }
 
 .cdk-overlay-container {
-  // This ensures overlays (like dropdown panels) use the dark color scheme
   color-scheme: dark;
 }
 
 .cdk-drop-list-dragging:not(.elements-menu) {
   border: 2px solid color-mix(in oklab, var(--color-white) 20%, transparent) !important;
   background-color: color-mix(in oklab, var(--color-white) 5%, transparent) !important;
+}
+
+/* Global Custom Scrollbar Utility */
+.custom-scrollbar {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+
+  /* Chrome, Edge, Safari */
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    background: rgba(251, 191, 36, 0.5);
+    /* Brand Gold */
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #fbbf24;
+    /* Solid Gold on direct hover */
+  }
 }

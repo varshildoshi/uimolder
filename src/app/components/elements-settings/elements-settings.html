@@ -15,6 +15,13 @@
         (ngModelChange)="updateElement(selectedElement.id, configElement.key, $event)" />
     </mat-form-field>
     }
+    @case ('number') {
+    <mat-form-field class="w-full" appearance="fill">
+      <mat-label>{{configElement.label}}</mat-label>
+      <input matInput type="number" [ngModel]="elementValues()[configElement.key]"
+        (ngModelChange)="updateElement(selectedElement.id, configElement.key, $event)" />
+    </mat-form-field>
+    }
     @case('checkbox') {
     <div class="flex items-center">
       <mat-checkbox [ngModel]="elementValues()[configElement.key]"

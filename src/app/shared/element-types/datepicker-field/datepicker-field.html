@@ -1,0 +1,61 @@
+@switch (flavor()) {
+@case ('material') {
+<mat-form-field class="w-full" hideRequiredMarker>
+    <mat-label>
+        {{element().label}}
+        @if (element().required) { <span style="color: var(--uim-red-accent-color)">*</span> }
+    </mat-label>
+    <input matInput [matDatepicker]="picker" [required]="element().required"
+        [placeholder]="element().placeholder || 'MM/DD/YYYY'" [ngModel]="element().value"
+        (ngModelChange)="updateValue($event)" />
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>
+}
+
+@case ('tailwind') {
+<div class="flex flex-col gap-2 w-full font-['Tomorrow']">
+    <h3 class="text-sm font-medium text-[var(--uim-label-color)]">
+        {{element().label}}
+        @if (element().required) { <span style="color: var(--uim-red-accent-color)">*</span> }
+    </h3>
+    <div class="relative">
+        <input type="date" [placeholder]="element().placeholder || ''" [ngModel]="element().value"
+            (ngModelChange)="updateValue($event)"
+            class="w-full px-4 py-2 bg-[var(--uim-bg-input)] border border-[var(--uim-border-color)] rounded-[var(--uim-radius)] text-[var(--uim-text-color)] placeholder:text-[var(--uim-placeholder-color)] focus:outline-none focus:ring-2 focus:ring-[var(--uim-accent-glow)] focus:border-[var(--uim-accent-color)] transition-all shadow-sm block appearance-none" />
+        <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-[var(--uim-label-color)]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+        </div>
+    </div>
+</div>
+}
+
+@case ('html') {
+<div style="display: flex; flex-direction: column; gap: 8px; width: 100%; font-family: var(--uim-font);">
+    <h3 style="font-size: 14px; font-weight: 500; color: var(--uim-label-color); margin: 0;">
+        {{element().label}}
+        @if (element().required) { <span style="color: var(--uim-red-accent-color);">*</span> }
+    </h3>
+    <div style="position: relative; width: 100%; cursor: pointer;">
+        <input type="date" [placeholder]="element().placeholder || ''" [ngModel]="element().value"
+            (ngModelChange)="updateValue($event)"
+            style="padding: 8px 16px; background: var(--uim-bg-input); border: 1px solid var(--uim-border-color); border-radius: var(--uim-radius); font-size: 14px; color: var(--uim-text-color); outline: none; width: 100%; box-sizing: border-box;" />
+        <div
+            style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--uim-label-color); display: flex; align-items: center;">
+            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+        </div>
+    </div>
+</div>
+}
+}
