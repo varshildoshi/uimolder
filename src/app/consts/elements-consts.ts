@@ -7,130 +7,8 @@ import { RadioGroupFieldComponent } from "../shared/element-types/radio-group-fi
 import { DatepickerFieldComponent } from "../shared/element-types/datepicker-field/datepicker-field"
 import { HeadingFieldComponent } from "../shared/element-types/heading-field/heading-field"
 import { ButtonFieldComponent } from "../shared/element-types/button-field/button-field"
-import { ButtonGroupFieldComponent } from "../shared/element-types/button-group-field/button-group-field"
+import { SubmitCancelFieldComponent } from "../shared/element-types/submit-cancel-field/submit-cancel-field"
 import { CardContainerComponent } from "../shared/element-types/card-container/card-container"
-import { ToggleFieldComponent } from "../shared/element-types/toggle-field/toggle-field"
-import { BadgeFieldComponent } from "../shared/element-types/badge-field/badge-field"
-import { IconFieldComponent } from "../shared/element-types/icon-field/icon-field"
-import { DividerFieldComponent } from "../shared/element-types/divider-field/divider-field"
-import { RangeFieldComponent } from "../shared/element-types/range-field/range-field"
-
-export const RANGE_ELEMENT_DEFINITION: ElementTypeDefinition = {
-    type: 'range',
-    elementType: 'formField',
-    label: 'Range Slider',
-    icon: 'linear_scale',
-    defaultConfig: {
-        label: 'Select Value',
-        required: false,
-        min: 0,
-        max: 100,
-        step: 1,
-        value: 50
-    },
-    elementConfig: [
-        { type: 'text', label: 'Label', key: 'label' },
-        { type: 'number', label: 'Minimum', key: 'min' },
-        { type: 'number', label: 'Maximum', key: 'max' },
-        { type: 'number', label: 'Step', key: 'step' },
-    ],
-    component: RangeFieldComponent
-}
-
-export const DIVIDER_ELEMENT_DEFINITION: ElementTypeDefinition = {
-    type: 'divider',
-    elementType: 'displayField',
-    label: 'Divider',
-    icon: 'horizontal_rule',
-    defaultConfig: {
-        label: 'Divider',
-        required: false
-    },
-    elementConfig: [
-        { type: 'text', label: 'Label (Reference)', key: 'label' }
-    ],
-    component: DividerFieldComponent
-}
-
-export const ICON_ELEMENT_DEFINITION: ElementTypeDefinition = {
-    type: 'icon',
-    elementType: 'displayField',
-    label: 'UI Icon',
-    icon: 'sentiment_satisfied',
-    defaultConfig: {
-        icon: 'face',
-        size: 24,
-        color: 'primary',
-        textAlign: 'left',
-        required: false
-    },
-    elementConfig: [
-        { type: 'text', label: 'Icon Name (Material)', key: 'icon' },
-        { type: 'number', label: 'Size (px)', key: 'size' },
-        {
-            type: 'select', key: 'color', label: 'Color',
-            options: [
-                { label: 'Primary (Gold)', value: 'primary' },
-                { label: 'Secondary (Slate)', value: 'secondary' },
-                { label: 'Inherit', value: 'inherit' },
-            ]
-        },
-        {
-            type: 'select', key: 'textAlign', label: 'Alignment',
-            options: [
-                { label: 'Left', value: 'left' },
-                { label: 'Center', value: 'center' },
-                { label: 'Right', value: 'right' },
-            ]
-        }
-    ],
-    component: IconFieldComponent
-}
-
-export const BADGE_ELEMENT_DEFINITION: ElementTypeDefinition = {
-    type: 'badge',
-    elementType: 'displayField',
-    label: 'Status Badge',
-    icon: 'label',
-    defaultConfig: {
-        label: 'ACTIVE',
-        placeholder: 'Status',
-        color: 'primary',
-        required: false
-    },
-    elementConfig: [
-        { type: 'text', label: 'Badge Text', key: 'label' },
-        {
-            type: 'select', key: 'color', label: 'Color',
-            options: [
-                { label: 'Primary (Gold)', value: 'primary' },
-                { label: 'Secondary (Slate)', value: 'secondary' },
-            ]
-        }
-    ],
-    component: BadgeFieldComponent
-}
-
-export const TOGGLE_ELEMENT_DEFINITION: ElementTypeDefinition = {
-    type: 'toggle',
-    elementType: 'formField',
-    label: 'Switch Toggle',
-    icon: 'toggle_on',
-    defaultConfig: {
-        label: 'Enable Feature',
-        required: false,
-        value: false,
-        onLabel: 'Enabled',
-        offLabel: 'Disabled'
-    },
-    elementConfig: [
-        { type: 'text', label: 'Label', key: 'label' },
-        { type: 'text', label: 'On Label', key: 'onLabel' },
-        { type: 'text', label: 'Off Label', key: 'offLabel' },
-        { type: 'checkbox', label: 'Required', key: 'required' },
-    ],
-    component: ToggleFieldComponent
-}
 
 export const CARD_ELEMENT_DEFINITION: ElementTypeDefinition = {
     type: 'card',
@@ -184,49 +62,22 @@ export const HEADING_ELEMENT_DEFINITION: ElementTypeDefinition = {
     component: HeadingFieldComponent
 }
 
-export const BUTTON_GROUP_ELEMENT_DEFINITION: ElementTypeDefinition = {
-    type: 'buttongroup',
-    elementType: 'formField',
-    label: 'Button Group',
-    icon: 'view_week',
-    defaultConfig: {
-        label: 'Select Action',
-        required: false,
-        options: [
-            { label: 'Option 1', value: 'option1' },
-            { label: 'Option 2', value: 'option2' },
-        ]
-    },
-    elementConfig: [
-        { type: 'text', label: 'Label', key: 'label' },
-        { type: 'checkbox', label: 'Required', key: 'required' },
-        { type: 'dynamic-options', key: 'options', label: 'Group Options' }
-    ],
-    component: ButtonGroupFieldComponent
-}
-
-export const BUTTON_ELEMENT_DEFINITION: ElementTypeDefinition = {
-    type: 'button',
+export const SUBMIT_CANCEL_ELEMENT_DEFINITION: ElementTypeDefinition = {
+    type: 'submitcancel',
     elementType: 'actionField',
-    label: 'Button',
+    label: 'Buttons',
     icon: 'smart_button',
     defaultConfig: {
-        label: 'Click Me',
-        variant: 'primary',
-        textAlign: 'left',
+        submitLabel: 'Submit',
+        cancelLabel: 'Cancel',
+        showCancel: true,
+        textAlign: 'right',
         required: false
     },
     elementConfig: [
-        { type: 'text', label: 'Label', key: 'label' },
-        {
-            type: 'select', key: 'variant', label: 'Style',
-            options: [
-                { label: 'Primary (Gold)', value: 'primary' },
-                { label: 'Secondary (Slate)', value: 'secondary' },
-                { label: 'Outline', value: 'outline' },
-                { label: 'Ghost', value: 'ghost' },
-            ]
-        },
+        { type: 'text', label: 'Submit Text', key: 'submitLabel' },
+        { type: 'text', label: 'Cancel Text', key: 'cancelLabel' },
+        { type: 'checkbox', label: 'Show Cancel Button', key: 'showCancel' },
         {
             type: 'select', key: 'textAlign', label: 'Alignment',
             options: [
@@ -236,7 +87,7 @@ export const BUTTON_ELEMENT_DEFINITION: ElementTypeDefinition = {
             ]
         }
     ],
-    component: ButtonFieldComponent
+    component: SubmitCancelFieldComponent
 }
 
 export const TEXT_ELEMENT_DEFINITION: ElementTypeDefinition = {

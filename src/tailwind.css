@@ -152,10 +152,10 @@
 
     /* Creating a custom class for that specific button in the image */
     .btn-primary {
-        @apply bg-brand-gold text-black font-semibold py-3 px-6 rounded-uimolder transition-all duration-200 hover:bg-brand-gold/10 hover:scale-[1.02] active:scale-95 hover:border hover:border-brand-gold hover:text-brand-gold;
+        @apply bg-brand-gold text-black px-8 py-3 rounded-uimolder transition-all duration-200 hover:bg-brand-gold/10 hover:scale-[1.02] hover:border hover:border-brand-gold hover:text-brand-gold active:scale-95;
     }
 
     .btn-outline {
-        @apply border border-brand-gold text-brand-gold font-semibold py-3 px-6 rounded-uimolder transition-all hover:bg-brand-gold/10;
+        @apply w-full sm:w-auto px-8 py-3 bg-white/5 text-brand-gold border border-white/10 rounded-uimolder hover:bg-white/10 hover:border-brand-gold transition-all duration-300
     }
 }

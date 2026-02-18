@@ -46,5 +46,8 @@ export interface FormElement {
     min?: number;
     max?: number;
     step?: number;
+    submitLabel?: string;
+    cancelLabel?: string;
+    showCancel?: boolean;
     options?: OptionsItem[]; // For select, radio, checkbox
 }

@@ -1,9 +1,0 @@
-<div [style.text-align]="element().textAlign || 'left'" class="w-full">
-    <mat-icon [style.width.px]="element().size || 24"
-              [style.height.px]="element().size || 24"
-              [style.font-size.px]="element().size || 24"
-              [style.color]="element().color === 'primary' ? 'var(--uim-accent-color)' : (element().color === 'secondary' ? 'var(--uim-label-color)' : 'inherit')"
-              class="flex items-center justify-center">
-        {{element().icon || 'help_outline'}}
-    </mat-icon>
-</div>

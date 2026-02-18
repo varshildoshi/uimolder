@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
   selector: 'app-header',
   imports: [NgOptimizedImage, RouterLink],
   template: `
-    <header #headerElement class="fixed top-0 w-full z-[100] border-b border-white/5 bg-canvas/60 backdrop-blur-xl transition-all duration-300">
+    <header #headerElement class="fixed top-0 w-full z-100 border-b border-white/5 bg-canvas/60 backdrop-blur-xl transition-all duration-300">
       <div class="max-w-7xl mx-auto px-6 h-32 flex items-center justify-between">
         <a routerLink="/" class="flex items-center group py-4">
           <img 
