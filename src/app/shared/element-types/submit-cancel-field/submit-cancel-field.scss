@@ -2,34 +2,3 @@
     display: block;
     width: 100%;
 }
-
-.html-btn-submit {
-    transition: all 0.2s !important;
-
-    &:hover {
-        background: rgba(241, 229, 209, 0.1) !important;
-        /* #F1E5D1 at 10% opacity */
-        color: #F1E5D1 !important;
-        border: 1px solid #F1E5D1 !important;
-        box-shadow: none !important;
-        transform: scale(1.02);
-    }
-
-    &:active {
-        transform: scale(0.95);
-    }
-}
-
-.html-btn-cancel {
-    transition: all 0.2s !important;
-
-    &:hover {
-        background: rgba(241, 229, 209, 0.1) !important;
-        border-color: #F1E5D1 !important;
-        transform: scale(1.02);
-    }
-
-    &:active {
-        transform: scale(0.95);
-    }
-}
