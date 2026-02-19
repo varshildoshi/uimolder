@@ -1,0 +1,23 @@
+:host {
+    display: contents;
+}
+
+.uimolder-checkbox {
+    ::ng-deep {
+        .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+            background-color: var(--uim-accent-color) !important;
+            border-color: var(--uim-accent-color) !important;
+        }
+        .mdc-label {
+            font-family: 'Tomorrow', sans-serif !important;
+        }
+    }
+}
+
+code {
+    counter-reset: line;
+}
+
+pre {
+    background: radial-gradient(circle at top left, rgba(251, 191, 36, 0.03), transparent 40%);
+}

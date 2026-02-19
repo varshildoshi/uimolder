@@ -8,6 +8,7 @@ import { LayoutService } from '../../services/layout.service';
 import { ElementsMenu } from '../elements-menu/elements-menu';
 import { ElementsCanvas } from '../elements-canvas/elements-canvas';
 import { ElementsSettings } from '../elements-settings/elements-settings';
+import { ExportModal } from '../../shared/export-modal/export-modal';
 
 export interface ComponentNode {
   id: string;
@@ -43,7 +44,8 @@ export interface Flavor {
     MatButtonModule,
     ElementsMenu,
     ElementsCanvas,
-    ElementsSettings
+    ElementsSettings,
+    ExportModal
   ],
   templateUrl: './layout-builder.html',
   styleUrl: './layout-builder.scss',
@@ -52,6 +54,8 @@ export interface Flavor {
 export class LayoutBuilder {
   private readonly layoutService = inject(LayoutService);
   public readonly headerHeight = this.layoutService.headerHeight;
+
+  public readonly isExportOpen = signal(false);
 
   public readonly formRows = signal<FormRow[]>([
     { id: 'row_initial', fields: [] }
@@ -157,13 +161,8 @@ export class LayoutBuilder {
     if (this.selectedElementId() === id) this.selectedElementId.set(null);
   }
 
-  public exportLayout() {
-    const data = JSON.stringify(this.formRows(), null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `uimolder-layout-${Date.now()}.json`;
-    a.click();
+    public exportLayout() {
+      this.isExportOpen.set(true);
+    }
   }
-}
+  

@@ -1,4 +1,7 @@
 import { Type } from "@angular/core";
+import { ElementRow } from "./element-row";
+
+export type FlavorName = 'html' | 'tailwind' | 'material';
 
 export interface ElementTypeDefinition {
     type: string;
@@ -8,6 +11,7 @@ export interface ElementTypeDefinition {
     defaultConfig: any;
     elementConfig?: ElementConfigDefinition[];
     component: Type<unknown>;
+    getTemplate?: (element: FormElement, flavor: FlavorName, useExternalCss: boolean, innerHtml?: string) => { html: string, css?: string };
 }
 
 export interface ElementConfigDefinition {
@@ -44,5 +48,3 @@ export interface FormElement {
     nestedRows?: ElementRow[];
     options?: OptionsItem[]; // For select, radio, checkbox
 }
-
-import { ElementRow } from "./element-row";

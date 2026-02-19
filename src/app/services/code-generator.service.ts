@@ -1,0 +1,160 @@
+import { inject, Injectable } from '@angular/core';
+import { ElementService } from './element.service';
+import { ElementTypesService } from './element-types.service';
+import { FlavorName } from '../models/element';
+import { ElementRow } from '../models/element-row';
+import { FormElement } from '../models/element';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CodeGeneratorService {
+  private elementService = inject(ElementService);
+  private elementTypesService = inject(ElementTypesService);
+
+  /**
+   * Main entry point to generate the component files
+   */
+  public generateComponent(flavor: FlavorName, useExternalCss: boolean): { ts: string, scss: string } {
+    const rows = this.elementService.rows();
+    const result = this.generateLayout(rows, flavor, useExternalCss);
+
+    const tsContent = this.getComponentTsString(flavor, result.html, result.css);
+    const scssContent = this.getScssString(result.css);
+
+    return { ts: tsContent, scss: scssContent };
+  }
+
+  /**
+   * Generates the final TypeScript string for the Angular component
+   */
+  private getComponentTsString(flavor: FlavorName, html: string, css: string): string {
+    const imports = this.getImports(flavor);
+    const modules = this.getImportModules(flavor);
+
+    return `import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+${imports}
+
+@Component({
+  selector: 'app-generated-layout',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ${modules}
+  ],
+  template: \`
+${this.indent(html, 4)}
+  \`,
+  styles: \`
+${this.indent(css, 4)}
+  \`
+})
+export class GeneratedLayoutComponent {}`;
+  }
+
+  /**
+   * Generates the final SCSS string
+   */
+  private getScssString(css: string): string {
+    if (!css) return '/* No custom styles generated */';
+    return `/* Generated Layout Styles */\n\n${css}`;
+  }
+
+  private generateLayout(rows: ElementRow[], flavor: FlavorName, useExternalCss: boolean): { html: string, css: string } {
+    let html = '';
+    let css = '';
+
+    rows.forEach(row => {
+      const rowResult = this.generateRow(row, flavor, useExternalCss);
+      html += rowResult.html + '\n';
+      css += rowResult.css + '\n';
+    });
+
+    return { html: html.trim(), css: css.trim() };
+  }
+
+  private generateRow(row: ElementRow, flavor: FlavorName, useExternalCss: boolean): { html: string, css: string } {
+    let rowHtml = '';
+    let rowCss = '';
+
+    row.elements.forEach(el => {
+      const elResult = this.generateElement(el, flavor, useExternalCss);
+      rowHtml += elResult.html + '\n';
+      rowCss += elResult.css + '\n';
+    });
+
+    const className = `row_${row.id.split('-')[0]}`;
+
+    if (flavor === 'tailwind' || flavor === 'material') {
+      const wrapper = `<div class="flex flex-wrap gap-4 w-full mb-6">\n${this.indent(rowHtml, 2)}\n</div>`;
+      return { html: wrapper, css: rowCss };
+    }
+
+    const rowStyles = `display: flex; flex-wrap: wrap; gap: 16px; width: 100%; margin-bottom: 24px;`;
+    if (useExternalCss) {
+      return {
+        html: `<div class="${className}">\n${this.indent(rowHtml, 2)}\n</div>`,
+        css: `.${className} { ${rowStyles} }\n${rowCss}`
+      };
+    }
+    return {
+      html: `<div style="${rowStyles}">\n${this.indent(rowHtml, 2)}\n</div>`,
+      css: rowCss
+    };
+  }
+
+  private generateElement(el: FormElement, flavor: FlavorName, useExternalCss: boolean): { html: string, css: string } {
+    const typeDef = this.elementTypesService.getElementType(el.type);
+    if (!typeDef || !typeDef.getTemplate) return { html: `<!-- Unknown element: ${el.type} -->`, css: '' };
+
+    let innerHtml = '';
+    let innerCss = '';
+
+    if (el.nestedRows) {
+      const nestedResult = this.generateLayout(el.nestedRows, flavor, useExternalCss);
+      innerHtml = nestedResult.html;
+      innerCss = nestedResult.css;
+    }
+
+    const result = typeDef.getTemplate(el, flavor, useExternalCss, innerHtml);
+    return {
+      html: result.html,
+      css: (result.css || '') + '\n' + innerCss
+    };
+  }
+
+  private indent(str: string, spaces: number): string {
+    const pad = ' '.repeat(spaces);
+    if (!str) return '';
+    return str.split('\n').map(line => pad + line).join('\n');
+  }
+
+  private getImports(flavor: FlavorName): string {
+    if (flavor !== 'material') return '';
+    return `import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';`;
+  }
+
+  private getImportModules(flavor: FlavorName): string {
+    if (flavor !== 'material') return '';
+    return `MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatButtonModule,
+    MatCardModule`;
+  }
+}
