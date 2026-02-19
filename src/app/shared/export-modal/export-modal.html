@@ -14,14 +14,33 @@
                 </div>
                 <div>
                     <h2 class="text-xl font-bold text-white tracking-tight">Export Blueprint</h2>
-                    <p class="text-xs text-slate-500 uppercase tracking-widest font-mono">Recursive Code Engine v1.0</p>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-mono">
+                        Active Flavor: <span class="text-brand-gold">{{ layoutService.activeFlavor() }}</span>
+                    </p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-6">
-                <mat-checkbox [(ngModel)]="useExternalCss" class="uimolder-checkbox">
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Extract CSS to Layout.scss</span>
-                </mat-checkbox>
+            <div class="flex items-center gap-8">
+                <!-- Style Selection -->
+                <div class="flex flex-col gap-2">
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Style Format</span>
+                    <mat-radio-group [(ngModel)]="styleType" class="flex gap-4">
+                        <mat-radio-button value="scss" class="uimolder-radio">
+                            <span class="text-[10px] text-slate-300 uppercase font-bold">SCSS</span>
+                        </mat-radio-button>
+                        <mat-radio-button value="css" class="uimolder-radio">
+                            <span class="text-[10px] text-slate-300 uppercase font-bold">CSS</span>
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+
+                <!-- External CSS Toggle -->
+                <div class="flex flex-col gap-2">
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Storage</span>
+                    <mat-checkbox [(ngModel)]="useExternalCss" class="uimolder-checkbox">
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Extract to {{ stylesFileName }}</span>
+                    </mat-checkbox>
+                </div>
 
                 <button (click)="close.emit()" class="p-2 hover:bg-white/5 rounded-full text-slate-500 hover:text-white transition-colors">
                     <mat-icon>close</mat-icon>
@@ -35,14 +54,14 @@
                 [class.border-brand-gold]="activeTab() === 'ts'"
                 [class.text-brand-gold]="activeTab() === 'ts'"
                 class="px-6 py-4 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent transition-all hover:text-white">
-                Component (TS)
+                generated-layout.ts
             </button>
             @if (useExternalCss()) {
-                <button (click)="activeTab.set('scss')" 
-                    [class.border-brand-gold]="activeTab() === 'scss'"
-                    [class.text-brand-gold]="activeTab() === 'scss'"
+                <button (click)="activeTab.set('styles')" 
+                    [class.border-brand-gold]="activeTab() === 'styles'"
+                    [class.text-brand-gold]="activeTab() === 'styles'"
                     class="px-6 py-4 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent transition-all hover:text-white">
-                    Styles (SCSS)
+                    {{ stylesFileName }}
                 </button>
             }
         </div>
@@ -50,16 +69,12 @@
         <!-- Code Preview -->
         <main class="flex-1 overflow-hidden relative bg-[#010409]">
             <pre class="h-full p-8 overflow-auto text-sm font-mono text-slate-300 custom-scrollbar leading-relaxed">
-                <code class="block whitespace-pre">{{ activeTab() === 'ts' ? generatedCode().ts : generatedCode().scss }}</code>
+                <code class="block whitespace-pre">{{ activeTab() === 'ts' ? generatedCode().ts : generatedCode().styles }}</code>
             </pre>
 
             <!-- Actions Overlay -->
-            <div class="absolute bottom-8 right-8 flex gap-4">
-                <button (click)="copyToClipboard()" class="btn btn-outline btn-md gap-3 bg-black/40 backdrop-blur-md">
-                    <mat-icon class="text-lg">content_copy</mat-icon>
-                    COPY_CODE
-                </button>
-                <button (click)="downloadFile()" class="btn btn-primary btn-md gap-3 shadow-xl">
+            <div class="absolute bottom-8 right-8">
+                <button (click)="downloadFile()" class="btn btn-primary btn-lg gap-3 shadow-xl">
                     <mat-icon class="text-lg">download</mat-icon>
                     DOWNLOAD_FILE
                 </button>

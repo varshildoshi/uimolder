@@ -2,20 +2,20 @@
     display: contents;
 }
 
-.uimolder-checkbox {
+.uimolder-checkbox, .uimolder-radio {
     ::ng-deep {
-        .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+        .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+        .mdc-radio__native-control:enabled:checked ~ .mdc-radio__background .mdc-radio__outer-circle {
             background-color: var(--uim-accent-color) !important;
             border-color: var(--uim-accent-color) !important;
+        }
+        .mdc-radio__inner-circle {
+            background-color: #000 !important;
         }
         .mdc-label {
             font-family: 'Tomorrow', sans-serif !important;
         }
     }
-}
-
-code {
-    counter-reset: line;
 }
 
 pre {

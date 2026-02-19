@@ -12,25 +12,34 @@ export class CodeGeneratorService {
   private elementService = inject(ElementService);
   private elementTypesService = inject(ElementTypesService);
 
+  private usedTypes = new Set<string>();
+
   /**
    * Main entry point to generate the component files
    */
-  public generateComponent(flavor: FlavorName, useExternalCss: boolean): { ts: string, scss: string } {
+  public generateComponent(flavor: FlavorName, useExternalCss: boolean, styleType: 'css' | 'scss'): { ts: string, styles: string } {
+    this.usedTypes.clear();
     const rows = this.elementService.rows();
     const result = this.generateLayout(rows, flavor, useExternalCss);
 
-    const tsContent = this.getComponentTsString(flavor, result.html, result.css);
-    const scssContent = this.getScssString(result.css);
+    const tsContent = this.getComponentTsString(flavor, result.html, result.css, useExternalCss, styleType);
+    const stylesContent = this.getStylesString(result.css);
 
-    return { ts: tsContent, scss: scssContent };
+    return { ts: tsContent, styles: stylesContent };
   }
 
   /**
    * Generates the final TypeScript string for the Angular component
    */
-  private getComponentTsString(flavor: FlavorName, html: string, css: string): string {
+  private getComponentTsString(flavor: FlavorName, html: string, css: string, useExternalCss: boolean, styleType: 'css' | 'scss'): string {
     const imports = this.getImports(flavor);
     const modules = this.getImportModules(flavor);
+
+    const styleDeclaration = useExternalCss
+      ? `styleUrl: './layout.${styleType}'`
+      : `styles: [\`
+${this.indent(css, 4)}
+  \`]`;
 
     return `import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -48,17 +57,15 @@ ${imports}
   template: \`
 ${this.indent(html, 4)}
   \`,
-  styles: \`
-${this.indent(css, 4)}
-  \`
+  ${styleDeclaration}
 })
 export class GeneratedLayoutComponent {}`;
   }
 
   /**
-   * Generates the final SCSS string
+   * Generates the final Styles string
    */
-  private getScssString(css: string): string {
+  private getStylesString(css: string): string {
     if (!css) return '/* No custom styles generated */';
     return `/* Generated Layout Styles */\n\n${css}`;
   }
@@ -107,6 +114,7 @@ export class GeneratedLayoutComponent {}`;
   }
 
   private generateElement(el: FormElement, flavor: FlavorName, useExternalCss: boolean): { html: string, css: string } {
+    this.usedTypes.add(el.type);
     const typeDef = this.elementTypesService.getElementType(el.type);
     if (!typeDef || !typeDef.getTemplate) return { html: `<!-- Unknown element: ${el.type} -->`, css: '' };
 
@@ -134,27 +142,71 @@ export class GeneratedLayoutComponent {}`;
 
   private getImports(flavor: FlavorName): string {
     if (flavor !== 'material') return '';
-    return `import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';`;
+
+    const imports: string[] = [];
+    const types = this.usedTypes;
+
+    if (types.has('text') || types.has('textarea') || types.has('select') || types.has('datepicker')) {
+      imports.push("import { MatFormFieldModule } from '@angular/material/form-field';");
+    }
+    if (types.has('text') || types.has('textarea') || types.has('datepicker')) {
+      imports.push("import { MatInputModule } from '@angular/material/input';");
+    }
+    if (types.has('select')) {
+      imports.push("import { MatSelectModule } from '@angular/material/select';");
+    }
+    if (types.has('checkbox')) {
+      imports.push("import { MatCheckboxModule } from '@angular/material/checkbox';");
+    }
+    if (types.has('radio')) {
+      imports.push("import { MatRadioModule } from '@angular/material/radio';");
+    }
+    if (types.has('datepicker')) {
+      imports.push("import { MatDatepickerModule } from '@angular/material/datepicker';");
+      imports.push("import { MatNativeDateModule } from '@angular/material/core';");
+    }
+    if (types.has('button') || types.has('buttons-group')) {
+      imports.push("import { MatButtonModule } from '@angular/material/button';");
+    }
+    if (types.has('card')) {
+      imports.push("import { MatCardModule } from '@angular/material/card';");
+    }
+
+    return imports.join('\n');
   }
 
   private getImportModules(flavor: FlavorName): string {
     if (flavor !== 'material') return '';
-    return `MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatCheckboxModule,
-    MatRadioModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatButtonModule,
-    MatCardModule`;
+
+    const modules: string[] = [];
+    const types = this.usedTypes;
+
+    if (types.has('text') || types.has('textarea') || types.has('select') || types.has('datepicker')) {
+      modules.push("MatFormFieldModule");
+    }
+    if (types.has('text') || types.has('textarea') || types.has('datepicker')) {
+      modules.push("MatInputModule");
+    }
+    if (types.has('select')) {
+      modules.push("MatSelectModule");
+    }
+    if (types.has('checkbox')) {
+      modules.push("MatCheckboxModule");
+    }
+    if (types.has('radio')) {
+      modules.push("MatRadioModule");
+    }
+    if (types.has('datepicker')) {
+      modules.push("MatDatepickerModule");
+      modules.push("MatNativeDateModule");
+    }
+    if (types.has('button') || types.has('buttons-group')) {
+      modules.push("MatButtonModule");
+    }
+    if (types.has('card')) {
+      modules.push("MatCardModule");
+    }
+
+    return modules.join(',\n    ');
   }
 }
