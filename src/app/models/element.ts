@@ -33,11 +33,13 @@ export interface FormElement {
     inputType?: string;
     placeholder?: string;
     rows?: number;
-    alignment?: 'vertical' | 'horizontal';
+    alignment?: 'vertical' | 'horizontal' | 'left' | 'center' | 'right';
     level?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
     textAlign?: 'left' | 'center' | 'right';
     primaryLabel?: string;
     secondaryLabel?: string;
     showSecondary?: boolean;
+    size?: 'sm' | 'md' | 'lg';
+    children?: FormElement[];
     options?: OptionsItem[]; // For select, radio, checkbox
 }

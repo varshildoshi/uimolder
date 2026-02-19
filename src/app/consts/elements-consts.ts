@@ -41,11 +41,50 @@ export const CARD_ELEMENT_DEFINITION: ElementTypeDefinition = {
     icon: 'view_quilt',
     defaultConfig: {
         label: 'Card Header',
+        level: 'h4',
+        textAlign: 'left',
+        alignment: 'center',
+        size: 'lg',
         required: false,
         children: []
     },
     elementConfig: [
         { type: 'text', label: 'Card Header', key: 'label' },
+        {
+            type: 'select', key: 'level', label: 'Header Level',
+            options: [
+                { label: 'H1 - Hero', value: 'h1' },
+                { label: 'H2 - Section', value: 'h2' },
+                { label: 'H3 - Subsection', value: 'h3' },
+                { label: 'H4 - Card Title', value: 'h4' },
+                { label: 'H5 - Small', value: 'h5' },
+                { label: 'H6 - Tiny', value: 'h6' },
+            ]
+        },
+        {
+            type: 'select', key: 'textAlign', label: 'Header Alignment',
+            options: [
+                { label: 'Left', value: 'left' },
+                { label: 'Center', value: 'center' },
+                { label: 'Right', value: 'right' },
+            ]
+        },
+        {
+            type: 'select', key: 'alignment', label: 'Card Alignment',
+            options: [
+                { label: 'Left', value: 'left' },
+                { label: 'Center', value: 'center' },
+                { label: 'Right', value: 'right' },
+            ]
+        },
+        {
+            type: 'select', key: 'size', label: 'Card Size',
+            options: [
+                { label: 'Small', value: 'sm' },
+                { label: 'Medium', value: 'md' },
+                { label: 'Large (Full)', value: 'lg' },
+            ]
+        }
     ],
     component: CardContainerComponent
 }

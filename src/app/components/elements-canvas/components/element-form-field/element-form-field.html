@@ -1,5 +1,5 @@
 <div class="bg-[radial-gradient(#ffffff05_1px,transparent_1px)] p-4 pt-1 rounded-lg shadow-md border-2 border-slate-800"
-    (click)="elementService.setSelectedElement(element().id)"
+    (click)="selectElement($event)"
     [class]="elementService.selectedElement()?.id === element().id ? 'border-brand-gold!' : ''">
     <div class="flex items-center justify-between my-2">
         <span class="text-sm">{{element().type | titlecase}}</span>

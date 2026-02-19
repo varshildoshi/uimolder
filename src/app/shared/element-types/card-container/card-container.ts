@@ -1,14 +1,19 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { FormElement } from '../../../models/element';
+import { FormElement, ElementTypeDefinition } from '../../../models/element';
 import { LayoutService } from '../../../services/layout.service';
 import { CommonModule } from '@angular/common';
 import { ElementService } from '../../../services/element.service';
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
+import { FieldPreview } from '../../../components/elements-canvas/components/field-preview/field-preview';
+// We use forwardRef or dynamic import to avoid circular dependency if needed, 
+// but since we are using them in templates and they are standalone, it's usually fine.
+import { ElementFormField } from '../../../components/elements-canvas/components/element-form-field/element-form-field';
 
 @Component({
   selector: 'app-card-container',
   standalone: true,
-  imports: [CommonModule, MatCardModule],
+  imports: [CommonModule, MatCardModule, DragDropModule, FieldPreview, ElementFormField],
   templateUrl: './card-container.html',
   styleUrl: './card-container.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,4 +25,33 @@ export class CardContainerComponent {
   elementService = inject(ElementService);
 
   public readonly flavor = this.layoutService.activeFlavor;
+  public readonly viewMode = this.layoutService.viewMode;
+
+  // Header configs (same as Heading component)
+  level = computed(() => this.element().level || 'h4');
+  headerTextAlign = computed(() => this.element().textAlign || 'left');
+
+  // Card configs
+  cardAlignment = computed(() => this.element().alignment || 'center');
+  cardSize = computed(() => this.element().size || 'lg');
+
+  onDropInside(event: CdkDragDrop<string>) {
+    const containerId = this.element().id;
+
+    if (event.previousContainer.data === 'element-selector') {
+      const elementType = event.item.data as ElementTypeDefinition;
+      const newElement: FormElement = {
+        id: crypto.randomUUID(),
+        type: elementType.type,
+        ...elementType.defaultConfig
+      };
+      this.elementService.addElementToContainer(newElement, containerId, event.currentIndex);
+      return;
+    }
+
+    const dragData = event.item.data as FormElement;
+    const previousContainerId = event.previousContainer.data as string;
+
+    this.elementService.moveElement(dragData.id, previousContainerId, containerId, event.currentIndex);
+  }
 }

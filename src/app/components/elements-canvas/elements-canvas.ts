@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
-import { ComponentNode, FormRow, ViewMode } from '../layout-builder/layout-builder';
+import { ViewMode } from '../layout-builder/layout-builder';
 import { ElementService } from '../../services/element.service';
 import { ElementPreview } from './components/element-preview/element-preview';
 import { ElementEditor } from './components/element-editor/element-editor';
+import { LayoutService } from '../../services/layout.service';
 
 @Component({
   selector: 'app-elements-canvas',
@@ -20,14 +21,14 @@ import { ElementEditor } from './components/element-editor/element-editor';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ElementsCanvas {
-  public readonly viewMode = input<ViewMode>('editor');
+  layoutService = inject(LayoutService);
+  public readonly viewMode = this.layoutService.viewMode;
   elementService = inject(ElementService);
 
   public readonly addRow = output<void>();
   public readonly removeRowAction = output<string>();
   public readonly removeItemAction = output<string>();
   public readonly selectElement = output<string>();
-  public readonly viewModeChange = output<ViewMode>();
 
   public onRemoveRow(rowId: string) {
     this.removeRowAction.emit(rowId);
@@ -43,6 +44,6 @@ export class ElementsCanvas {
   }
 
   public setViewMode(mode: ViewMode) {
-    this.viewModeChange.emit(mode);
+    this.layoutService.viewMode.set(mode);
   }
 }

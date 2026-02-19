@@ -16,6 +16,11 @@ export class ElementFormField {
   element = input.required<FormElement>();
   elementService = inject(ElementService);
 
+  selectElement(e: Event) {
+    e.stopPropagation();
+    this.elementService.setSelectedElement(this.element().id);
+  }
+
   deleteElement(e: Event) {
     e.stopPropagation();
     this.elementService.deleteElementFromRow(this.element().id);

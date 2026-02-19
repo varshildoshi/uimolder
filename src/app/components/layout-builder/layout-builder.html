@@ -44,9 +44,9 @@
     <app-elements-menu class="shrink-0" />
 
     <!-- Modular Canvas area -->
-    <app-elements-canvas class="flex-1 overflow-hidden" [viewMode]="viewMode()" (addRow)="addNewRow()"
+    <app-elements-canvas class="flex-1 overflow-hidden" (addRow)="addNewRow()"
       (removeRowAction)="removeRow($event)" (removeItemAction)="removeItem($event)"
-      (selectElement)="selectedElementId.set($event)" (viewModeChange)="viewMode.set($event)" />
+      (selectElement)="selectedElementId.set($event)" />
 
     <!-- Modular Right Sidebar / Settings -->
     <app-elements-settings class="shrink-0" />
