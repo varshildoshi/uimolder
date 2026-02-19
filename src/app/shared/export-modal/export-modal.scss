@@ -18,6 +18,24 @@
     }
 }
 
+/* Specific styling for subheader controls */
+.small-radio, .small-checkbox {
+    ::ng-deep {
+        .mdc-form-field {
+            padding: 0 !important;
+        }
+        .mdc-radio, .mdc-checkbox {
+            padding: 8px !important;
+            transform: scale(0.85);
+        }
+    }
+}
+
 pre {
     background: radial-gradient(circle at top left, rgba(251, 191, 36, 0.03), transparent 40%);
+}
+
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
