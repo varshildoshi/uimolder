@@ -41,5 +41,8 @@ export interface FormElement {
     showSecondary?: boolean;
     size?: 'sm' | 'md' | 'lg';
     children?: FormElement[];
+    nestedRows?: ElementRow[];
     options?: OptionsItem[]; // For select, radio, checkbox
 }
+
+import { ElementRow } from "./element-row";

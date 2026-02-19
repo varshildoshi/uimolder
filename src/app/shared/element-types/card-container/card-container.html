@@ -2,44 +2,86 @@
 @case ('material') {
 <div class="flex w-full" [class.justify-start]="cardAlignment() === 'left'"
     [class.justify-center]="cardAlignment() === 'center'" [class.justify-end]="cardAlignment() === 'right'">
-    <mat-card class="bg-(--uim-bg-input)! border-(--uim-border-color)! border!" [ngClass]="{
+    <mat-card class="!bg-[var(--uim-bg-input)] !border !border-[var(--uim-border-color)]" [ngClass]="{
             'w-full': cardSize() === 'lg',
             'w-2/3': cardSize() === 'md',
             'w-1/3': cardSize() === 'sm'
         }">
-        @if (element().label) {
-        <div class="w-full border-b border-(--uim-border-color) px-4 py-3 bg-white/5 font-['Tomorrow']"
-            [style.text-align]="headerTextAlign()">
-            @switch (level()) {
-            @case ('h1') { <h1 class="text-4xl font-extrabold m-0! text-(--uim-accent-color)! tracking-tight">
-                {{element().label}}</h1> }
-            @case ('h2') { <h2 class="text-3xl font-bold m-0! text-(--uim-accent-color)! tracking-tight">
-                {{element().label}}</h2> }
-            @case ('h3') { <h3 class="text-2xl font-semibold m-0! text-(--uim-accent-color)! tracking-tight">
-                {{element().label}}</h3> }
-            @case ('h4') { <h4 class="text-xl font-semibold m-0! text-(--uim-accent-color)!">{{element().label}}</h4> }
-            @case ('h5') { <h5 class="text-lg font-medium m-0! text-(--uim-accent-color)!">{{element().label}}</h5> }
-            @case ('h6') { <h6 class="text-base font-medium m-0! text-(--uim-accent-color)!">{{element().label}}</h6> }
-            }
-        </div>
-        }
-        <mat-card-content class="p-4! min-h-[100px]">
-            <div class="flex flex-wrap gap-4 w-full h-full min-h-[80px]" cdkDropList [cdkDropListData]="element().id"
-                (cdkDropListDropped)="onDropInside($event)" [cdkDropListOrientation]="'vertical'">
-                @for (child of element().children; track child.id) {
-                @if (viewMode() === 'editor') {
-                <app-element-form-field cdkDrag [cdkDragData]="child" class="flex-1 cursor-pointer" [element]="child" />
-                } @else {
-                <app-field-preview class="flex-1" [element]="child" />
-                }
-                } @empty {
-                <div
-                    class="border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full">
-                    <span class="text-[10px] text-slate-500 italic uppercase tracking-widest font-['Tomorrow']">Drop
-                        elements here</span>
-                </div>
+        <div
+            class="w-full border-b border-(--uim-border-color) px-4 py-3 bg-white/5 font-['Tomorrow'] relative group/header">
+            @if (element().label) {
+            <div class="w-full" [style.text-align]="headerTextAlign()">
+                @switch (level()) {
+                @case ('h1') { <h1 class="text-4xl font-extrabold m-0! !text-[var(--uim-accent-color)] tracking-tight">
+                    {{element().label}}</h1> }
+                @case ('h2') { <h2 class="text-3xl font-bold !m-0 !text-[var(--uim-accent-color)] tracking-tight">
+                    {{element().label}}</h2> }
+                @case ('h3') { <h3 class="text-2xl font-semibold !m-0 !text-[var(--uim-accent-color)] tracking-tight">
+                    {{element().label}}</h3> }
+                @case ('h4') { <h4 class="text-xl font-semibold !m-0 !text-[var(--uim-accent-color)]">
+                    {{element().label}}</h4> }
+                @case ('h5') { <h5 class="text-lg font-medium !m-0 !text-[var(--uim-accent-color)]">{{element().label}}
+                </h5> }
+                @case ('h6') { <h6 class="text-base font-medium !m-0 !text-[var(--uim-accent-color)]">
+                    {{element().label}}</h6> }
                 }
             </div>
+            }
+
+            @if (viewMode() === 'editor') {
+            <button (click)="elementService.addRowToElement(element().id)" class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-md btn-outline 
+                !rounded-lg !py-1 !px-2 gap-1 !text-[10px]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5l0 14" />
+                    <path d="M5 12l14 0" />
+                </svg> Add Row
+            </button>
+            }
+        </div>
+
+        <mat-card-content class="!p-0 min-h-[100px] flex flex-col">
+            @for (row of element().nestedRows; track row.id) {
+            <div class="flex-1 p-4 relative group/nested-row">
+
+                @if (viewMode() === 'editor') {
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-[11px] font-medium text-slate-500 uppercase tracking-widest">Card Row</span>
+                    @if (element().nestedRows && element().nestedRows!.length > 1) {
+                    <button (click)="elementService.deleteRow(row.id)"
+                        class="p-1 rounded-full text-slate-500 hover:text-red-500 transition-colors hover:bg-red-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6l-12 12" />
+                            <path d="M6 6l12 12" />
+                        </svg>
+                    </button>
+                    }
+                </div>
+                }
+
+                <div class="flex flex-wrap gap-4 min-h-[80px]" cdkDropList [id]="row.id" [cdkDropListData]="row.id"
+                    (cdkDropListDropped)="onDropInside($event, row.id)"
+                    [cdkDropListConnectedTo]="elementService.allContainerIds().concat('element-selector')"
+                    [cdkDropListOrientation]="'horizontal'">
+
+                    @for (child of row.elements; track child.id) {
+                    @if (viewMode() === 'editor') {
+                    <app-element-form-field cdkDrag [cdkDragData]="child" class="flex-1 cursor-pointer min-w-[150px]"
+                        [element]="child" />
+                    } @else {
+                    <app-field-preview class="flex-1 min-w-[150px]" [element]="child" />
+                    }
+                    } @empty {
+                    <div
+                        class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full">
+                        <span class="text-[10px] text-slate-500 italic uppercase tracking-widest font-['Tomorrow']">Drop
+                            elements here</span>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
         </mat-card-content>
     </mat-card>
 </div>
@@ -48,41 +90,81 @@
 @case ('tailwind') {
 <div class="flex w-full" [class.justify-start]="cardAlignment() === 'left'"
     [class.justify-center]="cardAlignment() === 'center'" [class.justify-end]="cardAlignment() === 'right'">
-    <div class="bg-(--uim-bg-input) border border-(--uim-border-color) rounded-(--uim-radius) overflow-hidden shadow-xl"
+    <div class="bg-[var(--uim-bg-input)] border border-[var(--uim-border-color)] rounded-[var(--uim-radius)] overflow-hidden shadow-xl flex flex-col"
         [ngClass]="{
             'w-full': cardSize() === 'lg',
             'w-2/3': cardSize() === 'md',
             'w-1/3': cardSize() === 'sm'
         }">
-        @if (element().label) {
-        <div class="px-4 py-3 border-b border-(--uim-border-color) bg-white/5 font-['Tomorrow'] w-full"
-            [style.text-align]="headerTextAlign()">
-            @switch (level()) {
-            @case ('h1') { <h1 class="text-4xl font-extrabold tracking-tight text-(--uim-accent-color)">
-                {{element().label}}</h1> }
-            @case ('h2') { <h2 class="text-3xl font-bold tracking-tight text-(--uim-accent-color)">{{element().label}}
-            </h2> }
-            @case ('h3') { <h3 class="text-2xl font-semibold tracking-tight text-(--uim-accent-color)">
-                {{element().label}}</h3> }
-            @case ('h4') { <h4 class="text-xl font-semibold text-(--uim-accent-color)">{{element().label}}</h4> }
-            @case ('h5') { <h5 class="text-lg font-medium text-(--uim-accent-color)">{{element().label}}</h5> }
-            @case ('h6') { <h6 class="text-base font-medium text-(--uim-accent-color)">{{element().label}}</h6> }
+        <div
+            class="px-4 py-3 border-b border-[var(--uim-border-color)] bg-white/5 font-['Tomorrow'] w-full relative group/header">
+            @if (element().label) {
+            <div class="w-full" [style.text-align]="headerTextAlign()">
+                @switch (level()) {
+                @case ('h1') { <h1 class="text-4xl font-extrabold tracking-tight text-[var(--uim-accent-color)]">
+                    {{element().label}}</h1> }
+                @case ('h2') { <h2 class="text-3xl font-bold tracking-tight text-[var(--uim-accent-color)]">
+                    {{element().label}}</h2> }
+                @case ('h3') { <h3 class="text-2xl font-semibold tracking-tight text-[var(--uim-accent-color)]">
+                    {{element().label}}</h3> }
+                @case ('h4') { <h4 class="text-xl font-semibold text-[var(--uim-accent-color)]">{{element().label}}</h4>
+                }
+                @case ('h5') { <h5 class="text-lg font-medium text-[var(--uim-accent-color)]">{{element().label}}</h5> }
+                @case ('h6') { <h6 class="text-base font-medium text-[var(--uim-accent-color)]">{{element().label}}</h6>
+                }
+                }
+            </div>
+            }
+
+            @if (viewMode() === 'editor') {
+            <button (click)="elementService.addRowToElement(element().id)"
+                class="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/header:opacity-100 px-2 py-1 border border-white/10 rounded-md text-[8px] font-bold uppercase tracking-wider bg-white/5 hover:bg-brand-gold hover:text-black transition-all">
+                Add Row
+            </button>
             }
         </div>
-        }
-        <div class="p-6 min-h-25 flex flex-wrap gap-4" cdkDropList [cdkDropListData]="element().id"
-            (cdkDropListDropped)="onDropInside($event)" [cdkDropListOrientation]="'vertical'">
-            @for (child of element().children; track child.id) {
-            @if (viewMode() === 'editor') {
-            <app-element-form-field cdkDrag [cdkDragData]="child" class="flex-1 cursor-pointer" [element]="child" />
-            } @else {
-            <app-field-preview class="flex-1" [element]="child" />
-            }
-            } @empty {
-            <div
-                class="border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full">
-                <span class="text-[10px] text-slate-500 italic font-['Tomorrow'] uppercase tracking-widest">Empty
-                    Container</span>
+
+        <div class="flex flex-col">
+            @for (row of element().nestedRows; track row.id) {
+            <div class="p-4 relative group/nested-row">
+
+                @if (viewMode() === 'editor') {
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-[11px] font-medium text-slate-500 uppercase tracking-widest">Card Row</span>
+                    @if (element().nestedRows && element().nestedRows!.length > 1) {
+                    <button (click)="elementService.deleteRow(row.id)"
+                        class="p-1 rounded-full text-slate-500 hover:text-red-500 transition-colors hover:bg-red-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6l-12 12" />
+                            <path d="M6 6l12 12" />
+                        </svg>
+                    </button>
+                    }
+                </div>
+                }
+
+                <div class="min-h-[80px] flex-1 flex flex-wrap gap-4" cdkDropList [id]="row.id"
+                    [cdkDropListData]="row.id" (cdkDropListDropped)="onDropInside($event, row.id)"
+                    [cdkDropListConnectedTo]="elementService.allContainerIds().concat('element-selector')"
+                    [cdkDropListOrientation]="'horizontal'">
+
+                    @for (child of row.elements; track child.id) {
+                    @if (viewMode() === 'editor') {
+                    <app-element-form-field cdkDrag [cdkDragData]="child" class="flex-1 cursor-pointer min-w-[150px]"
+                        [element]="child" />
+                    } @else {
+                    <app-field-preview class="flex-1 min-w-[150px]" [element]="child" />
+                    }
+                    } @empty {
+                    <div
+                        class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full">
+                        <span
+                            class="text-[10px] text-slate-500 italic font-['Tomorrow'] uppercase tracking-widest">Empty
+                            Row</span>
+                    </div>
+                    }
+                </div>
             </div>
             }
         </div>
@@ -94,40 +176,80 @@
 <div [style.display]="'flex'" [style.width]="'100%'"
     [style.justify-content]="cardAlignment() === 'left' ? 'flex-start' : (cardAlignment() === 'center' ? 'center' : 'flex-end')">
     <div [style.width]="cardSize() === 'lg' ? '100%' : (cardSize() === 'md' ? '66%' : '33%')"
-        style="background: var(--uim-bg-input); border: 1px solid var(--uim-border-color); border-radius: var(--uim-radius); font-family: var(--uim-font); overflow: hidden;">
-        @if (element().label) {
-        <div style="padding: 12px 16px; border-bottom: 1px solid var(--uim-border-color); color: var(--uim-accent-color); width: 100%; box-sizing: border-box;"
-            [style.text-align]="headerTextAlign()">
-            @switch (level()) {
-            @case ('h1') { <h1 style="margin: 0; font-size: 36px; font-weight: 800; letter-spacing: -0.025em;">
-                {{element().label}}</h1> }
-            @case ('h2') { <h2 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.025em;">
-                {{element().label}}</h2> }
-            @case ('h3') { <h3 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.025em;">
-                {{element().label}}</h3> }
-            @case ('h4') { <h4 style="margin: 0; font-size: 20px; font-weight: 600;">{{element().label}}</h4> }
-            @case ('h5') { <h5 style="margin: 0; font-size: 18px; font-weight: 500;">{{element().label}}</h5> }
-            @case ('h6') { <h6 style="margin: 0; font-size: 16px; font-weight: 500;">{{element().label}}</h6> }
-            }
-        </div>
-        }
-        <div style="padding: 16px; min-height: 100px;" cdkDropList [cdkDropListData]="element().id"
-            (cdkDropListDropped)="onDropInside($event)" [cdkDropListOrientation]="'vertical'">
-            <div style="display: flex; flex-wrap: wrap; gap: 16px; width: 100%; height: 100%; min-height: 80px;">
-                @for (child of element().children; track child.id) {
-                @if (viewMode() === 'editor') {
-                <app-element-form-field cdkDrag [cdkDragData]="child" style="flex: 1; cursor: pointer;"
-                    [element]="child" />
-                } @else {
-                <app-field-preview style="flex: 1;" [element]="child" />
-                }
-                } @empty {
-                <div
-                    style="border: 2px dashed #334155; border-radius: 8px; padding: 24px; text-align: center; color: #475569; font-size: 10px; font-style: italic; text-transform: uppercase; width: 100%; box-sizing: border-box;">
-                    Empty Container
-                </div>
+        style="background: var(--uim-bg-input); border: 1px solid var(--uim-border-color); border-radius: var(--uim-radius); font-family: var(--uim-font); overflow: hidden; display: flex; flex-direction: column;">
+
+        <div style="padding: 12px 16px; border-bottom: 1px solid var(--uim-border-color); color: var(--uim-accent-color); width: 100%; box-sizing: border-box; position: relative;"
+            class="group/header">
+            @if (element().label) {
+            <div [style.text-align]="headerTextAlign()">
+                @switch (level()) {
+                @case ('h1') { <h1 style="margin: 0; font-size: 36px; font-weight: 800; letter-spacing: -0.025em;">
+                    {{element().label}}</h1> }
+                @case ('h2') { <h2 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.025em;">
+                    {{element().label}}</h2> }
+                @case ('h3') { <h3 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.025em;">
+                    {{element().label}}</h3> }
+                @case ('h4') { <h4 style="margin: 0; font-size: 20px; font-weight: 600;">{{element().label}}</h4> }
+                @case ('h5') { <h5 style="margin: 0; font-size: 18px; font-weight: 500;">{{element().label}}</h5> }
+                @case ('h6') { <h6 style="margin: 0; font-size: 16px; font-weight: 500;">{{element().label}}</h6> }
                 }
             </div>
+            }
+
+            @if (viewMode() === 'editor') {
+            <button (click)="elementService.addRowToElement(element().id)"
+                style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); padding: 4px 8px; font-size: 8px; cursor: pointer; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;"
+                class="opacity-0 group-hover/header:opacity-100">
+                ADD ROW
+            </button>
+            }
+        </div>
+
+        <div style="display: flex; flex-direction: column;">
+            @for (row of element().nestedRows; track row.id) {
+            <div style="padding: 16px; position: relative;" class="group/nested-row">
+
+                @if (viewMode() === 'editor') {
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span
+                        style="font-size: 11px; font-family: 'Tomorrow', monospace; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em;">Card
+                        Row</span>
+                    @if (element().nestedRows && element().nestedRows!.length > 1) {
+                    <button (click)="elementService.deleteRow(row.id)"
+                        style="padding: 4px; border-radius: 50%; cursor: pointer; background: transparent; color: #64748b; border: none; transition: all 0.3s;"
+                        onmouseover="this.style.color='#ef4444'; this.style.backgroundColor='rgba(239, 68, 68, 0.15)'"
+                        onmouseout="this.style.color='#64748b'; this.style.backgroundColor='transparent'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6l-12 12" />
+                            <path d="M6 6l12 12" />
+                        </svg>
+                    </button>
+                    }
+                </div>
+                }
+
+                <div style="display: flex; flex-wrap: wrap; gap: 16px; width: 100%; height: 100%; min-height: 60px;"
+                    cdkDropList [id]="row.id" [cdkDropListData]="row.id"
+                    (cdkDropListDropped)="onDropInside($event, row.id)"
+                    [cdkDropListConnectedTo]="elementService.allContainerIds().concat('element-selector')"
+                    [cdkDropListOrientation]="'horizontal'">
+                    @for (child of row.elements; track child.id) {
+                    @if (viewMode() === 'editor') {
+                    <app-element-form-field cdkDrag [cdkDragData]="child"
+                        style="flex: 1; min-width: 150px; cursor: pointer;" [element]="child" />
+                    } @else {
+                    <app-field-preview style="flex: 1; min-width: 150px;" [element]="child" />
+                    }
+                    } @empty {
+                    <div
+                        style="flex: 1; border: 2px dashed #334155; border-radius: 8px; padding: 24px; text-align: center; color: #475569; font-size: 10px; font-style: italic; text-transform: uppercase; width: 100%; box-sizing: border-box;">
+                        Empty Row
+                    </div>
+                    }
+                </div>
+            </div>
+            }
         </div>
     </div>
 </div>

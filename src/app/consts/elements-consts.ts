@@ -46,19 +46,21 @@ export const CARD_ELEMENT_DEFINITION: ElementTypeDefinition = {
         alignment: 'center',
         size: 'lg',
         required: false,
-        children: []
+        nestedRows: [
+            { id: crypto.randomUUID(), elements: [] }
+        ]
     },
     elementConfig: [
         { type: 'text', label: 'Card Header', key: 'label' },
         {
             type: 'select', key: 'level', label: 'Header Level',
             options: [
-                { label: 'H1 - Hero', value: 'h1' },
-                { label: 'H2 - Section', value: 'h2' },
-                { label: 'H3 - Subsection', value: 'h3' },
-                { label: 'H4 - Card Title', value: 'h4' },
-                { label: 'H5 - Small', value: 'h5' },
-                { label: 'H6 - Tiny', value: 'h6' },
+                { label: 'H1', value: 'h1' },
+                { label: 'H2', value: 'h2' },
+                { label: 'H3', value: 'h3' },
+                { label: 'H4', value: 'h4' },
+                { label: 'H5', value: 'h5' },
+                { label: 'H6', value: 'h6' },
             ]
         },
         {

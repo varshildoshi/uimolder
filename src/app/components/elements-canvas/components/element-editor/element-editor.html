@@ -1,11 +1,11 @@
 <div class="py-5">
     @for(row of elementService.rows(); track row.id) {
     <div cdkDropList [cdkDropListData]="row.id" (cdkDropListDropped)="onDropInRow($event, row.id)"
-        [cdkDropListOrientation]="'mixed'"
+        [cdkDropListOrientation]="'horizontal'" [cdkDropListConnectedTo]="elementService.allContainerIds().concat('element-selector')"
         class="p-5 mb-4 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] bg-size[30px_30px] rounded-lg border-2 border-dashed border-slate-800">
 
         <div class="flex justify-between items-center my-2">
-            <span>Row</span>
+            <span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Row</span>
             @if(elementService.rows().length > 1) {
             <button (click)="elementService.deleteRow(row.id)"
                 class="p-1 rounded-full text-slate-500 hover:text-red-500 transition-colors hover:bg-red-500/30">
@@ -19,9 +19,9 @@
             </button>
             }
         </div>
-        <div class="flex flex-wrap gap-4">
+        <div class="flex flex-wrap gap-4 min-h-[80px]">
             @for (element of row.elements; track element.id) {
-            <app-element-form-field cdkDrag [cdkDragData]="element" class="flex-1 cursor-pointer" [element]="element" />
+            <app-element-form-field cdkDrag [cdkDragData]="element" class="flex-1 cursor-pointer min-w-[200px]" [element]="element" />
             } @empty{
             <div
                 class="w-full p-4 border border-dashed border-slate-700 rounded-xl flex items-center justify-center pointer-events-none">

@@ -35,9 +35,7 @@ export class CardContainerComponent {
   cardAlignment = computed(() => this.element().alignment || 'center');
   cardSize = computed(() => this.element().size || 'lg');
 
-  onDropInside(event: CdkDragDrop<string>) {
-    const containerId = this.element().id;
-
+  onDropInside(event: CdkDragDrop<string>, rowId: string) {
     if (event.previousContainer.data === 'element-selector') {
       const elementType = event.item.data as ElementTypeDefinition;
       const newElement: FormElement = {
@@ -45,13 +43,13 @@ export class CardContainerComponent {
         type: elementType.type,
         ...elementType.defaultConfig
       };
-      this.elementService.addElementToContainer(newElement, containerId, event.currentIndex);
+      this.elementService.addElementToRow(newElement, rowId, event.currentIndex);
       return;
     }
 
     const dragData = event.item.data as FormElement;
     const previousContainerId = event.previousContainer.data as string;
 
-    this.elementService.moveElement(dragData.id, previousContainerId, containerId, event.currentIndex);
+    this.elementService.moveElement(dragData.id, previousContainerId, rowId, event.currentIndex);
   }
 }

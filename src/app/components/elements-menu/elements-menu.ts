@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
 import { ElementTypesService } from '../../services/element-types.service';
+import { ElementService } from '../../services/element.service';
 import { ElementButton } from "./element-button/element-button";
 
 @Component({
@@ -18,6 +19,7 @@ import { ElementButton } from "./element-button/element-button";
 export class ElementsMenu {
 
   elementTypesService = inject(ElementTypesService);
+  elementService = inject(ElementService);
   elementTypes = this.elementTypesService.getAllElementsTypes();
 
   public readonly rowIds = input<string[]>([]);
