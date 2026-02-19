@@ -36,16 +36,6 @@ export interface FormElement {
     alignment?: 'vertical' | 'horizontal';
     level?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
     textAlign?: 'left' | 'center' | 'right';
-    variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-    dateFormat?: string;
-    onLabel?: string;
-    offLabel?: string;
-    color?: string;
-    icon?: string;
-    size?: number;
-    min?: number;
-    max?: number;
-    step?: number;
     primaryLabel?: string;
     secondaryLabel?: string;
     showSecondary?: boolean;
