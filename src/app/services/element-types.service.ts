@@ -26,7 +26,7 @@ export class ElementTypesService {
     ['radio', RADIO_ELEMENT_DEFINITION],
     ['select', SELECT_ELEMENT_DEFINITION],
     ['datepicker', DATEPICKER_ELEMENT_DEFINITION],
-    ['buttonsgroup', BUTTONS_GROUP_ELEMENT_DEFINITION],
+    ['buttons-group', BUTTONS_GROUP_ELEMENT_DEFINITION],
   ]);
 
   getElementType(type: string): ElementTypeDefinition | undefined {

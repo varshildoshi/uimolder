@@ -62,7 +62,7 @@ export const HEADING_ELEMENT_DEFINITION: ElementTypeDefinition = {
 }
 
 export const BUTTONS_GROUP_ELEMENT_DEFINITION: ElementTypeDefinition = {
-    type: 'buttonsgroup',
+    type: 'buttons-group',
     elementType: 'actionField',
     label: 'Buttons',
     icon: 'smart_button',

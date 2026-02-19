@@ -18,7 +18,7 @@ import { RouterLink } from '@angular/router';
             class="transition-all duration-300" />
         </a>
 
-        <div class="hidden md:flex items-center gap-10">
+        <div class="hidden md:flex items-center gap-5">
           <nav class="flex items-center gap-8 text-[13px] font-medium text-slate-400 uppercase tracking-widest">
             <a href="#features" class="hover:text-brand-gold transition-colors">Features</a>
             <a href="#showcase" class="hover:text-brand-gold transition-colors">Showcase</a>
@@ -26,13 +26,20 @@ import { RouterLink } from '@angular/router';
             <a href="#pricing" class="hover:text-brand-gold transition-colors">Pricing</a>
           </nav>
           
-          <div class="h-4 w-[1px] bg-brand-dark-gold/50"></div>
+          <div class="h-4 w-px bg-brand-dark-gold/50"></div>
 
-          <div class="flex items-center gap-4">
+          <div class="flex items-center gap-3">
              <button class="text-slate-400 text-sm font-medium hover:text-brand-gold transition-colors">Sign In</button>
-             <button routerLink="/builder1" class="btn btn-primary btn-md">
-               Launch Builder
-             </button>
+             <button class="flex items-center gap-2 btn btn-primary btn-md" routerLink="/builder">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-puzzle">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path
+                      d="M4 7h3a1 1 0 0 0 1 -1v-1a2 2 0 0 1 4 0v1a1 1 0 0 0 1 1h3a1 1 0 0 1 1 1v3a1 1 0 0 0 1 1h1a2 2 0 0 1 0 4h-1a1 1 0 0 0 -1 1v3a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1v-1a2 2 0 0 0 -4 0v1a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h1a2 2 0 0 0 0 -4h-1a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1" />
+              </svg>
+              Launch Builder
+            </button>
           </div>
         </div>
 

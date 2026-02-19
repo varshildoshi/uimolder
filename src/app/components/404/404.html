@@ -1,0 +1,64 @@
+<div class="min-h-screen bg-[#020617] flex items-center justify-center p-4 font-['Tomorrow'] overflow-hidden relative">
+    <!-- Background grid -->
+    <div class="absolute inset-0 z-0 opacity-20"
+        style="background-image: radial-gradient(rgba(241, 229, 209, 0.1) 0.5px, transparent 0.5px); background-size: 30px 30px;">
+    </div>
+
+    <!-- Glow effects -->
+    <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-indigo/10 blur-[150px] rounded-full -z-10 animate-pulse">
+    </div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-brand-gold/5 blur-[120px] rounded-full -z-10">
+    </div>
+
+    <div class="max-w-xl w-full text-center relative z-10 animate-reveal">
+        <!-- 404 with a mask/shimmer effect if possible, or just a nice gradient -->
+        <h1
+            class="text-[180px] md:text-[240px] font-black leading-none mb-2 uimolder-gradient-text bg-gradient-to-b from-brand-gold via-brand-gold/60 to-brand-gold/10 select-none">
+            404
+        </h1>
+
+        <div class="relative -mt-12 mb-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight uppercase">
+                Architectural Error
+            </h2>
+            <div class="w-24 h-1 bg-brand-gold mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <p class="text-slate-400 text-lg mb-12 leading-relaxed max-w-md mx-auto font-light">
+            The layout you're looking for seems to have been <span class="text-brand-gold/80 italic">unmolded</span> or
+            never existed in our blueprint.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <button routerLink="/"
+                class="btn btn-primary btn-lg flex items-center justify-center gap-3 group whitespace-nowrap">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-big-left-lines">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path
+                        d="M12 15v3.586a1 1 0 0 1 -1.707 .707l-6.586 -6.586a1 1 0 0 1 0 -1.414l6.586 -6.586a1 1 0 0 1 1.707 .707v3.586h3v6h-3" />
+                    <path d="M21 15v-6" />
+                    <path d="M18 15v-6" />
+                </svg>
+                Return Home
+            </button>
+
+            <button class="group flex items-center gap-3 text-slate-400 hover:text-white transition-colors py-4 px-6"
+                routerLink="/builder">
+                <div
+                    class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white/5 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-puzzle">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path
+                            d="M4 7h3a1 1 0 0 0 1 -1v-1a2 2 0 0 1 4 0v1a1 1 0 0 0 1 1h3a1 1 0 0 1 1 1v3a1 1 0 0 0 1 1h1a2 2 0 0 1 0 4h-1a1 1 0 0 0 -1 1v3a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1v-1a2 2 0 0 0 -4 0v1a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h1a2 2 0 0 0 0 -4h-1a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1" />
+                    </svg>
+                </div>
+                Open Builder
+            </button>
+        </div>
+    </div>
+</div>
