@@ -1,0 +1,28 @@
+@switch (flavor()) {
+@case ('material') {
+<div class="flex w-full" [class.justify-start]="element().textAlign === 'left'"
+    [class.justify-center]="element().textAlign === 'center'" [class.justify-end]="element().textAlign === 'right'">
+    <button type="button" class="btn btn-primary btn-md rounded-full">
+        {{element().label || 'Button'}}
+    </button>
+</div>
+}
+
+@case ('tailwind') {
+<div class="flex w-full" [class.justify-start]="element().textAlign === 'left'"
+    [class.justify-center]="element().textAlign === 'center'" [class.justify-end]="element().textAlign === 'right'">
+    <button type="button" class="btn btn-primary btn-md rounded-full font-['Tomorrow']">
+        {{element().label || 'BUTTON'}}
+    </button>
+</div>
+}
+
+@case ('html') {
+<div [style.display]="'flex'" [style.width]="'100%'"
+    [style.justify-content]="element().textAlign === 'left' ? 'flex-start' : (element().textAlign === 'center' ? 'center' : 'flex-end')">
+    <button type="button" class="btn btn-primary btn-md rounded-full" style="font-family: var(--uim-font);">
+        {{element().label || 'Button'}}
+    </button>
+</div>
+}
+}

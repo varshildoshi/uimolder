@@ -8,6 +8,7 @@ import {
   RADIO_ELEMENT_DEFINITION,
   DATEPICKER_ELEMENT_DEFINITION,
   HEADING_ELEMENT_DEFINITION,
+  BUTTON_ELEMENT_DEFINITION,
   BUTTONS_GROUP_ELEMENT_DEFINITION,
   CARD_ELEMENT_DEFINITION
 } from '../consts/elements-consts';
@@ -20,6 +21,7 @@ export class ElementTypesService {
   elementTypes = new Map<string, ElementTypeDefinition>([
     ['card', CARD_ELEMENT_DEFINITION],
     ['heading', HEADING_ELEMENT_DEFINITION],
+    ['button', BUTTON_ELEMENT_DEFINITION],
     ['text', TEXT_ELEMENT_DEFINITION],
     ['textarea', TEXTAREA_ELEMENT_DEFINITION],
     ['checkbox', CHECKBOX_ELEMENT_DEFINITION],

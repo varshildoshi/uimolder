@@ -6,8 +6,33 @@ import { TextareaFieldComponent } from "../shared/element-types/textarea-field/t
 import { RadioGroupFieldComponent } from "../shared/element-types/radio-group-field/radio-group-field"
 import { DatepickerFieldComponent } from "../shared/element-types/datepicker-field/datepicker-field"
 import { HeadingFieldComponent } from "../shared/element-types/heading-field/heading-field"
+import { ButtonFieldComponent } from "../shared/element-types/button-field/button-field"
 import { ButtonsGroupComponent } from "../shared/element-types/buttons-group/buttons-group"
 import { CardContainerComponent } from "../shared/element-types/card-container/card-container"
+
+export const BUTTON_ELEMENT_DEFINITION: ElementTypeDefinition = {
+    type: 'button',
+    elementType: 'actionField',
+    label: 'Button (Single)',
+    icon: 'smart_button',
+    defaultConfig: {
+        label: 'Click Me',
+        textAlign: 'right',
+        required: false
+    },
+    elementConfig: [
+        { type: 'text', label: 'Button Text', key: 'label' },
+        {
+            type: 'select', key: 'textAlign', label: 'Alignment',
+            options: [
+                { label: 'Left', value: 'left' },
+                { label: 'Center', value: 'center' },
+                { label: 'Right', value: 'right' },
+            ]
+        }
+    ],
+    component: ButtonFieldComponent
+}
 
 export const CARD_ELEMENT_DEFINITION: ElementTypeDefinition = {
     type: 'card',
