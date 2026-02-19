@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormElement } from '../../../models/element';
@@ -12,6 +12,7 @@ import { LayoutService } from '../../../services/layout.service';
   imports: [FormsModule, MatFormFieldModule, MatInputModule],
   templateUrl: './textarea-field.html',
   styleUrl: './textarea-field.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextareaFieldComponent {
 

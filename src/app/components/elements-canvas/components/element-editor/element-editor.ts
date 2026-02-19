@@ -1,5 +1,5 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ElementFormField } from '../element-form-field/element-form-field';
 import { ElementService } from '../../../../services/element.service';
 import { ElementTypeDefinition, FormElement } from '../../../../models/element';
@@ -10,6 +10,7 @@ import { ElementTypeDefinition, FormElement } from '../../../../models/element';
   imports: [DragDropModule, ElementFormField],
   templateUrl: './element-editor.html',
   styleUrl: './element-editor.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ElementEditor {
 

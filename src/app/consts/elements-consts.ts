@@ -64,7 +64,7 @@ export const HEADING_ELEMENT_DEFINITION: ElementTypeDefinition = {
 export const BUTTONS_GROUP_ELEMENT_DEFINITION: ElementTypeDefinition = {
     type: 'buttons-group',
     elementType: 'actionField',
-    label: 'Buttons',
+    label: 'Buttons (Group)',
     icon: 'smart_button',
     defaultConfig: {
         primaryLabel: 'Submit',

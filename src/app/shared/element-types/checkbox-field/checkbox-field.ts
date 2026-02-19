@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormElement } from '../../../models/element';
 import { LayoutService } from '../../../services/layout.service';
@@ -10,6 +10,7 @@ import { ElementService } from '../../../services/element.service';
   imports: [MatCheckboxModule, FormsModule],
   templateUrl: './checkbox-field.html',
   styleUrl: './checkbox-field.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxFieldComponent {
 

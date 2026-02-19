@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
 import { ElementTypesService } from '../../../../services/element-types.service';
 import { FormElement } from '../../../../models/element';
@@ -8,6 +8,7 @@ import { FormElement } from '../../../../models/element';
   imports: [NgComponentOutlet],
   templateUrl: './field-preview.html',
   styleUrl: './field-preview.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FieldPreview {
 

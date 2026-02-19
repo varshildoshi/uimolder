@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
@@ -16,7 +16,8 @@ import { ElementEditor } from './components/element-editor/element-editor';
     'class': 'block h-full'
   },
   templateUrl: './elements-canvas.html',
-  styleUrl: './elements-canvas.scss'
+  styleUrl: './elements-canvas.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ElementsCanvas {
   public readonly viewMode = input<ViewMode>('editor');

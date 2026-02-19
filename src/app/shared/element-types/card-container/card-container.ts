@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { FormElement } from '../../../models/element';
 import { LayoutService } from '../../../services/layout.service';
@@ -11,6 +11,7 @@ import { ElementService } from '../../../services/element.service';
   imports: [CommonModule, MatCardModule],
   templateUrl: './card-container.html',
   styleUrl: './card-container.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardContainerComponent {
 

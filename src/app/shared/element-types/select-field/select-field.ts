@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from '@angular/material/select';
 import { FormElement } from '../../../models/element';
@@ -13,6 +13,7 @@ import { ElementService } from '../../../services/element.service';
   imports: [CommonModule, MatFormFieldModule, MatSelectModule, FormsModule],
   templateUrl: './select-field.html',
   styleUrl: './select-field.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectFieldComponent {
 

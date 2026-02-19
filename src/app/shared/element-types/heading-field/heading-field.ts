@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { FormElement } from '../../../models/element';
 import { LayoutService } from '../../../services/layout.service';
 import { CommonModule } from '@angular/common';
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   templateUrl: './heading-field.html',
   styleUrl: './heading-field.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeadingFieldComponent {
 
@@ -16,4 +17,7 @@ export class HeadingFieldComponent {
   layoutService = inject(LayoutService);
 
   public readonly flavor = this.layoutService.activeFlavor;
+
+  level = computed(() => this.element().level || 'h2');
+  textAlign = computed(() => this.element().textAlign || 'left');
 }

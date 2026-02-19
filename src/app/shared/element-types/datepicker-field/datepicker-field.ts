@@ -1,4 +1,4 @@
-import { Component, inject, input, effect, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, effect, computed } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatIconModule],
   templateUrl: './datepicker-field.html',
   styleUrl: './datepicker-field.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerFieldComponent {
 

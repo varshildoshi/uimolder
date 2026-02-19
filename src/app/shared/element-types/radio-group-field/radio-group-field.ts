@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormElement } from '../../../models/element';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, FormsModule, MatRadioModule],
   templateUrl: './radio-group-field.html',
   styleUrl: './radio-group-field.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RadioGroupFieldComponent {
 

@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ElementService } from '../../services/element.service';
@@ -18,7 +18,8 @@ import { DynamicOptions } from "../../shared/element-types/select-field/dynamic-
     'class': 'block h-full'
   },
   templateUrl: './elements-settings.html',
-  styleUrl: './elements-settings.scss'
+  styleUrl: './elements-settings.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ElementsSettings {
 

@@ -1,4 +1,4 @@
-import { Component, signal, inject, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
@@ -46,7 +46,8 @@ export interface Flavor {
     ElementsSettings
   ],
   templateUrl: './layout-builder.html',
-  styleUrl: './layout-builder.scss'
+  styleUrl: './layout-builder.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LayoutBuilder {
   private readonly layoutService = inject(LayoutService);
