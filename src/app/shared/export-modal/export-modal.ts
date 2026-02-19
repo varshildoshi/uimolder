@@ -10,7 +10,7 @@ import { MatRadioModule } from '@angular/material/radio';
 @Component({
   selector: 'app-export-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatCheckboxModule, MatRadioModule],
+  imports: [CommonModule, FormsModule, MatCheckboxModule, MatRadioModule],
   templateUrl: './export-modal.html',
   styleUrl: './export-modal.scss',
 })
