@@ -30,7 +30,7 @@ import { RouterLink } from '@angular/router';
 
           <div class="flex items-center gap-4">
              <button class="text-slate-400 text-sm font-medium hover:text-brand-gold transition-colors">Sign In</button>
-             <button routerLink="/builder1" class="btn-primary px-6 py-2.5 font-semibold text-xs uppercase tracking-tight transition-all shadow-lg">
+             <button routerLink="/builder1" class="btn btn-primary btn-md">
                Launch Builder
              </button>
           </div>

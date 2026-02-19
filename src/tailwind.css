@@ -150,12 +150,51 @@
 
 @layer components {
 
-    /* Creating a custom class for that specific button in the image */
-    .btn-primary {
-        @apply bg-brand-gold text-black px-8 py-3 rounded-uimolder transition-all duration-200 hover:bg-brand-gold/10 hover:scale-[1.02] hover:border hover:border-brand-gold hover:text-brand-gold active:scale-95;
+    /* .btn-primary {
+        @apply shadow-lg tracking-tight px-8 py-3 bg-brand-gold text-black rounded-uimolder transition-all duration-200 hover:bg-brand-gold/10 hover:scale-[1.02] hover:border hover:border-brand-gold hover:text-brand-gold active:scale-95;
     }
 
     .btn-outline {
-        @apply w-full sm:w-auto px-8 py-3 bg-white/5 text-brand-gold border border-white/10 rounded-uimolder hover:bg-white/10 hover:border-brand-gold transition-all duration-300
+        @apply shadow-lg tracking-tight px-8 py-3 bg-white/5 text-brand-gold border border-white/10 rounded-uimolder hover:bg-white/10 hover:border-brand-gold transition-all duration-300;
+    }
+
+    .btn-sm {
+        @apply px-4 py-1.5 text-[10px] tracking-wider;
+    }
+
+    .btn-md {
+        @apply px-6 py-2.5 text-sm tracking-tight;
+    }
+
+    .btn-lg {
+        @apply px-10 py-4 text-base tracking-widest;
+    } */
+
+    /* 1. Base Structure (Bootstrap's .btn) */
+    .btn {
+        @apply tracking-wide font-medium px-8 py-3 inline-flex items-center justify-center transition-all duration-300 cursor-pointer shadow-lg active:scale-95 disabled:opacity-50 disabled:pointer-events-none border border-white/10 rounded-uimolder;
+    }
+
+    /* 2. Color Variants */
+    .btn-primary {
+        @apply bg-brand-gold text-black border-brand-gold hover:bg-brand-gold/10 hover:text-brand-gold hover:scale-[1.02];
+    }
+
+    .btn-outline {
+        @apply bg-white/5 text-brand-gold border-white/10 hover:bg-white/10 hover:border-brand-gold;
+    }
+
+    /* 3. Bootstrap-style Size Modifiers */
+    /* Note: We remove default padding from .btn and let these handle it */
+    .btn-sm {
+        @apply px-4 py-1.5 text-[10px] tracking-wider;
+    }
+
+    .btn-md {
+        @apply px-6 py-2.5 text-sm tracking-tight;
+    }
+
+    .btn-lg {
+        @apply px-10 py-4 text-base tracking-widest;
     }
 }

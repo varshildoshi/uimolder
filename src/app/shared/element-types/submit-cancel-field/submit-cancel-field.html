@@ -4,11 +4,11 @@
     [class.justify-center]="element().textAlign === 'center'" [class.justify-end]="element().textAlign === 'right'">
     <div class="flex gap-4">
         @if (element().showCancel) {
-        <button type="button" class="btn-outline rounded-full">
+        <button type="button" class="btn btn-outline btn-md rounded-full">
             {{element().cancelLabel || 'Cancel'}}
         </button>
         }
-        <button type="submit" class="btn-primary rounded-full">
+        <button type="submit" class="btn btn-primary btn-md rounded-full">
             {{element().submitLabel || 'Submit'}}
         </button>
     </div>
