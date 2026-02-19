@@ -3,13 +3,13 @@
 <div class="flex w-full" [class.justify-start]="element().textAlign === 'left'"
     [class.justify-center]="element().textAlign === 'center'" [class.justify-end]="element().textAlign === 'right'">
     <div class="flex gap-4">
-        @if (element().showCancel) {
+        @if (element().showSecondary) {
         <button type="button" class="btn btn-outline btn-md rounded-full">
-            {{element().cancelLabel || 'Cancel'}}
+            {{element().secondaryLabel || 'Cancel'}}
         </button>
         }
         <button type="submit" class="btn btn-primary btn-md rounded-full">
-            {{element().submitLabel || 'Submit'}}
+            {{element().primaryLabel || 'Submit'}}
         </button>
     </div>
 </div>
@@ -19,13 +19,13 @@
 <div class="flex w-full" [class.justify-start]="element().textAlign === 'left'"
     [class.justify-center]="element().textAlign === 'center'" [class.justify-end]="element().textAlign === 'right'">
     <div class="flex gap-4 font-['Tomorrow']">
-        @if (element().showCancel) {
+        @if (element().showSecondary) {
         <button type="button" class="btn btn-outline btn-md rounded-full">
-            {{element().cancelLabel || 'CANCEL'}}
+            {{element().secondaryLabel || 'CANCEL'}}
         </button>
         }
         <button type="submit" class="btn btn-primary btn-md rounded-full">
-            {{element().submitLabel || 'SUBMIT'}}
+            {{element().primaryLabel || 'SUBMIT'}}
         </button>
     </div>
 </div>
@@ -35,13 +35,13 @@
 <div [style.display]="'flex'" [style.width]="'100%'"
     [style.justify-content]="element().textAlign === 'left' ? 'flex-start' : (element().textAlign === 'center' ? 'center' : 'flex-end')">
     <div style="display: flex; gap: 16px; font-family: var(--uim-font);">
-        @if (element().showCancel) {
+        @if (element().showSecondary) {
         <button type="button" class="btn btn-outline btn-md rounded-full">
-            {{element().cancelLabel || 'Cancel'}}
+            {{element().secondaryLabel || 'Cancel'}}
         </button>
         }
         <button type="submit" class="btn btn-primary btn-md rounded-full">
-            {{element().submitLabel || 'Submit'}}
+            {{element().primaryLabel || 'Submit'}}
         </button>
     </div>
 </div>

@@ -7,13 +7,13 @@ import { LayoutService } from '../../../services/layout.service';
 import { ElementService } from '../../../services/element.service';
 
 @Component({
-  selector: 'app-submit-cancel-field',
+  selector: 'app-buttons-group',
   standalone: true,
   imports: [CommonModule, FormsModule, MatButtonModule],
-  templateUrl: './submit-cancel-field.html',
-  styleUrl: './submit-cancel-field.scss',
+  templateUrl: './buttons-group.html',
+  styleUrl: './buttons-group.scss',
 })
-export class SubmitCancelFieldComponent {
+export class ButtonsGroupComponent {
   element = input.required<FormElement>();
   layoutService = inject(LayoutService);
   elementService = inject(ElementService);

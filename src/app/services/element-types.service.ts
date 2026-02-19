@@ -8,7 +8,7 @@ import {
   RADIO_ELEMENT_DEFINITION,
   DATEPICKER_ELEMENT_DEFINITION,
   HEADING_ELEMENT_DEFINITION,
-  SUBMIT_CANCEL_ELEMENT_DEFINITION,
+  BUTTONS_GROUP_ELEMENT_DEFINITION,
   CARD_ELEMENT_DEFINITION
 } from '../consts/elements-consts';
 
@@ -26,7 +26,7 @@ export class ElementTypesService {
     ['radio', RADIO_ELEMENT_DEFINITION],
     ['select', SELECT_ELEMENT_DEFINITION],
     ['datepicker', DATEPICKER_ELEMENT_DEFINITION],
-    ['submitcancel', SUBMIT_CANCEL_ELEMENT_DEFINITION],
+    ['buttonsgroup', BUTTONS_GROUP_ELEMENT_DEFINITION],
   ]);
 
   getElementType(type: string): ElementTypeDefinition | undefined {

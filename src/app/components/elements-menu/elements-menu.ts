@@ -33,7 +33,7 @@ export class ElementsMenu {
     },
     {
       name: 'Components',
-      elements: ['card', 'button', 'submitcancel']
+      elements: ['card', 'button', 'buttonsgroup']
     }
   ];
 

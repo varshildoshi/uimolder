@@ -6,8 +6,7 @@ import { TextareaFieldComponent } from "../shared/element-types/textarea-field/t
 import { RadioGroupFieldComponent } from "../shared/element-types/radio-group-field/radio-group-field"
 import { DatepickerFieldComponent } from "../shared/element-types/datepicker-field/datepicker-field"
 import { HeadingFieldComponent } from "../shared/element-types/heading-field/heading-field"
-import { ButtonFieldComponent } from "../shared/element-types/button-field/button-field"
-import { SubmitCancelFieldComponent } from "../shared/element-types/submit-cancel-field/submit-cancel-field"
+import { ButtonsGroupComponent } from "../shared/element-types/buttons-group/buttons-group"
 import { CardContainerComponent } from "../shared/element-types/card-container/card-container"
 
 export const CARD_ELEMENT_DEFINITION: ElementTypeDefinition = {
@@ -62,22 +61,22 @@ export const HEADING_ELEMENT_DEFINITION: ElementTypeDefinition = {
     component: HeadingFieldComponent
 }
 
-export const SUBMIT_CANCEL_ELEMENT_DEFINITION: ElementTypeDefinition = {
-    type: 'submitcancel',
+export const BUTTONS_GROUP_ELEMENT_DEFINITION: ElementTypeDefinition = {
+    type: 'buttonsgroup',
     elementType: 'actionField',
     label: 'Buttons',
     icon: 'smart_button',
     defaultConfig: {
-        submitLabel: 'Submit',
-        cancelLabel: 'Cancel',
-        showCancel: true,
+        primaryLabel: 'Submit',
+        secondaryLabel: 'Cancel',
+        showSecondary: true,
         textAlign: 'right',
         required: false
     },
     elementConfig: [
-        { type: 'text', label: 'Submit Text', key: 'submitLabel' },
-        { type: 'text', label: 'Cancel Text', key: 'cancelLabel' },
-        { type: 'checkbox', label: 'Show Cancel Button', key: 'showCancel' },
+        { type: 'text', label: 'Submit Button Text', key: 'primaryLabel' },
+        { type: 'text', label: 'Cancel Button Text', key: 'secondaryLabel' },
+        { type: 'checkbox', label: 'Show Cancel Button', key: 'showSecondary' },
         {
             type: 'select', key: 'textAlign', label: 'Alignment',
             options: [
@@ -87,7 +86,7 @@ export const SUBMIT_CANCEL_ELEMENT_DEFINITION: ElementTypeDefinition = {
             ]
         }
     ],
-    component: SubmitCancelFieldComponent
+    component: ButtonsGroupComponent
 }
 
 export const TEXT_ELEMENT_DEFINITION: ElementTypeDefinition = {
