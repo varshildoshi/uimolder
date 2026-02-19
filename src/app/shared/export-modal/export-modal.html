@@ -1,22 +1,50 @@
 @if (isOpen()) {
 <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
     <!-- Backdrop -->
-    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300" (click)="close.emit()"></div>
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300" (click)="close.emit()">
+    </div>
 
     <!-- Modal Content -->
-    <div class="relative w-full max-w-5xl h-[85vh] bg-[#020617] border border-white/10 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-300">
-        
+    <div
+        class="relative w-full max-w-5xl h-[85vh] bg-[#020617] border border-white/10 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-300">
+
         <!-- Header -->
         <header class="flex items-center justify-between px-8 py-6 border-b border-white/5 shrink-0 bg-white/[0.02]">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 rounded-xl bg-brand-gold/10 flex items-center justify-center border border-brand-gold/20">
-                    <mat-icon class="text-brand-gold">code</mat-icon>
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-13 h-13 rounded-xl bg-brand-gold/10 flex items-center justify-center border border-brand-gold/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-code text-brand-gold">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M7 8l-4 4l4 4" />
+                            <path d="M17 8l4 4l-4 4" />
+                            <path d="M14 4l-4 16" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-(--uim-accent-color)! tracking-tight">Export Blueprint</h2>
+                        <p class="text-[12px] text-white uppercase tracking-[0.2em] font-medium">By UiMolder</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-xl font-bold text-white tracking-tight">Export Blueprint</h2>
-                    <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-mono">
-                        Active Flavor: <span class="text-brand-gold">{{ layoutService.activeFlavor() }}</span>
-                    </p>
+
+                <!-- Vertical Divider -->
+                <div class="h-10 w-px bg-white/10"></div>
+
+                <!-- Active Flavor Beautified -->
+                <div class="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-xl border border-white/10">
+                    <div class="w-6 h-6 flex items-center justify-center rounded-md"
+                        [style.background]="flavorData().color + '22'">
+                        <svg width="16" height="16" viewBox="0 0 24 24">
+                            <path [attr.fill]="flavorData().color" [attr.d]="flavorData().icon" />
+                        </svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[8px] text-slate-500 uppercase font-bold tracking-widest">Active Flavor</span>
+                        <span class="text-[11px] text-white font-black tracking-widest uppercase">{{ flavorData().label
+                            }}</span>
+                    </div>
                 </div>
             </div>
 
@@ -38,11 +66,13 @@
                 <div class="flex flex-col gap-2">
                     <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Storage</span>
                     <mat-checkbox [(ngModel)]="useExternalCss" class="uimolder-checkbox">
-                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Extract to {{ stylesFileName }}</span>
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Extract to {{
+                            stylesFileName }}</span>
                     </mat-checkbox>
                 </div>
 
-                <button (click)="close.emit()" class="p-2 hover:bg-white/5 rounded-full text-slate-500 hover:text-white transition-colors">
+                <button (click)="close.emit()"
+                    class="p-2 hover:bg-white/5 rounded-full text-slate-500 hover:text-white transition-colors">
                     <mat-icon>close</mat-icon>
                 </button>
             </div>
@@ -50,26 +80,24 @@
 
         <!-- Tabs -->
         <div class="flex px-8 border-b border-white/5 shrink-0 bg-white/[0.01]">
-            <button (click)="activeTab.set('ts')" 
-                [class.border-brand-gold]="activeTab() === 'ts'"
+            <button (click)="activeTab.set('ts')" [class.border-brand-gold]="activeTab() === 'ts'"
                 [class.text-brand-gold]="activeTab() === 'ts'"
                 class="px-6 py-4 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent transition-all hover:text-white">
                 generated-layout.ts
             </button>
             @if (useExternalCss()) {
-                <button (click)="activeTab.set('styles')" 
-                    [class.border-brand-gold]="activeTab() === 'styles'"
-                    [class.text-brand-gold]="activeTab() === 'styles'"
-                    class="px-6 py-4 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent transition-all hover:text-white">
-                    {{ stylesFileName }}
-                </button>
+            <button (click)="activeTab.set('styles')" [class.border-brand-gold]="activeTab() === 'styles'"
+                [class.text-brand-gold]="activeTab() === 'styles'"
+                class="px-6 py-4 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent transition-all hover:text-white">
+                {{ stylesFileName }}
+            </button>
             }
         </div>
 
         <!-- Code Preview -->
         <main class="flex-1 overflow-hidden relative bg-[#010409]">
             <pre class="h-full p-8 overflow-auto text-sm font-mono text-slate-300 custom-scrollbar leading-relaxed">
-                <code class="block whitespace-pre">{{ activeTab() === 'ts' ? generatedCode().ts : generatedCode().styles }}</code>
+                <code class="block whitespace-pre-wrap break-words">{{ activeTab() === 'ts' ? generatedCode().ts : generatedCode().styles }}</code>
             </pre>
 
             <!-- Actions Overlay -->
