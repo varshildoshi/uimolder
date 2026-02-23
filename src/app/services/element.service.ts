@@ -315,7 +315,14 @@ export class ElementService {
         newRows[index] = temp;
         this._rows.set(newRows);
         this.appRef.tick();
+        return;
       }
+
+      this._rows.update(rows => rows.map(row => ({
+        ...row,
+        elements: this.moveDeepRow(row.elements, rowId, -1)
+      })));
+      this.appRef.tick();
     });
   }
 
@@ -330,7 +337,41 @@ export class ElementService {
         newRows[index] = temp;
         this._rows.set(newRows);
         this.appRef.tick();
+        return;
       }
+
+      this._rows.update(rows => rows.map(row => ({
+        ...row,
+        elements: this.moveDeepRow(row.elements, rowId, 1)
+      })));
+      this.appRef.tick();
+    });
+  }
+
+  private moveDeepRow(elements: FormElement[], rowId: string, direction: number): FormElement[] {
+    return elements.map(el => {
+      if (el.nestedRows) {
+        const idx = el.nestedRows.findIndex(r => r.id === rowId);
+        if (idx !== -1) {
+          const targetIdx = idx + direction;
+          if (targetIdx >= 0 && targetIdx < el.nestedRows.length) {
+            const updatedRows = [...el.nestedRows];
+            const temp = updatedRows[idx];
+            updatedRows[idx] = updatedRows[targetIdx];
+            updatedRows[targetIdx] = temp;
+            return { ...el, nestedRows: updatedRows };
+          }
+          return el;
+        }
+        return {
+          ...el,
+          nestedRows: el.nestedRows.map(r => ({
+            ...r,
+            elements: this.moveDeepRow(r.elements, rowId, direction)
+          }))
+        };
+      }
+      return el;
     });
   }
 
