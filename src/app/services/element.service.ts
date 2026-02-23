@@ -15,18 +15,27 @@ export class ElementService {
   private appRef = inject(ApplicationRef);
 
   public readonly allContainerIds = computed(() => {
-    const ids: string[] = this._rows().map(r => r.id);
-    this._rows().forEach(row => {
-      this.getDeepContainerIds(row.elements, ids);
+    const rows = this._rows() || [];
+    const ids: string[] = rows.filter(r => !!r).map(r => r.id);
+    rows.forEach(row => {
+      if (row && row.elements) {
+        this.getDeepContainerIds(row.elements, ids);
+      }
     });
     return ids;
   });
 
-  private getDeepContainerIds(elements: FormElement[], ids: string[]) {
+  private getDeepContainerIds(elements: FormElement[] | undefined, ids: string[]) {
+    if (!elements) return;
     elements.forEach(el => {
+      if (!el) return;
       if (el.nestedRows) {
-        el.nestedRows.forEach(r => ids.push(r.id));
-        el.nestedRows.forEach(r => this.getDeepContainerIds(r.elements, ids));
+        el.nestedRows.forEach(r => {
+          if (r) {
+            ids.push(r.id);
+            this.getDeepContainerIds(r.elements, ids);
+          }
+        });
       }
       if (el.children) {
         this.getDeepContainerIds(el.children, ids);
@@ -35,13 +44,15 @@ export class ElementService {
   }
 
   public readonly selectedElement = computed(() => {
-    const rows = this._rows();
+    const rows = this._rows() || [];
     const id = this._selectedElementId();
     if (!id) return null;
 
     for (const row of rows) {
-      const found = this.findDeep(row.elements, id);
-      if (found) return found;
+      if (row && row.elements) {
+        const found = this.findDeep(row.elements, id);
+        if (found) return found;
+      }
     }
     return null;
   });
@@ -55,13 +66,17 @@ export class ElementService {
     ]);
   }
 
-  private findDeep(elements: FormElement[], id: string): FormElement | undefined {
+  private findDeep(elements: FormElement[] | undefined, id: string): FormElement | undefined {
+    if (!elements) return undefined;
     for (const el of elements) {
+      if (!el) continue;
       if (el.id === id) return el;
       if (el.nestedRows) {
         for (const row of el.nestedRows) {
-          const found = this.findDeep(row.elements, id);
-          if (found) return found;
+          if (row && row.elements) {
+            const found = this.findDeep(row.elements, id);
+            if (found) return found;
+          }
         }
       }
       if (el.children) {
@@ -84,195 +99,390 @@ export class ElementService {
   }
 
   addRowToElement(elementId: string) {
-    startViewTransition(() => {
-      this._rows.update(rows => rows.map(row => ({
-        ...row,
-        elements: this.updateDeepAddRow(row.elements, elementId)
-      })));
-      this.appRef.tick();
+    let changed = false;
+    const rows = this._rows() || [];
+    const newRows = rows.map(row => {
+      if (!row || !row.elements) return row;
+      const updatedElements = this.updateDeepAddRow(row.elements, elementId);
+      if (updatedElements !== row.elements) {
+        changed = true;
+        return { ...row, elements: updatedElements };
+      }
+      return row;
     });
+
+    if (changed) {
+      startViewTransition(() => {
+        this._rows.set(newRows);
+        this.appRef.tick();
+      });
+    }
   }
 
-  private updateDeepAddRow(elements: FormElement[], targetId: string): FormElement[] {
-    return elements.map(el => {
+  private updateDeepAddRow(elements: FormElement[] | undefined, targetId: string): FormElement[] {
+    if (!elements) return [];
+    let anyChanged = false;
+    const newElements = elements.map(el => {
+      if (!el) return el;
       if (el.id === targetId) {
         const newRow: ElementRow = { id: crypto.randomUUID(), elements: [] };
         const updatedRows = el.nestedRows ? [...el.nestedRows, newRow] : [newRow];
+        anyChanged = true;
         return { ...el, nestedRows: updatedRows };
       }
       if (el.nestedRows) {
-        return { ...el, nestedRows: el.nestedRows.map(r => ({ ...r, elements: this.updateDeepAddRow(r.elements, targetId) })) };
+        let nestedChanged = false;
+        const newNestedRows = el.nestedRows.map(r => {
+          if (!r || !r.elements) return r;
+          const updatedElements = this.updateDeepAddRow(r.elements, targetId);
+          if (updatedElements !== r.elements) {
+            nestedChanged = true;
+            return { ...r, elements: updatedElements };
+          }
+          return r;
+        });
+        if (nestedChanged) {
+          anyChanged = true;
+          return { ...el, nestedRows: newNestedRows };
+        }
       }
       return el;
     });
+    return anyChanged ? newElements : elements;
   }
 
   deleteRow(rowId: string) {
-    startViewTransition(() => {
-      if (this._rows().some(r => r.id === rowId)) {
-        if (this._rows().length === 1) return;
-        this._rows.set(this._rows().filter(row => row.id !== rowId));
+    const rows = this._rows() || [];
+    if (rows.some(r => r && r.id === rowId)) {
+      if (rows.length === 1) return;
+      startViewTransition(() => {
+        this._rows.set(rows.filter(row => row && row.id !== rowId));
         this.appRef.tick();
-        return;
-      }
+      });
+      return;
+    }
 
-      this._rows.update(rows => rows.map(row => ({
-        ...row,
-        elements: this.deleteDeepRow(row.elements, rowId)
-      })));
-      this.appRef.tick();
+    let changed = false;
+    const newRows = rows.map(row => {
+      if (!row || !row.elements) return row;
+      const updatedElements = this.deleteDeepRow(row.elements, rowId);
+      if (updatedElements !== row.elements) {
+        changed = true;
+        return { ...row, elements: updatedElements };
+      }
+      return row;
     });
+
+    if (changed) {
+      startViewTransition(() => {
+        this._rows.set(newRows);
+        this.appRef.tick();
+      });
+    }
   }
 
-  private deleteDeepRow(elements: FormElement[], rowId: string): FormElement[] {
-    return elements.map(el => {
+  private deleteDeepRow(elements: FormElement[] | undefined, rowId: string): FormElement[] {
+    if (!elements) return [];
+    let anyChanged = false;
+    const newElements = elements.map(el => {
+      if (!el) return el;
       if (el.nestedRows) {
-        if (el.nestedRows.some(r => r.id === rowId)) {
+        if (el.nestedRows.some(r => r && r.id === rowId)) {
           if (el.nestedRows.length > 1) {
-            return { ...el, nestedRows: el.nestedRows.filter(r => r.id !== rowId) };
+            anyChanged = true;
+            return { ...el, nestedRows: el.nestedRows.filter(r => r && r.id !== rowId) };
           }
           return el;
         }
-        return { ...el, nestedRows: el.nestedRows.map(r => ({ ...r, elements: this.deleteDeepRow(r.elements, rowId) })) };
+        let nestedChanged = false;
+        const newNestedRows = el.nestedRows.map(r => {
+          if (!r || !r.elements) return r;
+          const updatedElements = this.deleteDeepRow(r.elements, rowId);
+          if (updatedElements !== r.elements) {
+            nestedChanged = true;
+            return { ...r, elements: updatedElements };
+          }
+          return r;
+        });
+        if (nestedChanged) {
+          anyChanged = true;
+          return { ...el, nestedRows: newNestedRows };
+        }
       }
       return el;
     });
+    return anyChanged ? newElements : elements;
   }
 
   addElementToRow(element: FormElement, rowId: string, index?: number) {
-    startViewTransition(() => {
-      this._rows.update(rows => rows.map(row => {
-        if (row.id === rowId) {
-          const updatedElements = [...row.elements];
-          if (index !== undefined) {
-            updatedElements.splice(index, 0, element);
-          } else {
-            updatedElements.push(element);
-          }
-          return { ...row, elements: updatedElements };
+    let changed = false;
+    const rows = this._rows() || [];
+    const newRows = rows.map(row => {
+      if (!row) return row;
+      if (row.id === rowId) {
+        const updatedElements = row.elements ? [...row.elements] : [];
+        if (index !== undefined) {
+          updatedElements.splice(index, 0, element);
+        } else {
+          updatedElements.push(element);
         }
-        return { ...row, elements: this.updateDeepAddElementToRow(row.elements, rowId, element, index) };
-      }));
-      this.appRef.tick();
+        changed = true;
+        return { ...row, elements: updatedElements };
+      }
+      if (!row.elements) return row;
+      const updatedElements = this.updateDeepAddElementToRow(row.elements, rowId, element, index);
+      if (updatedElements !== row.elements) {
+        changed = true;
+        return { ...row, elements: updatedElements };
+      }
+      return row;
     });
+
+    if (changed) {
+      startViewTransition(() => {
+        this._rows.set(newRows);
+        this.appRef.tick();
+      });
+    }
   }
 
-  private updateDeepAddElementToRow(elements: FormElement[], rowId: string, newEl: FormElement, index?: number): FormElement[] {
-    return elements.map(el => {
-      if (el.nestedRows) {
-        const updatedRows = el.nestedRows.map(r => {
-          if (r.id === rowId) {
-            const updatedEls = [...r.elements];
-            if (index !== undefined) updatedEls.splice(index, 0, newEl);
-            else updatedEls.push(newEl);
-            return { ...r, elements: updatedEls };
-          }
-          return { ...r, elements: this.updateDeepAddElementToRow(r.elements, rowId, newEl, index) };
-        });
-        return { ...el, nestedRows: updatedRows };
+  private updateDeepAddElementToRow(elements: FormElement[] | undefined, rowId: string, newEl: FormElement, index?: number): FormElement[] {
+    if (!elements) return [];
+    let anyChanged = false;
+    const newElements = elements.map(el => {
+      if (!el || !el.nestedRows) return el;
+      let nestedChanged = false;
+      const newNestedRows = el.nestedRows.map(r => {
+        if (!r) return r;
+        if (r.id === rowId) {
+          const updatedEls = r.elements ? [...r.elements] : [];
+          if (index !== undefined) updatedEls.splice(index, 0, newEl);
+          else updatedEls.push(newEl);
+          nestedChanged = true;
+          return { ...r, elements: updatedEls };
+        }
+        if (!r.elements) return r;
+        const updatedElements = this.updateDeepAddElementToRow(r.elements, rowId, newEl, index);
+        if (updatedElements !== r.elements) {
+          nestedChanged = true;
+          return { ...r, elements: updatedElements };
+        }
+        return r;
+      });
+      if (nestedChanged) {
+        anyChanged = true;
+        return { ...el, nestedRows: newNestedRows };
       }
       return el;
     });
+    return anyChanged ? newElements : elements;
   }
 
   deleteElementFromRow(elementId: string) {
-    startViewTransition(() => {
-      this._rows.update(rows => rows.map(row => ({
-        ...row,
-        elements: this.deleteDeep(row.elements, elementId)
-      })));
-      this.appRef.tick();
-    });
-  }
-
-  private deleteDeep(elements: FormElement[], id: string): FormElement[] {
-    return elements
-      .filter(el => el.id !== id)
-      .map(el => {
-        if (el.nestedRows) {
-          return { ...el, nestedRows: el.nestedRows.map(r => ({ ...r, elements: this.deleteDeep(r.elements, id) })) };
-        }
-        if (el.children) {
-          return { ...el, children: this.deleteDeep(el.children, id) };
-        }
-        return el;
-      });
-  }
-
-  moveElement(elementId: string, sourceContainerId: string, targetContainerId: string, targetIndex: number = -1) {
-    startViewTransition(() => {
-      let elementToMove: FormElement | undefined;
-
-      this._rows.update(rows => {
-        const newRows = rows.map(row => {
-          if (row.id === sourceContainerId) {
-            const idx = row.elements.findIndex(e => e.id === elementId);
-            if (idx !== -1) {
-              elementToMove = row.elements[idx];
-              const updated = [...row.elements];
-              updated.splice(idx, 1);
-              return { ...row, elements: updated };
-            }
-          }
-          return { ...row, elements: this.removeDeep(row.elements, elementId, (found) => elementToMove = found) };
-        });
-        return newRows;
-      });
-
-      if (!elementToMove) return;
-
-      this._rows.update(rows => {
-        return rows.map(row => {
-          if (row.id === targetContainerId) {
-            const updated = [...row.elements];
-            if (targetIndex === -1) updated.push(elementToMove!);
-            else updated.splice(targetIndex, 0, elementToMove!);
-            return { ...row, elements: updated };
-          }
-          return { ...row, elements: this.insertDeep(row.elements, targetContainerId, elementToMove!, targetIndex) };
-        });
-      });
-      this.appRef.tick();
-    });
-  }
-
-  private removeDeep(elements: FormElement[], id: string, onFound: (el: FormElement) => void): FormElement[] {
-    return elements.reduce((acc, el) => {
-      if (el.id === id) {
-        onFound(el);
-        return acc;
+    let changed = false;
+    const rows = this._rows() || [];
+    const newRows = rows.map(row => {
+      if (!row || !row.elements) return row;
+      const updatedElements = this.deleteDeep(row.elements, elementId);
+      if (updatedElements !== row.elements) {
+        changed = true;
+        return { ...row, elements: updatedElements };
       }
-      if (el.nestedRows) {
-        const updatedRows = el.nestedRows.map(r => ({ ...r, elements: this.removeDeep(r.elements, id, onFound) }));
-        acc.push({ ...el, nestedRows: updatedRows });
-      } else if (el.children) {
-        acc.push({ ...el, children: this.removeDeep(el.children, id, onFound) });
-      } else {
-        acc.push(el);
-      }
-      return acc;
-    }, [] as FormElement[]);
+      return row;
+    });
+
+    if (changed) {
+      startViewTransition(() => {
+        this._rows.set(newRows);
+        this.appRef.tick();
+      });
+    }
   }
 
-  private insertDeep(elements: FormElement[], targetId: string, newEl: FormElement, index: number): FormElement[] {
-    return elements.map(el => {
+  private deleteDeep(elements: FormElement[] | undefined, id: string): FormElement[] {
+    if (!elements) return [];
+    let anyChanged = false;
+
+    // First, check if any element at this level should be filtered out
+    const filteredElements = elements.filter(el => el && el.id !== id);
+    if (filteredElements.length !== elements.length) {
+      anyChanged = true;
+    }
+
+    const newElements = filteredElements.map(el => {
+      if (!el) return el;
+      let elChanged = false;
+      let newNestedRows = el.nestedRows;
+      let newChildren = el.children;
+
       if (el.nestedRows) {
-        const updatedRows = el.nestedRows.map(r => {
-          if (r.id === targetId) {
-            const updated = [...r.elements];
-            if (index === -1) updated.push(newEl);
-            else updated.splice(index, 0, newEl);
-            return { ...r, elements: updated };
+        newNestedRows = el.nestedRows.map(r => {
+          if (!r || !r.elements) return r;
+          const updatedElements = this.deleteDeep(r.elements, id);
+          if (updatedElements !== r.elements) {
+            elChanged = true;
+            return { ...r, elements: updatedElements };
           }
-          return { ...r, elements: this.insertDeep(r.elements, targetId, newEl, index) };
+          return r;
         });
-        return { ...el, nestedRows: updatedRows };
+      }
+
+      if (el.children) {
+        newChildren = this.deleteDeep(el.children, id);
+        if (newChildren !== el.children) {
+          elChanged = true;
+        }
+      }
+
+      if (elChanged) {
+        anyChanged = true;
+        return { ...el, nestedRows: newNestedRows, children: newChildren };
       }
       return el;
     });
+
+    return anyChanged ? newElements : elements;
+  }
+
+  moveElement(elementId: string, sourceContainerId: string, targetContainerId: string, targetIndex: number = -1) {
+    let elementToMove: FormElement | undefined;
+    const rows = this._rows() || [];
+
+    // First: remove from source
+    let sourceChanged = false;
+    const rowsAfterRemoval = rows.map(row => {
+      if (!row || !row.elements) return row;
+      if (row.id === sourceContainerId) {
+        const idx = row.elements.findIndex(e => e && e.id === elementId);
+        if (idx !== -1) {
+          elementToMove = row.elements[idx];
+          const updated = [...row.elements];
+          updated.splice(idx, 1);
+          sourceChanged = true;
+          return { ...row, elements: updated };
+        }
+      }
+      const updatedElements = this.removeDeep(row.elements, elementId, (found) => elementToMove = found);
+      if (updatedElements !== row.elements) {
+        sourceChanged = true;
+        return { ...row, elements: updatedElements };
+      }
+      return row;
+    });
+
+    if (!sourceChanged || !elementToMove) return;
+
+    // Second: insert into target
+    let targetChanged = false;
+    const finalRows = rowsAfterRemoval.map(row => {
+      if (!row) return row;
+      if (row.id === targetContainerId) {
+        const updated = row.elements ? [...row.elements] : [];
+        if (targetIndex === -1) updated.push(elementToMove!);
+        else updated.splice(targetIndex, 0, elementToMove!);
+        targetChanged = true;
+        return { ...row, elements: updated };
+      }
+      if (!row.elements) return row;
+      const updatedElements = this.insertDeep(row.elements, targetContainerId, elementToMove!, targetIndex);
+      if (updatedElements !== row.elements) {
+        targetChanged = true;
+        return { ...row, elements: updatedElements };
+      }
+      return row;
+    });
+
+    if (targetChanged) {
+      startViewTransition(() => {
+        this._rows.set(finalRows);
+        this.appRef.tick();
+      });
+    }
+  }
+
+  private removeDeep(elements: FormElement[] | undefined, id: string, onFound: (el: FormElement) => void): FormElement[] {
+    if (!elements) return [];
+    let anyChanged = false;
+
+    // Check if element is at this level
+    const idx = elements.findIndex(el => el && el.id === id);
+    if (idx !== -1) {
+      onFound(elements[idx]);
+      anyChanged = true;
+      return elements.filter((_, i) => i !== idx);
+    }
+
+    const newElements = elements.map(el => {
+      if (!el) return el;
+      let elChanged = false;
+      let newNestedRows = el.nestedRows;
+      let newChildren = el.children;
+
+      if (el.nestedRows) {
+        newNestedRows = el.nestedRows.map(r => {
+          if (!r || !r.elements) return r;
+          const updatedElements = this.removeDeep(r.elements, id, onFound);
+          if (updatedElements !== r.elements) {
+            elChanged = true;
+            return { ...r, elements: updatedElements };
+          }
+          return r;
+        });
+      }
+
+      if (el.children) {
+        newChildren = this.removeDeep(el.children, id, onFound);
+        if (newChildren !== el.children) {
+          elChanged = true;
+        }
+      }
+
+      if (elChanged) {
+        anyChanged = true;
+        return { ...el, nestedRows: newNestedRows, children: newChildren };
+      }
+      return el;
+    });
+
+    return anyChanged ? newElements : elements;
+  }
+
+  private insertDeep(elements: FormElement[] | undefined, targetId: string, newEl: FormElement, index: number): FormElement[] {
+    if (!elements) return [];
+    let anyChanged = false;
+
+    const newElements = elements.map(el => {
+      if (!el || !el.nestedRows) return el;
+      let nestedChanged = false;
+      const newNestedRows = el.nestedRows.map(r => {
+        if (!r) return r;
+        if (r.id === targetId) {
+          const updated = r.elements ? [...r.elements] : [];
+          if (index === -1) updated.push(newEl);
+          else updated.splice(index, 0, newEl);
+          nestedChanged = true;
+          return { ...r, elements: updated };
+        }
+        if (!r.elements) return r;
+        const updatedElements = this.insertDeep(r.elements, targetId, newEl, index);
+        if (updatedElements !== r.elements) {
+          nestedChanged = true;
+          return { ...r, elements: updatedElements };
+        }
+        return r;
+      });
+      if (nestedChanged) {
+        anyChanged = true;
+        return { ...el, nestedRows: newNestedRows };
+      }
+      return el;
+    });
+
+    return anyChanged ? newElements : elements;
   }
 
   setSelectedElement(elementId: string | null) {
+    if (this._selectedElementId() === elementId) return;
     startViewTransition(() => {
       this._selectedElementId.set(elementId);
       this.appRef.tick();
@@ -280,99 +490,184 @@ export class ElementService {
   }
 
   updateElement(elementId: string, data: Partial<FormElement>) {
-    startViewTransition(() => {
-      this._rows.update(rows => rows.map(row => ({
-        ...row,
-        elements: this.updateDeepProps(row.elements, elementId, data)
-      })));
-      this.appRef.tick();
+    let changed = false;
+    const rows = this._rows() || [];
+    const newRows = rows.map(row => {
+      if (!row || !row.elements) return row;
+      const updatedElements = this.updateDeepProps(row.elements, elementId, data);
+      if (updatedElements !== row.elements) {
+        changed = true;
+        return { ...row, elements: updatedElements };
+      }
+      return row;
     });
+
+    if (changed) {
+      startViewTransition(() => {
+        this._rows.set(newRows);
+        this.appRef.tick();
+      });
+    }
   }
 
-  private updateDeepProps(elements: FormElement[], id: string, data: Partial<FormElement>): FormElement[] {
-    return elements.map(el => {
+  private updateDeepProps(elements: FormElement[] | undefined, id: string, data: Partial<FormElement>): FormElement[] {
+    if (!elements) return [];
+    let anyChanged = false;
+    const newElements = elements.map(el => {
+      if (!el) return el;
       if (el.id === id) {
+        anyChanged = true;
         return { ...el, ...data };
       }
+
+      let elChanged = false;
+      let newNestedRows = el.nestedRows;
+      let newChildren = el.children;
+
       if (el.nestedRows) {
-        return { ...el, nestedRows: el.nestedRows.map(r => ({ ...r, elements: this.updateDeepProps(r.elements, id, data) })) };
+        newNestedRows = el.nestedRows.map(r => {
+          if (!r || !r.elements) return r;
+          const updatedElements = this.updateDeepProps(r.elements, id, data);
+          if (updatedElements !== r.elements) {
+            elChanged = true;
+            return { ...r, elements: updatedElements };
+          }
+          return r;
+        });
       }
+
       if (el.children) {
-        return { ...el, children: this.updateDeepProps(el.children, id, data) };
+        newChildren = this.updateDeepProps(el.children, id, data);
+        if (newChildren !== el.children) {
+          elChanged = true;
+        }
+      }
+
+      if (elChanged) {
+        anyChanged = true;
+        return { ...el, nestedRows: newNestedRows, children: newChildren };
       }
       return el;
     });
+
+    return anyChanged ? newElements : elements;
   }
 
   moveRowUp(rowId: string) {
-    startViewTransition(() => {
-      const rows = this._rows();
-      const index = rows.findIndex(r => r.id === rowId);
-      if (index > 0) {
+    const rows = this._rows() || [];
+    const index = rows.findIndex(r => r && r.id === rowId);
+
+    if (index > 0) {
+      startViewTransition(() => {
         const newRows = [...rows];
-        const temp = newRows[index - 1];
-        newRows[index - 1] = newRows[index];
-        newRows[index] = temp;
+        [newRows[index - 1], newRows[index]] = [newRows[index], newRows[index - 1]];
         this._rows.set(newRows);
         this.appRef.tick();
-        return;
-      }
+      });
+      return;
+    }
 
-      this._rows.update(rows => rows.map(row => ({
-        ...row,
-        elements: this.moveDeepRow(row.elements, rowId, -1)
-      })));
-      this.appRef.tick();
+    let changed = false;
+    const newRows = rows.map(row => {
+      if (!row || !row.elements) return row;
+      const updatedElements = this.moveDeepRow(row.elements, rowId, -1);
+      if (updatedElements !== row.elements) {
+        changed = true;
+        return { ...row, elements: updatedElements };
+      }
+      return row;
     });
+
+    if (changed) {
+      startViewTransition(() => {
+        this._rows.set(newRows);
+        this.appRef.tick();
+      });
+    }
   }
 
   moveRowDown(rowId: string) {
-    startViewTransition(() => {
-      const rows = this._rows();
-      const index = rows.findIndex(r => r.id === rowId);
-      if (index < rows.length - 1) {
+    const rows = this._rows() || [];
+    const index = rows.findIndex(r => r && r.id === rowId);
+
+    if (index !== -1 && index < rows.length - 1) {
+      startViewTransition(() => {
         const newRows = [...rows];
-        const temp = newRows[index + 1];
-        newRows[index + 1] = newRows[index];
-        newRows[index] = temp;
+        [newRows[index], newRows[index + 1]] = [newRows[index + 1], newRows[index]];
         this._rows.set(newRows);
         this.appRef.tick();
-        return;
-      }
+      });
+      return;
+    }
 
-      this._rows.update(rows => rows.map(row => ({
-        ...row,
-        elements: this.moveDeepRow(row.elements, rowId, 1)
-      })));
-      this.appRef.tick();
+    let changed = false;
+    const newRows = rows.map(row => {
+      if (!row || !row.elements) return row;
+      const updatedElements = this.moveDeepRow(row.elements, rowId, 1);
+      if (updatedElements !== row.elements) {
+        changed = true;
+        return { ...row, elements: updatedElements };
+      }
+      return row;
     });
+
+    if (changed) {
+      startViewTransition(() => {
+        this._rows.set(newRows);
+        this.appRef.tick();
+      });
+    }
   }
 
-  private moveDeepRow(elements: FormElement[], rowId: string, direction: number): FormElement[] {
-    return elements.map(el => {
+  private moveDeepRow(elements: FormElement[] | undefined, rowId: string, direction: number): FormElement[] {
+    if (!elements) return [];
+
+    let anyElementChanged = false;
+    const newElements = elements.map(el => {
+      if (!el) return el;
+
       if (el.nestedRows) {
-        const idx = el.nestedRows.findIndex(r => r.id === rowId);
+        const idx = el.nestedRows.findIndex(r => r && r.id === rowId);
         if (idx !== -1) {
           const targetIdx = idx + direction;
           if (targetIdx >= 0 && targetIdx < el.nestedRows.length) {
             const updatedRows = [...el.nestedRows];
-            const temp = updatedRows[idx];
-            updatedRows[idx] = updatedRows[targetIdx];
-            updatedRows[targetIdx] = temp;
+            [updatedRows[idx], updatedRows[targetIdx]] = [updatedRows[targetIdx], updatedRows[idx]];
+            anyElementChanged = true;
             return { ...el, nestedRows: updatedRows };
           }
           return el;
         }
-        return {
-          ...el,
-          nestedRows: el.nestedRows.map(r => ({
-            ...r,
-            elements: this.moveDeepRow(r.elements, rowId, direction)
-          }))
-        };
+
+        let nestedRowsChanged = false;
+        const newNestedRows = el.nestedRows.map(row => {
+          if (!row || !row.elements) return row;
+          const updatedElements = this.moveDeepRow(row.elements, rowId, direction);
+          if (updatedElements !== row.elements) {
+            nestedRowsChanged = true;
+            return { ...row, elements: updatedElements };
+          }
+          return row;
+        });
+
+        if (nestedRowsChanged) {
+          anyElementChanged = true;
+          return { ...el, nestedRows: newNestedRows };
+        }
       }
+
+      if (el.children) {
+        const updatedChildren = this.moveDeepRow(el.children, rowId, direction);
+        if (updatedChildren !== el.children) {
+          anyElementChanged = true;
+          return { ...el, children: updatedChildren };
+        }
+      }
+
       return el;
     });
+
+    return anyElementChanged ? newElements : elements;
   }
 
 }
