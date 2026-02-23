@@ -1,7 +1,8 @@
 <div class="h-screen flex flex-col bg-[#020617] text-slate-300 font-['Tomorrow']" cdkDropListGroup
   [ngStyle]="{ 'padding-top': headerHeight() + 'px' }">
 
-  <header class="h-16 border-b border-white/5 bg-black/40 flex items-center justify-between px-8 shrink-0 relative">
+  <header
+    class="h-16 border-b border-white/5 bg-canvas/60 backdrop-blur-xl flex items-center justify-between px-8 shrink-0 relative [view-transition-name:top-header] z-100">
     <!-- Left Placeholder for centering -->
     <div class="w-48 hidden md:block"></div>
 
@@ -44,14 +45,12 @@
     <app-elements-menu class="shrink-0" />
 
     <!-- Modular Canvas area -->
-    <app-elements-canvas class="flex-1 overflow-hidden" (addRow)="addNewRow()"
-      (removeRowAction)="removeRow($event)" (removeItemAction)="removeItem($event)"
-      (selectElement)="selectedElementId.set($event)" />
+    <app-elements-canvas class="flex-1 overflow-hidden" (addRow)="addNewRow()" (removeRowAction)="removeRow($event)"
+      (removeItemAction)="removeItem($event)" (selectElement)="selectedElementId.set($event)" />
 
-        <!-- Modular Right Sidebar / Settings -->
-        <app-elements-settings class="shrink-0" />
-      </div>
-    
-      <app-export-modal [isOpen]="isExportOpen()" (close)="isExportOpen.set(false)" />
-    </div>
-    
+    <!-- Modular Right Sidebar / Settings -->
+    <app-elements-settings class="shrink-0" />
+  </div>
+
+  <app-export-modal [isOpen]="isExportOpen()" (close)="isExportOpen.set(false)" />
+</div>
