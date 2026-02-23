@@ -1,6 +1,7 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { ApplicationRef, computed, inject, Injectable, signal } from '@angular/core';
 import { ElementRow } from '../models/element-row';
 import { FormElement } from '../models/element';
+import { startViewTransition } from '../utils/view-transition';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,8 @@ export class ElementService {
   private _rows = signal<ElementRow[]>([]);
   private _selectedElementId = signal<string | null>(null);
   public readonly rows = this._rows.asReadonly();
+
+  private appRef = inject(ApplicationRef);
 
   public readonly allContainerIds = computed(() => {
     const ids: string[] = this._rows().map(r => r.id);
@@ -70,18 +73,24 @@ export class ElementService {
   }
 
   addRow() {
-    const newRow: ElementRow = {
-      id: crypto.randomUUID(),
-      elements: []
-    };
-    this._rows.set([...this._rows(), newRow]);
+    startViewTransition(() => {
+      const newRow: ElementRow = {
+        id: crypto.randomUUID(),
+        elements: []
+      };
+      this._rows.set([...this._rows(), newRow]);
+      this.appRef.tick();
+    });
   }
 
   addRowToElement(elementId: string) {
-    this._rows.update(rows => rows.map(row => ({
-      ...row,
-      elements: this.updateDeepAddRow(row.elements, elementId)
-    })));
+    startViewTransition(() => {
+      this._rows.update(rows => rows.map(row => ({
+        ...row,
+        elements: this.updateDeepAddRow(row.elements, elementId)
+      })));
+      this.appRef.tick();
+    });
   }
 
   private updateDeepAddRow(elements: FormElement[], targetId: string): FormElement[] {
@@ -99,16 +108,20 @@ export class ElementService {
   }
 
   deleteRow(rowId: string) {
-    if (this._rows().some(r => r.id === rowId)) {
-      if (this._rows().length === 1) return;
-      this._rows.set(this._rows().filter(row => row.id !== rowId));
-      return;
-    }
+    startViewTransition(() => {
+      if (this._rows().some(r => r.id === rowId)) {
+        if (this._rows().length === 1) return;
+        this._rows.set(this._rows().filter(row => row.id !== rowId));
+        this.appRef.tick();
+        return;
+      }
 
-    this._rows.update(rows => rows.map(row => ({
-      ...row,
-      elements: this.deleteDeepRow(row.elements, rowId)
-    })));
+      this._rows.update(rows => rows.map(row => ({
+        ...row,
+        elements: this.deleteDeepRow(row.elements, rowId)
+      })));
+      this.appRef.tick();
+    });
   }
 
   private deleteDeepRow(elements: FormElement[], rowId: string): FormElement[] {
@@ -127,18 +140,21 @@ export class ElementService {
   }
 
   addElementToRow(element: FormElement, rowId: string, index?: number) {
-    this._rows.update(rows => rows.map(row => {
-      if (row.id === rowId) {
-        const updatedElements = [...row.elements];
-        if (index !== undefined) {
-          updatedElements.splice(index, 0, element);
-        } else {
-          updatedElements.push(element);
+    startViewTransition(() => {
+      this._rows.update(rows => rows.map(row => {
+        if (row.id === rowId) {
+          const updatedElements = [...row.elements];
+          if (index !== undefined) {
+            updatedElements.splice(index, 0, element);
+          } else {
+            updatedElements.push(element);
+          }
+          return { ...row, elements: updatedElements };
         }
-        return { ...row, elements: updatedElements };
-      }
-      return { ...row, elements: this.updateDeepAddElementToRow(row.elements, rowId, element, index) };
-    }));
+        return { ...row, elements: this.updateDeepAddElementToRow(row.elements, rowId, element, index) };
+      }));
+      this.appRef.tick();
+    });
   }
 
   private updateDeepAddElementToRow(elements: FormElement[], rowId: string, newEl: FormElement, index?: number): FormElement[] {
@@ -160,10 +176,13 @@ export class ElementService {
   }
 
   deleteElementFromRow(elementId: string) {
-    this._rows.update(rows => rows.map(row => ({
-      ...row,
-      elements: this.deleteDeep(row.elements, elementId)
-    })));
+    startViewTransition(() => {
+      this._rows.update(rows => rows.map(row => ({
+        ...row,
+        elements: this.deleteDeep(row.elements, elementId)
+      })));
+      this.appRef.tick();
+    });
   }
 
   private deleteDeep(elements: FormElement[], id: string): FormElement[] {
@@ -181,36 +200,39 @@ export class ElementService {
   }
 
   moveElement(elementId: string, sourceContainerId: string, targetContainerId: string, targetIndex: number = -1) {
-    let elementToMove: FormElement | undefined;
+    startViewTransition(() => {
+      let elementToMove: FormElement | undefined;
 
-    this._rows.update(rows => {
-      const newRows = rows.map(row => {
-        if (row.id === sourceContainerId) {
-          const idx = row.elements.findIndex(e => e.id === elementId);
-          if (idx !== -1) {
-            elementToMove = row.elements[idx];
+      this._rows.update(rows => {
+        const newRows = rows.map(row => {
+          if (row.id === sourceContainerId) {
+            const idx = row.elements.findIndex(e => e.id === elementId);
+            if (idx !== -1) {
+              elementToMove = row.elements[idx];
+              const updated = [...row.elements];
+              updated.splice(idx, 1);
+              return { ...row, elements: updated };
+            }
+          }
+          return { ...row, elements: this.removeDeep(row.elements, elementId, (found) => elementToMove = found) };
+        });
+        return newRows;
+      });
+
+      if (!elementToMove) return;
+
+      this._rows.update(rows => {
+        return rows.map(row => {
+          if (row.id === targetContainerId) {
             const updated = [...row.elements];
-            updated.splice(idx, 1);
+            if (targetIndex === -1) updated.push(elementToMove!);
+            else updated.splice(targetIndex, 0, elementToMove!);
             return { ...row, elements: updated };
           }
-        }
-        return { ...row, elements: this.removeDeep(row.elements, elementId, (found) => elementToMove = found) };
+          return { ...row, elements: this.insertDeep(row.elements, targetContainerId, elementToMove!, targetIndex) };
+        });
       });
-      return newRows;
-    });
-
-    if (!elementToMove) return;
-
-    this._rows.update(rows => {
-      return rows.map(row => {
-        if (row.id === targetContainerId) {
-          const updated = [...row.elements];
-          if (targetIndex === -1) updated.push(elementToMove!);
-          else updated.splice(targetIndex, 0, elementToMove!);
-          return { ...row, elements: updated };
-        }
-        return { ...row, elements: this.insertDeep(row.elements, targetContainerId, elementToMove!, targetIndex) };
-      });
+      this.appRef.tick();
     });
   }
 
@@ -251,14 +273,20 @@ export class ElementService {
   }
 
   setSelectedElement(elementId: string | null) {
-    this._selectedElementId.set(elementId);
+    startViewTransition(() => {
+      this._selectedElementId.set(elementId);
+      this.appRef.tick();
+    });
   }
 
   updateElement(elementId: string, data: Partial<FormElement>) {
-    this._rows.update(rows => rows.map(row => ({
-      ...row,
-      elements: this.updateDeepProps(row.elements, elementId, data)
-    })));
+    startViewTransition(() => {
+      this._rows.update(rows => rows.map(row => ({
+        ...row,
+        elements: this.updateDeepProps(row.elements, elementId, data)
+      })));
+      this.appRef.tick();
+    });
   }
 
   private updateDeepProps(elements: FormElement[], id: string, data: Partial<FormElement>): FormElement[] {
@@ -276,12 +304,34 @@ export class ElementService {
     });
   }
 
-  clearLayout() {
-    this._rows.set([{
-      id: crypto.randomUUID(),
-      elements: []
-    }]);
-    this._selectedElementId.set(null);
+  moveRowUp(rowId: string) {
+    startViewTransition(() => {
+      const rows = this._rows();
+      const index = rows.findIndex(r => r.id === rowId);
+      if (index > 0) {
+        const newRows = [...rows];
+        const temp = newRows[index - 1];
+        newRows[index - 1] = newRows[index];
+        newRows[index] = temp;
+        this._rows.set(newRows);
+        this.appRef.tick();
+      }
+    });
+  }
+
+  moveRowDown(rowId: string) {
+    startViewTransition(() => {
+      const rows = this._rows();
+      const index = rows.findIndex(r => r.id === rowId);
+      if (index < rows.length - 1) {
+        const newRows = [...rows];
+        const temp = newRows[index + 1];
+        newRows[index + 1] = newRows[index];
+        newRows[index] = temp;
+        this._rows.set(newRows);
+        this.appRef.tick();
+      }
+    });
   }
 
 }
