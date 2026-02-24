@@ -16,7 +16,7 @@ export class FaqComponent {
     {
       id: 1,
       question: "How do I start building with UiMolder?",
-      answer: "Simply launch the 'Forge' builder. You can start with our structural blueprints or a blank canvas. Our recursive engine allows you to nest components infinitely, while the Signal Engine handles all state logic automatically in the background."
+      answer: "Simply launch the 'Layout' builder. You can start with our structural blueprints or a blank canvas. Our recursive engine allows you to nest components infinitely, while the Signal Engine handles all state logic automatically in the background."
     },
     {
       id: 2,
