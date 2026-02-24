@@ -18,7 +18,6 @@ export class ElementEditor {
 
   onDropInRow(event: CdkDragDrop<string>, rowId: string) {
     if (event.previousContainer.data === 'element-selector') {
-      console.log('Dropped in Element Editor:', event);
       const elementType = event.item.data as ElementTypeDefinition;
       const newElement: FormElement = {
         id: crypto.randomUUID(),

@@ -1,6 +1,6 @@
 <div class="py-5">
     @for(row of elementService.rows(); track row.id) {
-    <div cdkDropList [cdkDropListData]="row.id" (cdkDropListDropped)="onDropInRow($event, row.id)"
+    <div cdkDropList [id]="row.id" [cdkDropListData]="row.id" (cdkDropListDropped)="onDropInRow($event, row.id)"
         [cdkDropListOrientation]="'horizontal'"
         [cdkDropListConnectedTo]="elementService.allContainerIds().concat('element-selector')"
         [style.view-transition-name]="'row-' + row.id"
