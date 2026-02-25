@@ -42,7 +42,8 @@
 
         <mat-card-content class="!p-0 min-h-[100px] flex flex-col">
             @for (row of element().nestedRows; track row.id) {
-            <div class="flex-1 p-4 ps-10 relative group/nested-row" [style.view-transition-name]="'row-' + row.id">
+            <div class="flex-1 p-4 relative group/nested-row" [style.view-transition-name]="'row-' + row.id"
+                [ngClass]="viewMode() === 'editor' ? 'ps-10' : ''">
 
                 @if (viewMode() === 'editor') {
                 <div class="flex justify-between items-center mb-2">
