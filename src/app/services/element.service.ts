@@ -15,33 +15,39 @@ export class ElementService {
   private appRef = inject(ApplicationRef);
 
   public readonly allContainerIds = computed(() => {
+    const ids: string[] = [];
     const rows = this._rows() || [];
-    const ids: string[] = rows.filter(r => !!r).map(r => r.id);
+
+    const getDeepIds = (elements: FormElement[] | undefined) => {
+      if (!elements) return;
+      elements.forEach(el => {
+        if (!el) return;
+        if (el.nestedRows) {
+          el.nestedRows.forEach(r => {
+            if (r) {
+              getDeepIds(r.elements);
+              ids.push(r.id);
+            }
+          });
+        }
+        if (el.children) {
+          getDeepIds(el.children);
+        }
+      });
+    };
+
     rows.forEach(row => {
       if (row && row.elements) {
-        this.getDeepContainerIds(row.elements, ids);
+        getDeepIds(row.elements);
       }
     });
+
+    rows.forEach(row => {
+      if (row) ids.push(row.id);
+    });
+
     return ids;
   });
-
-  private getDeepContainerIds(elements: FormElement[] | undefined, ids: string[]) {
-    if (!elements) return;
-    elements.forEach(el => {
-      if (!el) return;
-      if (el.nestedRows) {
-        el.nestedRows.forEach(r => {
-          if (r) {
-            ids.push(r.id);
-            this.getDeepContainerIds(r.elements, ids);
-          }
-        });
-      }
-      if (el.children) {
-        this.getDeepContainerIds(el.children, ids);
-      }
-    });
-  }
 
   public readonly selectedElement = computed(() => {
     const rows = this._rows() || [];
