@@ -148,7 +148,8 @@
 
         <div class="flex flex-col">
             @for (row of element().nestedRows; track row.id) {
-            <div class="p-4 ps-10 relative group/nested-row" [style.view-transition-name]="'row-' + row.id">
+            <div class="p-4 relative group/nested-row" [style.view-transition-name]="'row-' + row.id"
+                [ngClass]="viewMode() === 'editor' ? 'ps-10' : ''">
 
                 @if (viewMode() === 'editor') {
                 <div class="flex justify-between items-center mb-2">
@@ -189,17 +190,18 @@
                 </div>
 
                 @if (viewMode() === 'editor') {
-                <div
-                    class="absolute left-1 flex flex-col gap-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/nested-row:opacity-100 transition-opacity">
-                    <button [disabled]="$first" (click)="elementService.moveRowUp(row.id)"
-                        class="p-1 rounded-full hover:bg-slate-500/30 disabled:opacity-30">
+                <div class="absolute left-1 flex flex-col gap-2 top-1/2 -translate-y-1/2">
+                    <button [disabled]="$first" (click)="elementService.moveRowUp(row.id)" class="p-1 rounded-full transition-colors 
+           hover:bg-slate-500/30 
+           disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M18 15l-6-6-6 6" />
                         </svg>
                     </button>
-                    <button [disabled]="$last" (click)="elementService.moveRowDown(row.id)"
-                        class="p-1 rounded-full hover:bg-slate-500/30 disabled:opacity-30">
+                    <button [disabled]="$last" (click)="elementService.moveRowDown(row.id)" class="p-1 rounded-full transition-colors 
+           hover:bg-slate-500/30 
+           disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M6 9l6 6 6-6" />
@@ -249,8 +251,9 @@
 
         <div style="display: flex; flex-direction: column;">
             @for (row of element().nestedRows; track row.id) {
-            <div style="padding: 16px; padding-left: 40px; position: relative;" class="group/nested-row"
-                [style.view-transition-name]="'row-' + row.id">
+            <div style="padding: 16px; position: relative;" class="group/nested-row"
+                [style.view-transition-name]="'row-' + row.id"
+                [ngStyle]="viewMode() === 'editor' ? {paddingLeft: '40px'} : {}">
 
                 @if (viewMode() === 'editor') {
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -294,8 +297,8 @@
                 </div>
 
                 @if (viewMode() === 'editor') {
-                <div style="position: absolute; left: 4px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px;"
-                    class="opacity-0 group-hover/nested-row:opacity-100 transition-opacity">
+                <div
+                    style="position: absolute; left: 4px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px;">
                     <button [disabled]="$first" (click)="elementService.moveRowUp(row.id)"
                         style="padding: 4px; border-radius: 50%; cursor: pointer; background: transparent; color: #64748b; border: none;"
                         onmouseover="this.style.backgroundColor='rgba(100, 116, 139, 0.15)'"
