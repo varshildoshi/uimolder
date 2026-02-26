@@ -3,8 +3,8 @@
     <div cdkDropList [id]="row.id" [cdkDropListData]="row.id" (cdkDropListDropped)="onDropInRow($event, row.id)"
         [cdkDropListOrientation]="'horizontal'"
         [cdkDropListConnectedTo]="elementService.allContainerIds().concat('element-selector')"
-        [style.view-transition-name]="'row-' + row.id"
-        class="relative z-[1] isolate contain-paint p-5 mb-4 ps-10 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] bg-size[30px_30px] rounded-lg border-2 border-dashed border-slate-800">
+        [style.view-transition-name]="'row-' + row.id" [style.view-transition-class]="'row-transition'"
+        class="relative z-[1] isolate contain-paint group/row p-5 mb-4 ps-10 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] bg-size[30px_30px] rounded-lg border-2 border-dashed border-slate-800">
 
         <div class="flex justify-between items-center my-2">
             <span class="text-[11px] font-medium text-slate-500 uppercase tracking-widest">Row</span>
@@ -38,8 +38,8 @@
         </div>
         <div class="absolute left-1 flex flex-col gap-3 top-1/2 -translate-y-1/2">
             <button [disabled]="$first" (click)="elementService.moveRowUp(row.id)" class="p-1 rounded-full transition-colors 
-           hover:bg-slate-500/30 
-           disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent">
+                   hover:bg-slate-500/30 
+                   disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-up">

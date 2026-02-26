@@ -289,7 +289,21 @@ body {
   border-width: 2px !important;
 }
 
-::view-transition-old(.element-transition),
-::view-transition-new(.element-transition) {
-  height: 100%;
+/* Make all view transitions smoother */
+::view-transition-group(root) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Ensure individual elements and rows also transition smoothly */
+::view-transition-group(*) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Prevent cross-fade "ghosting" for morphing elements */
+::view-transition-old(.row-transition),
+::view-transition-new(.row-transition) {
+  mix-blend-mode: normal;
+  animation-duration: 0.5s;
 }
