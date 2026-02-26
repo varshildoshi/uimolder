@@ -278,6 +278,17 @@ body {
   }
 }
 
+@keyframes rejection-blink {
+  0%, 100% { border-color: rgba(239, 68, 68, 0.5); box-shadow: 0 0 0 rgba(239, 68, 68, 0); }
+  50% { border-color: rgba(239, 68, 68, 1); box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+}
+
+.animate-rejection {
+  animation: rejection-blink 0.8s infinite;
+  border-style: dashed !important;
+  border-width: 2px !important;
+}
+
 ::view-transition-old(.element-transition),
 ::view-transition-new(.element-transition) {
   height: 100%;

@@ -4,7 +4,7 @@ import { FormElement, ElementTypeDefinition } from '../../../models/element';
 import { LayoutService } from '../../../services/layout.service';
 import { CommonModule } from '@angular/common';
 import { ElementService } from '../../../services/element.service';
-import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { FieldPreview } from '../../../components/elements-canvas/components/field-preview/field-preview';
 // We use forwardRef or dynamic import to avoid circular dependency if needed, 
 // but since we are using them in templates and they are standalone, it's usually fine.
@@ -26,6 +26,17 @@ export class CardContainerComponent {
 
   public readonly flavor = this.layoutService.activeFlavor;
   public readonly viewMode = this.layoutService.viewMode;
+
+  public readonly isRejectingCard = computed(() => {
+    const item = this.elementService.currentlyDraggedItem();
+    return item?.type === 'card';
+  });
+
+  canDrop = (drag: CdkDrag) => {
+    const itemData = drag.data;
+    // Block only if the dragged item is a card
+    return itemData?.type !== 'card';
+  }
 
   // Header configs (same as Heading component)
   level = computed(() => this.element().level || 'h4');
