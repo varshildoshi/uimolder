@@ -11,6 +11,7 @@ export class ElementService {
   private _rows = signal<ElementRow[]>([]);
   private _selectedElementId = signal<string | null>(null);
   public readonly currentlyDraggedItem = signal<any | null>(null);
+  public readonly currentlyHoveredRowId = signal<string | null>(null);
   public readonly rows = this._rows.asReadonly();
 
   private appRef = inject(ApplicationRef);

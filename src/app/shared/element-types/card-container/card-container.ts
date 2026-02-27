@@ -27,10 +27,21 @@ export class CardContainerComponent {
   public readonly flavor = this.layoutService.activeFlavor;
   public readonly viewMode = this.layoutService.viewMode;
 
-  public readonly isRejectingCard = computed(() => {
+  isRejectingCard(rowId: string) {
     const item = this.elementService.currentlyDraggedItem();
-    return item?.type === 'card';
-  });
+    const hoveredRowId = this.elementService.currentlyHoveredRowId();
+    return item?.type === 'card' && hoveredRowId === rowId;
+  }
+
+  onRowMouseEnter(rowId: string) {
+    if (this.elementService.currentlyDraggedItem()) {
+      this.elementService.currentlyHoveredRowId.set(rowId);
+    }
+  }
+
+  onRowMouseLeave() {
+    this.elementService.currentlyHoveredRowId.set(null);
+  }
 
   canDrop = (drag: CdkDrag) => {
     const itemData = drag.data;

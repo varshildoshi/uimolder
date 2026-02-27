@@ -1,6 +1,6 @@
 <button cdkDrag [cdkDragData]="element()" 
     (cdkDragStarted)="whileDragging.set(true); elementService.currentlyDraggedItem.set(element())"
-    (cdkDragEnded)="whileDragging.set(false); elementService.currentlyDraggedItem.set(null)"
+    (cdkDragEnded)="whileDragging.set(false); elementService.currentlyDraggedItem.set(null); elementService.currentlyHoveredRowId.set(null)"
     class="w-full p-3 bg-white/3 border border-white/10 rounded-xl flex items-center gap-3 cursor-grab hover:bg-white/5 hover:border-white/20">
     <div class="rounded-md bg-slate-900 flex items-center justify-center p-1">
         <mat-icon class="text-brand-gold">{{element().icon}}</mat-icon>

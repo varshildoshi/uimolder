@@ -43,6 +43,7 @@
         <mat-card-content class="!p-0 min-h-[100px] flex flex-col">
             @for (row of element().nestedRows; track row.id) {
             <div class="flex-1 p-4 relative z-[1] isolate contain-paint group/nested-row"
+                (mouseenter)="onRowMouseEnter(row.id)" (mouseleave)="onRowMouseLeave()"
                 [style.view-transition-name]="'row-' + row.id" [style.view-transition-class]="'row-transition'"
                 [ngClass]="viewMode() === 'editor' ? 'ps-10' : ''">
 
@@ -66,13 +67,13 @@
                     (cdkDropListDropped)="onDropInside($event, row.id)"
                     [cdkDropListConnectedTo]="elementService.allContainerIds().concat('element-selector')"
                     [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDrop"
-                    [class.animate-rejection]="isRejectingCard()">
+                    [class.animate-rejection]="isRejectingCard(row.id)">
 
                     @for (child of row.elements; track child.id) {
                     @if (viewMode() === 'editor') {
                     <app-element-form-field cdkDrag [cdkDragData]="child"
                         (cdkDragStarted)="elementService.currentlyDraggedItem.set(child)"
-                        (cdkDragEnded)="elementService.currentlyDraggedItem.set(null)"
+                        (cdkDragEnded)="elementService.currentlyDraggedItem.set(null); elementService.currentlyHoveredRowId.set(null)"
                         class="flex-1 cursor-pointer min-w-[150px]" [style.view-transition-name]="'element-' + child.id"
                         [element]="child" />
                     } @else {
@@ -80,8 +81,8 @@
                     }
                     } @empty {
                     <div class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full"
-                        [class.!border-red-500/30]="isRejectingCard()">
-                        @if (isRejectingCard()) {
+                        [class.!border-red-500/30]="isRejectingCard(row.id)">
+                        @if (isRejectingCard(row.id)) {
                         <span class="text-[10px] text-red-400 italic uppercase tracking-widest font-['Tomorrow']">Card
                             Nesting Not Allowed</span>
                         } @else {
@@ -159,6 +160,7 @@
         <div class="flex flex-col">
             @for (row of element().nestedRows; track row.id) {
             <div class="p-4 relative z-[1] isolate contain-paint group/nested-row"
+                (mouseenter)="onRowMouseEnter(row.id)" (mouseleave)="onRowMouseLeave()"
                 [style.view-transition-name]="'row-' + row.id" [style.view-transition-class]="'row-transition'"
                 [ngClass]="viewMode() === 'editor' ? 'ps-10' : ''">
 
@@ -182,13 +184,13 @@
                     [cdkDropListData]="row.id" (cdkDropListDropped)="onDropInside($event, row.id)"
                     [cdkDropListConnectedTo]="elementService.allContainerIds().concat('element-selector')"
                     [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDrop"
-                    [class.animate-rejection]="isRejectingCard()">
+                    [class.animate-rejection]="isRejectingCard(row.id)">
 
                     @for (child of row.elements; track child.id) {
                     @if (viewMode() === 'editor') {
                     <app-element-form-field cdkDrag [cdkDragData]="child"
                         (cdkDragStarted)="elementService.currentlyDraggedItem.set(child)"
-                        (cdkDragEnded)="elementService.currentlyDraggedItem.set(null)"
+                        (cdkDragEnded)="elementService.currentlyDraggedItem.set(null); elementService.currentlyHoveredRowId.set(null)"
                         class="flex-1 cursor-pointer min-w-[150px]" [style.view-transition-name]="'element-' + child.id"
                         [element]="child" />
                     } @else {
@@ -196,8 +198,8 @@
                     }
                     } @empty {
                     <div class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full"
-                        [class.!border-red-500/30]="isRejectingCard()">
-                        @if (isRejectingCard()) {
+                        [class.!border-red-500/30]="isRejectingCard(row.id)">
+                        @if (isRejectingCard(row.id)) {
                         <span class="text-[10px] text-red-400 italic font-['Tomorrow'] uppercase tracking-widest">Card
                             Nesting Not Allowed</span>
                         } @else {
@@ -272,8 +274,8 @@
         <div style="display: flex; flex-direction: column;">
             @for (row of element().nestedRows; track row.id) {
             <div style="padding: 16px; position: relative; z-index: 1; isolation: isolate; contain: paint;"
-                class="group/nested-row" [style.view-transition-name]="'row-' + row.id"
-                [style.view-transition-class]="'row-transition'"
+                class="group/nested-row" (mouseenter)="onRowMouseEnter(row.id)" (mouseleave)="onRowMouseLeave()"
+                [style.view-transition-name]="'row-' + row.id" [style.view-transition-class]="'row-transition'"
                 [ngStyle]="viewMode() === 'editor' ? {paddingLeft: '40px'} : {}">
 
                 @if (viewMode() === 'editor') {
@@ -301,22 +303,22 @@
                     (cdkDropListDropped)="onDropInside($event, row.id)"
                     [cdkDropListConnectedTo]="elementService.allContainerIds().concat('element-selector')"
                     [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDrop"
-                    [class.animate-rejection]="isRejectingCard()"
-                    [style.border]="isRejectingCard() ? '2px dashed rgba(239, 68, 68, 0.5)' : ''">
+                    [class.animate-rejection]="isRejectingCard(row.id)"
+                    [style.border]="isRejectingCard(row.id) ? '2px dashed rgba(239, 68, 68, 0.5)' : ''">
                     @for (child of row.elements; track child.id) {
                     @if (viewMode() === 'editor') {
                     <app-element-form-field cdkDrag [cdkDragData]="child"
                         (cdkDragStarted)="elementService.currentlyDraggedItem.set(child)"
-                        (cdkDragEnded)="elementService.currentlyDraggedItem.set(null)"
+                        (cdkDragEnded)="elementService.currentlyDraggedItem.set(null); elementService.currentlyHoveredRowId.set(null)"
                         [style.view-transition-name]="'element-' + child.id"
                         style="flex: 1; min-width: 150px; cursor: pointer;" [element]="child" />
                     } @else {
                     <app-field-preview style="flex: 1; min-width: 150px;" [element]="child" />
                     }
                     } @empty {
-                    <div [style.border]="isRejectingCard() ? '2px dashed rgba(239, 68, 68, 0.3)' : '2px dashed #334155'"
+                    <div [style.border]="isRejectingCard(row.id) ? '2px dashed rgba(239, 68, 68, 0.3)' : '2px dashed #334155'"
                         style="flex: 1; border-radius: 8px; padding: 24px; text-align: center; font-size: 10px; font-style: italic; text-transform: uppercase; width: 100%; box-sizing: border-box;">
-                        @if (isRejectingCard()) {
+                        @if (isRejectingCard(row.id)) {
                         <span style="color: #f87171;">CARD NESTING NOT ALLOWED</span>
                         } @else {
                         <span style="color: #475569;">Empty Row</span>
