@@ -17,12 +17,21 @@ export class ElementEditor {
   elementService = inject(ElementService);
 
   onDropInRow(event: CdkDragDrop<string>, rowId: string) {
+    if (event.container.id !== rowId) return;
+
     if (event.previousContainer.data === 'element-selector') {
       const elementType = event.item.data as ElementTypeDefinition;
+      
+      // Deep clone and regenerate IDs for nested rows
+      const elementConfig = JSON.parse(JSON.stringify(elementType.defaultConfig));
+      if (elementConfig.nestedRows) {
+        elementConfig.nestedRows.forEach((r: any) => r.id = crypto.randomUUID());
+      }
+
       const newElement: FormElement = {
         id: crypto.randomUUID(),
         type: elementType.type,
-        ...elementType.defaultConfig
+        ...elementConfig
       };
       this.elementService.addElementToRow(newElement, rowId, event.currentIndex);
       return; // Ignore drops from the element selector
