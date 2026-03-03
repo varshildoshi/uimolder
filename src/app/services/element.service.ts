@@ -28,8 +28,10 @@ export class ElementService {
         if (el.nestedRows) {
           el.nestedRows.forEach(r => {
             if (r) {
-              nestedIds.push(r.id);
+              // Recurse first (deeper children first)
               getDeepIds(r.elements);
+              // Then push the row ID (post-order)
+              nestedIds.push(r.id);
             }
           });
         }
@@ -71,6 +73,42 @@ export class ElementService {
         elements: []
       }
     ]);
+  }
+
+  public isDescendantOf(parentId: string, targetId: string): boolean {
+    const rows = this._rows() || [];
+    // 1. Find the parent element globally
+    let parentElement: FormElement | undefined;
+    for (const row of rows) {
+      parentElement = this.findDeep(row.elements, parentId);
+      if (parentElement) break;
+    }
+
+    if (!parentElement) return false;
+
+    // 2. Check if targetId (element or row) is a descendant of parentElement
+    return this.isInside(parentElement, targetId);
+  }
+
+  private isInside(parent: FormElement, targetId: string): boolean {
+    if (parent.nestedRows) {
+      for (const row of parent.nestedRows) {
+        if (row.id === targetId) return true;
+        if (row.elements) {
+          for (const el of row.elements) {
+            if (el.id === targetId) return true;
+            if (this.isInside(el, targetId)) return true;
+          }
+        }
+      }
+    }
+    if (parent.children) {
+      for (const child of parent.children) {
+        if (child.id === targetId) return true;
+        if (this.isInside(child, targetId)) return true;
+      }
+    }
+    return false;
   }
 
   private findDeep(elements: FormElement[] | undefined, id: string): FormElement | undefined {

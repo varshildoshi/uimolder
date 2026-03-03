@@ -16,6 +16,26 @@ export class ElementEditor {
 
   elementService = inject(ElementService);
 
+  canDrop = (drag: any) => {
+    // Top-level rows never reject drops (they have no parent card to cause circular nesting)
+    return true;
+  }
+
+  isRejectingCard(rowId: string) {
+    // Top-level rows never reject
+    return false;
+  }
+
+  onRowMouseEnter(rowId: string) {
+    if (this.elementService.currentlyDraggedItem()) {
+      this.elementService.currentlyHoveredRowId.set(rowId);
+    }
+  }
+
+  onRowMouseLeave() {
+    this.elementService.currentlyHoveredRowId.set(null);
+  }
+
   onDropInRow(event: CdkDragDrop<string>, rowId: string) {
     if (event.container.id !== rowId) return;
 

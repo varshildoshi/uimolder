@@ -10,12 +10,12 @@
 - [ ] Task: Conductor - User Manual Verification 'Core Recursive Architecture' (Protocol in workflow.md)
 
 ## Phase 2: Advanced Drag-and-Drop Engine
-- [ ] Task: Implement Priority Hit-Testing
-    - [ ] Write failing tests for `allContainerIds` sorting (nested first).
-    - [ ] Update `ElementService` to prioritize nested row IDs in the connected list.
-- [ ] Task: Implement Parent Suppression & Rejection Logic
-    - [ ] Write failing tests for `canDrop` predicates (card rejection and parent back-off).
-    - [ ] Update `ElementEditor` and `CardContainer` with refined `canDrop` logic.
+- [x] Task: Implement Priority Hit-Testing
+    - [x] Write failing tests for `allContainerIds` sorting (nested first).
+    - [x] Update `ElementService` to prioritize nested row IDs in the connected list.
+- [x] Task: Implement Parent Suppression & Rejection Logic
+    - [x] Write failing tests for `canDrop` predicates (card rejection and parent back-off).
+    - [x] Update `ElementEditor` and `CardContainer` with refined `canDrop` logic.
 - [ ] Task: Conductor - User Manual Verification 'Advanced Drag-and-Drop Engine' (Protocol in workflow.md)
 
 ## Phase 3: Visual Feedback & UI Polish

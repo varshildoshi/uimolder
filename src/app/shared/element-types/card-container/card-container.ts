@@ -30,7 +30,15 @@ export class CardContainerComponent {
   isRejectingCard(rowId: string) {
     const item = this.elementService.currentlyDraggedItem();
     const hoveredRowId = this.elementService.currentlyHoveredRowId();
-    return item?.type === 'card' && hoveredRowId === rowId;
+    if (hoveredRowId !== rowId || !item) return false;
+
+    // Block only if the dragged item is a card and it's either this card or one of its parents
+    if (item.type === 'card') {
+      const cardId = this.element().id;
+      // Cannot drop a card into itself or into its own descendants
+      return item.id === cardId || this.elementService.isDescendantOf(item.id, cardId);
+    }
+    return false;
   }
 
   onRowMouseEnter(rowId: string) {
@@ -45,8 +53,16 @@ export class CardContainerComponent {
 
   canDrop = (drag: CdkDrag) => {
     const itemData = drag.data;
-    // Block only if the dragged item is a card
-    return itemData?.type !== 'card';
+    if (!itemData || itemData.type !== 'card') return true;
+
+    const cardId = this.element().id;
+    const draggedCardId = itemData.id;
+
+    // Cannot drop a card into itself
+    if (cardId === draggedCardId) return false;
+
+    // Cannot drop a card into any of its own descendants
+    return !this.elementService.isDescendantOf(draggedCardId, cardId);
   }
 
   // Header configs (same as Heading component)

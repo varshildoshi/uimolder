@@ -3,8 +3,10 @@
     <div cdkDropList [id]="row.id" [cdkDropListData]="row.id" (cdkDropListDropped)="onDropInRow($event, row.id)"
         [cdkDropListOrientation]="'horizontal'"
         [cdkDropListConnectedTo]="elementService.allContainerIds().concat('element-selector')"
+        [cdkDropListEnterPredicate]="canDrop" (mouseenter)="onRowMouseEnter(row.id)" (mouseleave)="onRowMouseLeave()"
         [style.view-transition-name]="'row-' + row.id"
-        class="relative p-5 mb-4 ps-10 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] bg-size[30px_30px] rounded-lg border-2 border-dashed border-slate-800">
+        class="relative p-5 mb-4 ps-10 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] bg-size[30px_30px] rounded-lg border-2 border-dashed border-slate-800"
+        [class.animate-rejection]="isRejectingCard(row.id)">
 
         <div class="flex justify-between items-center my-2">
             <span class="text-[11px] font-medium text-slate-500 uppercase tracking-widest">Row</span>
