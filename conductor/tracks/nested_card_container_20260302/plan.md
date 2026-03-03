@@ -7,7 +7,7 @@
 - [x] Task: Implement Robust Recursive Service Methods
     - [x] Write failing tests for `findDeep`, `removeDeep`, and `insertDeep`.
     - [x] Refactor `ElementService` to use these exhaustive recursive patterns for all state mutations.
-- [ ] Task: Conductor - User Manual Verification 'Core Recursive Architecture' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Core Recursive Architecture' (Protocol in workflow.md)
 
 ## Phase 2: Advanced Drag-and-Drop Engine [checkpoint: 44442b1]
 - [x] Task: Implement Priority Hit-Testing
@@ -16,7 +16,7 @@
 - [x] Task: Implement Parent Suppression & Rejection Logic
     - [x] Write failing tests for `canDrop` predicates (card rejection and parent back-off).
     - [x] Update `ElementEditor` and `CardContainer` with refined `canDrop` logic.
-- [ ] Task: Conductor - User Manual Verification 'Advanced Drag-and-Drop Engine' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Advanced Drag-and-Drop Engine' (Protocol in workflow.md)
 
 ## Phase 3: Visual Feedback & UI Polish [checkpoint: 759f4e6]
 - [x] Task: Implement Z-Index & Isolation Fixes
@@ -25,4 +25,7 @@
 - [x] Task: Final Recursive Nesting Verification
     - [x] Perform "Infinite Cards" test (nesting 3+ levels deep).
     - [x] Verify state integrity and code generation for deeply nested structures.
-- [ ] Task: Conductor - User Manual Verification 'Visual Feedback & UI Polish' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Visual Feedback & UI Polish' (Protocol in workflow.md)
+
+## Phase: Bug Fixes
+- [x] Task: Fix async state update in `moveElement` 705ab20
