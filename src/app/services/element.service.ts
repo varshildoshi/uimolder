@@ -134,13 +134,15 @@ export class ElementService {
 
   addRow() {
     startViewTransition(() => {
-      const newRow: ElementRow = {
-        id: crypto.randomUUID(),
-        elements: []
-      };
-      this.rowsSignal.set([...this.rowsSignal(), newRow]);
       this.appRef.tick();
     });
+
+    const newRow: ElementRow = {
+      id: crypto.randomUUID(),
+      elements: []
+    };
+    this.rowsSignal.set([...this.rowsSignal(), newRow]);
+    this.appRef.tick();
   }
 
   addRowToElement(elementId: string) {
@@ -427,7 +429,9 @@ export class ElementService {
     // 1. Globally find and remove the element (ignore sourceContainerId if not found there)
     const rowsAfterRemoval = rows.map(row => {
       if (!row || !row.elements) return row;
-      const updatedElements = this.removeDeep(row.elements, elementId, (found) => elementToMove = found);
+      const updatedElements = this.removeDeep(row.elements, elementId, (found) => {
+        elementToMove = found;
+      });
       if (updatedElements !== row.elements) {
         return { ...row, elements: updatedElements };
       }
@@ -454,9 +458,11 @@ export class ElementService {
     });
 
     startViewTransition(() => {
-      this.rowsSignal.set(finalRows);
       this.appRef.tick();
     });
+
+    this.rowsSignal.set(finalRows);
+    this.appRef.tick();
   }
 
   private removeDeep(elements: FormElement[] | undefined, id: string, onFound: (el: FormElement) => void): FormElement[] {
