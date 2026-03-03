@@ -1,4 +1,4 @@
-import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ElementFormField } from '../element-form-field/element-form-field';
 import { ElementService } from '../../../../services/element.service';
@@ -16,9 +16,14 @@ export class ElementEditor {
 
   elementService = inject(ElementService);
 
-  canDrop = (drag: any) => {
-    // Top-level rows never reject drops (they have no parent card to cause circular nesting)
-    return true;
+  canDrop = (rowId: string) => {
+    return (drag: CdkDrag) => {
+      // If any child row of this row is currently hovered, this row should not accept the drop
+      if (this.elementService.isAnyChildHovered(rowId)) {
+        return false;
+      }
+      return true;
+    };
   }
 
   isRejectingCard(rowId: string) {
@@ -41,7 +46,7 @@ export class ElementEditor {
 
     if (event.previousContainer.data === 'element-selector') {
       const elementType = event.item.data as ElementTypeDefinition;
-      
+
       // Deep clone and regenerate IDs for nested rows
       const elementConfig = JSON.parse(JSON.stringify(elementType.defaultConfig));
       if (elementConfig.nestedRows) {

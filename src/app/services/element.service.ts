@@ -90,6 +90,36 @@ export class ElementService {
     return this.isInside(parentElement, targetId);
   }
 
+  isAnyChildHovered(parentId: string): boolean {
+    const hoveredId = this.currentlyHoveredRowId();
+    if (!hoveredId || hoveredId === parentId) return false;
+    return this.isDescendantOfRow(parentId, hoveredId);
+  }
+
+  private isDescendantOfRow(rowId: string, targetId: string): boolean {
+    const rows = this.rowsSignal() || [];
+    const row = this.findRowDeep(rows, rowId);
+    if (!row) return false;
+
+    for (const el of row.elements) {
+      if (this.isInside(el, targetId)) return true;
+    }
+    return false;
+  }
+
+  private findRowDeep(rows: ElementRow[], id: string): ElementRow | undefined {
+    for (const row of rows) {
+      if (row.id === id) return row;
+      for (const el of row.elements) {
+        if (el.nestedRows) {
+          const found = this.findRowDeep(el.nestedRows, id);
+          if (found) return found;
+        }
+      }
+    }
+    return undefined;
+  }
+
   private isInside(parent: FormElement, targetId: string): boolean {
     if (parent.nestedRows) {
       for (const row of parent.nestedRows) {

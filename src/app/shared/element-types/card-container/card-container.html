@@ -64,7 +64,7 @@
                 <div class="flex flex-wrap gap-4 min-h-[80px]" cdkDropList [id]="row.id" [cdkDropListData]="row.id"
                     (cdkDropListDropped)="onDropInside($event, row.id)"
                     [cdkDropListConnectedTo]="elementService.allContainerIds().concat('element-selector')"
-                    [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDrop"
+                    [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDropInRow(row.id)"
                     [class.animate-rejection]="isRejectingCard(row.id)">
 
                     @for (child of row.elements; track child.id) {
@@ -179,7 +179,7 @@
                 <div class="min-h-[80px] flex-1 flex flex-wrap gap-4" cdkDropList [id]="row.id"
                     [cdkDropListData]="row.id" (cdkDropListDropped)="onDropInside($event, row.id)"
                     [cdkDropListConnectedTo]="elementService.allContainerIds().concat('element-selector')"
-                    [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDrop"
+                    [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDropInRow(row.id)"
                     [class.animate-rejection]="isRejectingCard(row.id)">
 
                     @for (child of row.elements; track child.id) {
@@ -296,7 +296,7 @@
                     cdkDropList [id]="row.id" [cdkDropListData]="row.id"
                     (cdkDropListDropped)="onDropInside($event, row.id)"
                     [cdkDropListConnectedTo]="elementService.allContainerIds().concat('element-selector')"
-                    [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDrop"
+                    [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDropInRow(row.id)"
                     [class.animate-rejection]="isRejectingCard(row.id)"
                     [style.border]="isRejectingCard(row.id) ? '2px dashed rgba(239, 68, 68, 0.5)' : ''">
                     @for (child of row.elements; track child.id) {
