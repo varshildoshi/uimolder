@@ -1,30 +1,14 @@
-import { ChangeDetectionStrategy, Component, signal, inject, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { LayoutService } from '../../services/layout.service';
+import { LayoutService, FlavorName } from '../../services/layout.service';
 import { ElementsMenu } from '../elements-menu/elements-menu';
 import { ElementsCanvas } from '../elements-canvas/elements-canvas';
 import { ElementsSettings } from '../elements-settings/elements-settings';
 import { ExportModal } from '../../shared/export-modal/export-modal';
-
-export interface ComponentNode {
-  id: string;
-  type: string;
-  label: string;
-  props: any;
-  children?: ComponentNode[];
-}
-
-export interface FormRow {
-  id: string;
-  fields: ComponentNode[];
-}
-
-export type ViewMode = 'editor' | 'preview';
-export type FlavorName = 'html' | 'tailwind' | 'material';
 
 export interface Flavor {
   name: FlavorName;
@@ -53,20 +37,12 @@ export interface Flavor {
 })
 export class LayoutBuilder {
   private readonly layoutService = inject(LayoutService);
-  public readonly headerHeight = this.layoutService.headerHeight;
+  readonly headerHeight = this.layoutService.headerHeight;
+  readonly isExportOpen = signal(false);
+  readonly viewMode = this.layoutService.viewMode;
+  readonly activeFlavor = this.layoutService.activeFlavor;
 
-  public readonly isExportOpen = signal(false);
-
-  public readonly formRows = signal<FormRow[]>([
-    { id: 'row_initial', fields: [] }
-  ]);
-  public readonly rowIds = computed(() => this.formRows().map(r => r.id));
-  public readonly selectedElementId = signal<string | null>(null);
-  public readonly viewMode = this.layoutService.viewMode;
-
-  public readonly activeFlavor = this.layoutService.activeFlavor;
-
-  public readonly flavors: Flavor[] = [
+  readonly flavors: Flavor[] = [
     {
       name: 'html',
       label: 'HTML',
@@ -87,82 +63,7 @@ export class LayoutBuilder {
     }
   ];
 
-  public readonly activeComponent = computed(() => {
-    for (const row of this.formRows()) {
-      const item = row.fields.find(i => i.id === this.selectedElementId());
-      if (item) return item;
-    }
-    return null;
-  });
-
-  public onDrop(event: CdkDragDrop<ComponentNode[]>, rowId: string) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else if (event.previousContainer.id === 'toolbox-list') {
-      const blueprint = event.previousContainer.data[event.previousIndex];
-      const newItem: ComponentNode = {
-        ...JSON.parse(JSON.stringify(blueprint)),
-        id: `node_${Math.random().toString(36).substring(2, 9)}`,
-        props: { ...blueprint.props, value: '' }
-      };
-
-      this.formRows.update(rows => rows.map(row => {
-        if (row.id === rowId) {
-          const newFields = [...row.fields];
-          newFields.splice(event.currentIndex, 0, newItem);
-          return { ...row, fields: newFields };
-        }
-        return row;
-      }));
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-      this.formRows.set([...this.formRows()]);
-    }
+  exportLayout() {
+    this.isExportOpen.set(true);
   }
-
-  public addNewRow() {
-    const newRow: FormRow = {
-      id: 'row_' + Math.random().toString(36).substring(2, 9),
-      fields: []
-    };
-    this.formRows.update(rows => [...rows, newRow]);
-  }
-
-  public removeRow(rowId: string) {
-    if (this.formRows().length > 1) {
-      this.formRows.update(rows => rows.filter(r => r.id !== rowId));
-    }
-  }
-
-  public updateProp(key: string, val: any) {
-    this.formRows.update(rows => rows.map(row => ({
-      ...row,
-      fields: row.fields.map(i => i.id === this.selectedElementId() ? { ...i, props: { ...i.props, [key]: val } } : i)
-    })));
-  }
-
-  public updateLabel(val: string) {
-    this.formRows.update(rows => rows.map(row => ({
-      ...row,
-      fields: row.fields.map(i => i.id === this.selectedElementId() ? { ...i, label: val } : i)
-    })));
-  }
-
-  public removeItem(id: string) {
-    this.formRows.update(rows => rows.map(row => ({
-      ...row,
-      fields: row.fields.filter(i => i.id !== id)
-    })));
-    if (this.selectedElementId() === id) this.selectedElementId.set(null);
-  }
-
-    public exportLayout() {
-      this.isExportOpen.set(true);
-    }
-  }
-  
+}

@@ -8,18 +8,18 @@ import { startViewTransition } from '../utils/view-transition';
 })
 export class ElementService {
 
-  private _rows = signal<ElementRow[]>([]);
-  private _selectedElementId = signal<string | null>(null);
-  public readonly currentlyDraggedItem = signal<any | null>(null);
-  public readonly currentlyHoveredRowId = signal<string | null>(null);
-  public readonly rows = this._rows.asReadonly();
+  private rowsSignal = signal<ElementRow[]>([]);
+  private selectedElementIdSignal = signal<string | null>(null);
+  readonly currentlyDraggedItem = signal<any | null>(null);
+  readonly currentlyHoveredRowId = signal<string | null>(null);
+  readonly rows = this.rowsSignal.asReadonly();
 
   private appRef = inject(ApplicationRef);
 
-  public readonly allContainerIds = computed(() => {
+  readonly allContainerIds = computed(() => {
     const nestedIds: string[] = [];
     const topLevelIds: string[] = [];
-    const rows = this._rows() || [];
+    const rows = this.rowsSignal() || [];
 
     const getDeepIds = (elements: FormElement[] | undefined) => {
       if (!elements) return;
@@ -52,9 +52,9 @@ export class ElementService {
     return [...nestedIds, ...topLevelIds];
   });
 
-  public readonly selectedElement = computed(() => {
-    const rows = this._rows() || [];
-    const id = this._selectedElementId();
+  readonly selectedElement = computed(() => {
+    const rows = this.rowsSignal() || [];
+    const id = this.selectedElementIdSignal();
     if (!id) return null;
 
     for (const row of rows) {
@@ -67,7 +67,7 @@ export class ElementService {
   });
 
   constructor() {
-    this._rows.set([
+    this.rowsSignal.set([
       {
         id: crypto.randomUUID(),
         elements: []
@@ -75,8 +75,8 @@ export class ElementService {
     ]);
   }
 
-  public isDescendantOf(parentId: string, targetId: string): boolean {
-    const rows = this._rows() || [];
+  isDescendantOf(parentId: string, targetId: string): boolean {
+    const rows = this.rowsSignal() || [];
     // 1. Find the parent element globally
     let parentElement: FormElement | undefined;
     for (const row of rows) {
@@ -138,14 +138,14 @@ export class ElementService {
         id: crypto.randomUUID(),
         elements: []
       };
-      this._rows.set([...this._rows(), newRow]);
+      this.rowsSignal.set([...this.rowsSignal(), newRow]);
       this.appRef.tick();
     });
   }
 
   addRowToElement(elementId: string) {
     let changed = false;
-    const rows = this._rows() || [];
+    const rows = this.rowsSignal() || [];
     const newRows = rows.map(row => {
       if (!row || !row.elements) return row;
       const updatedChildren = this.updateDeepAddRow(row.elements, elementId);
@@ -158,7 +158,7 @@ export class ElementService {
 
     if (changed) {
       startViewTransition(() => {
-        this._rows.set(newRows);
+        this.rowsSignal.set(newRows);
         this.appRef.tick();
       });
     }
@@ -205,11 +205,11 @@ export class ElementService {
   }
 
   deleteRow(rowId: string) {
-    const rows = this._rows() || [];
+    const rows = this.rowsSignal() || [];
     if (rows.some(r => r && r.id === rowId)) {
       if (rows.length === 1) return;
       startViewTransition(() => {
-        this._rows.set(rows.filter(row => row && row.id !== rowId));
+        this.rowsSignal.set(rows.filter(row => row && row.id !== rowId));
         this.appRef.tick();
       });
       return;
@@ -228,7 +228,7 @@ export class ElementService {
 
     if (changed) {
       startViewTransition(() => {
-        this._rows.set(newRows);
+        this.rowsSignal.set(newRows);
         this.appRef.tick();
       });
     }
@@ -276,7 +276,7 @@ export class ElementService {
 
   addElementToRow(element: FormElement, rowId: string, index?: number) {
     let changed = false;
-    const rows = this._rows() || [];
+    const rows = this.rowsSignal() || [];
     const newRows = rows.map(row => {
       if (!row) return row;
       if (row.id === rowId) {
@@ -300,7 +300,7 @@ export class ElementService {
 
     if (changed) {
       startViewTransition(() => {
-        this._rows.set(newRows);
+        this.rowsSignal.set(newRows);
         this.appRef.tick();
       });
     }
@@ -355,7 +355,7 @@ export class ElementService {
 
   deleteElementFromRow(elementId: string) {
     let changed = false;
-    const rows = this._rows() || [];
+    const rows = this.rowsSignal() || [];
     const newRows = rows.map(row => {
       if (!row || !row.elements) return row;
       const updatedElements = this.deleteDeep(row.elements, elementId);
@@ -368,7 +368,7 @@ export class ElementService {
 
     if (changed) {
       startViewTransition(() => {
-        this._rows.set(newRows);
+        this.rowsSignal.set(newRows);
         this.appRef.tick();
       });
     }
@@ -422,7 +422,7 @@ export class ElementService {
 
   moveElement(elementId: string, sourceContainerId: string, targetContainerId: string, targetIndex: number = -1) {
     let elementToMove: FormElement | undefined;
-    const rows = this._rows() || [];
+    const rows = this.rowsSignal() || [];
 
     // 1. Globally find and remove the element (ignore sourceContainerId if not found there)
     const rowsAfterRemoval = rows.map(row => {
@@ -454,7 +454,7 @@ export class ElementService {
     });
 
     startViewTransition(() => {
-      this._rows.set(finalRows);
+      this.rowsSignal.set(finalRows);
       this.appRef.tick();
     });
   }
@@ -558,16 +558,16 @@ export class ElementService {
   }
 
   setSelectedElement(elementId: string | null) {
-    if (this._selectedElementId() === elementId) return;
+    if (this.selectedElementIdSignal() === elementId) return;
     startViewTransition(() => {
-      this._selectedElementId.set(elementId);
+      this.selectedElementIdSignal.set(elementId);
       this.appRef.tick();
     });
   }
 
   updateElement(elementId: string, data: Partial<FormElement>) {
     let changed = false;
-    const rows = this._rows() || [];
+    const rows = this.rowsSignal() || [];
     const newRows = rows.map(row => {
       if (!row || !row.elements) return row;
       const updatedElements = this.updateDeepProps(row.elements, elementId, data);
@@ -580,7 +580,7 @@ export class ElementService {
 
     if (changed) {
       startViewTransition(() => {
-        this._rows.set(newRows);
+        this.rowsSignal.set(newRows);
         this.appRef.tick();
       });
     }
@@ -631,14 +631,14 @@ export class ElementService {
   }
 
   moveRowUp(rowId: string) {
-    const rows = this._rows() || [];
+    const rows = this.rowsSignal() || [];
     const index = rows.findIndex(r => r && r.id === rowId);
 
     if (index > 0) {
       startViewTransition(() => {
         const newRows = [...rows];
         [newRows[index - 1], newRows[index]] = [newRows[index], newRows[index - 1]];
-        this._rows.set(newRows);
+        this.rowsSignal.set(newRows);
         this.appRef.tick();
       });
       return;
@@ -657,21 +657,21 @@ export class ElementService {
 
     if (changed) {
       startViewTransition(() => {
-        this._rows.set(newRows);
+        this.rowsSignal.set(newRows);
         this.appRef.tick();
       });
     }
   }
 
   moveRowDown(rowId: string) {
-    const rows = this._rows() || [];
+    const rows = this.rowsSignal() || [];
     const index = rows.findIndex(r => r && r.id === rowId);
 
     if (index !== -1 && index < rows.length - 1) {
       startViewTransition(() => {
         const newRows = [...rows];
         [newRows[index], newRows[index + 1]] = [newRows[index + 1], newRows[index]];
-        this._rows.set(newRows);
+        this.rowsSignal.set(newRows);
         this.appRef.tick();
       });
       return;
@@ -690,7 +690,7 @@ export class ElementService {
 
     if (changed) {
       startViewTransition(() => {
-        this._rows.set(newRows);
+        this.rowsSignal.set(newRows);
         this.appRef.tick();
       });
     }

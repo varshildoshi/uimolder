@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 import { ElementsMenu } from './elements-menu';
 
@@ -8,7 +9,8 @@ describe('ElementsMenu', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ElementsMenu]
+      imports: [ElementsMenu],
+      providers: [provideZonelessChangeDetection()]
     })
     .compileComponents();
 

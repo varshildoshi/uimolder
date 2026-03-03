@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 import { TextFieldComponent } from './text-field';
 
@@ -8,12 +9,19 @@ describe('TextFieldComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TextFieldComponent]
+      imports: [TextFieldComponent],
+      providers: [provideZonelessChangeDetection()]
     })
       .compileComponents();
 
     fixture = TestBed.createComponent(TextFieldComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('element', {
+      id: '1',
+      type: 'text',
+      label: 'Test',
+      required: false
+    });
     fixture.detectChanges();
   });
 

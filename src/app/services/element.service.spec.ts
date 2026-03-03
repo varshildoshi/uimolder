@@ -71,7 +71,7 @@ describe('ElementService', () => {
     };
 
     // Manually set rows for testing findDeep
-    (service as any)._rows.set([{
+    (service as any).rowsSignal.set([{
       id: rootRowId,
       elements: [card1]
     }]);
@@ -94,7 +94,7 @@ describe('ElementService', () => {
     const nestedRow: ElementRow = { id: nestedRowId, elements: [element] };
     const card: FormElement = { id: cardId, type: 'card', label: 'Card', required: false, nestedRows: [nestedRow] };
 
-    (service as any)._rows.set([{ id: rootRowId, elements: [card] }]);
+    (service as any).rowsSignal.set([{ id: rootRowId, elements: [card] }]);
 
     service.deleteElementFromRow(elementId);
 
@@ -112,7 +112,7 @@ describe('ElementService', () => {
     const nestedRow: ElementRow = { id: nestedRowId, elements: [] };
     const card: FormElement = { id: cardId, type: 'card', label: 'Card', required: false, nestedRows: [nestedRow] };
 
-    (service as any)._rows.set([{ id: rootRowId, elements: [card] }]);
+    (service as any).rowsSignal.set([{ id: rootRowId, elements: [card] }]);
 
     const newElement: FormElement = { id: newElementId, type: 'text', label: 'New', required: false };
     service.addElementToRow(newElement, nestedRowId);
@@ -134,7 +134,7 @@ describe('ElementService', () => {
     const nestedRow1: ElementRow = { id: nestedRow1Id, elements: [card2] };
     const card1: FormElement = { id: card1Id, type: 'card', label: 'Card 1', required: false, nestedRows: [nestedRow1] };
 
-    (service as any)._rows.set([{ id: rootRowId, elements: [card1] }]);
+    (service as any).rowsSignal.set([{ id: rootRowId, elements: [card1] }]);
 
     const containerIds = service.allContainerIds();
 
@@ -158,7 +158,7 @@ describe('ElementService', () => {
     const nestedRow: ElementRow = { id: nestedRowId, elements: [] };
     const card: FormElement = { id: cardId, type: 'card', label: 'Card', required: false, nestedRows: [nestedRow] };
 
-    (service as any)._rows.set([{ 
+    (service as any).rowsSignal.set([{ 
       id: rootRowId, 
       elements: [element, card] 
     }]);
@@ -186,7 +186,7 @@ describe('ElementService', () => {
     const card1: FormElement = { id: card1Id, type: 'card', label: 'Card 1', required: false, nestedRows: [nestedRow1] };
     const card2: FormElement = { id: card2Id, type: 'card', label: 'Card 2', required: false, nestedRows: [nestedRow2] };
 
-    (service as any)._rows.set([{ 
+    (service as any).rowsSignal.set([{ 
       id: rootRowId, 
       elements: [card1, card2] 
     }]);
@@ -214,7 +214,7 @@ describe('ElementService', () => {
     const row1: ElementRow = { id: row1Id, elements: [card2] };
     const card1: FormElement = { id: card1Id, type: 'card', label: 'Card 1', required: false, nestedRows: [row1] };
 
-    (service as any)._rows.set([{ id: 'root', elements: [card1] }]);
+    (service as any).rowsSignal.set([{ id: 'root', elements: [card1] }]);
 
     expect(service.isDescendantOf(card1Id, card2Id)).toBeTrue();
     expect(service.isDescendantOf(card1Id, leafId)).toBeTrue();
@@ -249,7 +249,7 @@ describe('ElementService', () => {
     const row1: ElementRow = { id: row1Id, elements: [card2] };
     const card1: FormElement = { id: card1Id, type: 'card', label: 'C1', required: false, nestedRows: [row1] };
 
-    (service as any)._rows.set([{ id: row0Id, elements: [card1] }]);
+    (service as any).rowsSignal.set([{ id: row0Id, elements: [card1] }]);
 
     expect(service.isDescendantOf(card1Id, leafId)).toBeTrue();
     expect(service.isDescendantOf(card3Id, leafId)).toBeTrue();

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 import { ElementsCanvas } from './elements-canvas';
 
@@ -8,7 +9,8 @@ describe('ElementsCanvas', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ElementsCanvas]
+      imports: [ElementsCanvas],
+      providers: [provideZonelessChangeDetection()]
     })
     .compileComponents();
 
