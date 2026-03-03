@@ -31,3 +31,4 @@
 - [x] Task: Fix async state update in `moveElement` 705ab20
 - [x] Task: Fix issue where existing elements cannot be moved into card rows 8c4dbf2
 - [x] Task: Fix issue where already dropped elements cannot be moved within or into card rows e2bbd05
+- [x] Task: Fix issue where parent row captures drag over child and causes reordering jitter 45625dc
