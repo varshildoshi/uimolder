@@ -2,7 +2,22 @@
     (click)="selectElement($event)"
     [class]="elementService.selectedElement()?.id === element().id ? 'border-brand-gold!' : ''">
     <div class="flex items-center justify-between my-2">
-        <span class="text-sm">{{element().type | titlecase}}</span>
+        <div class="flex items-center gap-2">
+            <div cdkDragHandle class="cursor-grab active:cursor-grabbing p-1 hover:bg-white/5 rounded text-slate-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-grip-vertical">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M9 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                    <path d="M9 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                    <path d="M9 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                    <path d="M15 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                    <path d="M15 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                    <path d="M15 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                </svg>
+            </div>
+            <span class="text-[10px] font-medium uppercase tracking-wider text-slate-400">{{element().type}}</span>
+        </div>
         <button (click)="deleteElement($event)"
             class="p-2 flex items-center justify-center rounded-full text-slate-500 hover:text-red-500 transition-colors hover:bg-red-500/30">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
