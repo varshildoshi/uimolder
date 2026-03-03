@@ -55,3 +55,6 @@
     - [ ] Implement "Export JSON" (save state) and "Download Code" buttons.
     - [ ] Write tests for the generation logic.
 - [ ] Task: Conductor - User Manual Verification 'Multi-Flavor Code Generation & Export' (Protocol in workflow.md)
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions c4c0fef
