@@ -9,7 +9,7 @@
     - [x] Refactor `ElementService` to use these exhaustive recursive patterns for all state mutations.
 - [ ] Task: Conductor - User Manual Verification 'Core Recursive Architecture' (Protocol in workflow.md)
 
-## Phase 2: Advanced Drag-and-Drop Engine
+## Phase 2: Advanced Drag-and-Drop Engine [checkpoint: 44442b1]
 - [x] Task: Implement Priority Hit-Testing
     - [x] Write failing tests for `allContainerIds` sorting (nested first).
     - [x] Update `ElementService` to prioritize nested row IDs in the connected list.
