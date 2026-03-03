@@ -1,12 +1,12 @@
 # Implementation Plan: Nested Card Container Layout
 
 ## Phase 1: Core Recursive Architecture
-- [ ] Task: Harden Recursive Data Models
-    - [ ] Write failing tests for deep tree structure validation.
-    - [ ] Ensure `FormElement` and `ElementRow` models are correctly typed for `nestedRows`.
-- [ ] Task: Implement Robust Recursive Service Methods
-    - [ ] Write failing tests for `findDeep`, `removeDeep`, and `insertDeep`.
-    - [ ] Refactor `ElementService` to use these exhaustive recursive patterns for all state mutations.
+- [x] Task: Harden Recursive Data Models
+    - [x] Write failing tests for deep tree structure validation.
+    - [x] Ensure `FormElement` and `ElementRow` models are correctly typed for `nestedRows`.
+- [x] Task: Implement Robust Recursive Service Methods
+    - [x] Write failing tests for `findDeep`, `removeDeep`, and `insertDeep`.
+    - [x] Refactor `ElementService` to use these exhaustive recursive patterns for all state mutations.
 - [ ] Task: Conductor - User Manual Verification 'Core Recursive Architecture' (Protocol in workflow.md)
 
 ## Phase 2: Advanced Drag-and-Drop Engine
