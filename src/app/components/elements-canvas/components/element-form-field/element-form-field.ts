@@ -3,10 +3,11 @@ import { FormElement } from '../../../../models/element';
 import { TitleCasePipe } from '@angular/common';
 import { ElementService } from '../../../../services/element.service';
 import { FieldPreview } from '../field-preview/field-preview';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-element-form-field',
-  imports: [TitleCasePipe, FieldPreview],
+  imports: [TitleCasePipe, FieldPreview, DragDropModule],
   templateUrl: './element-form-field.html',
   styleUrl: './element-form-field.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

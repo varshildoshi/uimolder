@@ -30,3 +30,4 @@
 ## Phase: Bug Fixes
 - [x] Task: Fix async state update in `moveElement` 705ab20
 - [x] Task: Fix issue where existing elements cannot be moved into card rows 8c4dbf2
+- [~] Task: Fix issue where already dropped elements cannot be moved within or into card rows
