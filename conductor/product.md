@@ -17,13 +17,14 @@ A UI building platform (Uimolder) designed for creating and managing web compone
 ## Key Features
 - **Forge Builder (Drag & Drop):**
     -   Built using Angular CDK.
+    -   **Deeply Nested Drag & Drop:** Intuitive engine that supports infinite recursion (Cards within Cards) with prioritized hit-testing.
     -   **Extensive Component Library:** Includes Cards, Dashboards, Modals, Autocomplete, Badges, Bottom Sheets, Buttons, Button Toggles, and a wide range of elements from Angular Material and Bootstrap.
     -   **Deep Configuration:** Comprehensive configuration options for each element (e.g., validation rules, patterns for text fields; option management for dropdowns).
 - **Multi-Flavor Support & Export:**
     -   **Flavors:** Simple HTML, TailwindCSS v4, Angular Material.
     -   **Export Code:** Ability to export the generated layout and code in any or all of the supported flavors.
     -   **Live Conversion:** Instantly convert an existing UI layout from one flavor to another (e.g., Simple HTML -> TailwindCSS).
-- **Advanced Layouts:** Support for complex components beyond forms, including Cards, Dashboards, and other advanced UI elements.
+- **Advanced Layouts:** Support for complex components beyond forms, including Dashboards and **infinitely nestable Card Containers** for building highly hierarchical UIs.
 
 ## Roadmap (Future)
 - **User Management:** Login and Authentication.
