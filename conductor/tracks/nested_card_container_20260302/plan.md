@@ -18,7 +18,7 @@
     - [x] Update `ElementEditor` and `CardContainer` with refined `canDrop` logic.
 - [ ] Task: Conductor - User Manual Verification 'Advanced Drag-and-Drop Engine' (Protocol in workflow.md)
 
-## Phase 3: Visual Feedback & UI Polish
+## Phase 3: Visual Feedback & UI Polish [checkpoint: 759f4e6]
 - [x] Task: Implement Z-Index & Isolation Fixes
     - [x] Update `ElementEditor.scss` and `CardContainer.scss` for elevation during drag.
     - [x] Ensure nested drop zones are physically reachable in the DOM.
