@@ -53,30 +53,26 @@ export class CardContainerComponent {
 
   canDropInRow = (rowId: string) => {
     return (drag: CdkDrag) => {
-      const isAnyChildHovered = this.elementService.isAnyChildHovered(rowId);
-      if (isAnyChildHovered) {
-        console.log(`Rejecting drop into ${rowId} because a child is hovered.`);
+      // 1. If any child row of this row is currently hovered, this row should not accept the drop
+      if (this.elementService.isAnyChildHovered(rowId)) {
         return false;
       }
 
+      // 2. Original card rejection logic
       const itemData = drag.data;
       if (!itemData) return true;
 
       if (itemData.type === 'card') {
         const cardId = this.element().id;
         const draggedCardId = itemData.id;
-        if (cardId === draggedCardId) {
-          console.log(`Rejecting drop: card ${cardId} into itself.`);
-          return false;
-        }
-        const isDescendant = this.elementService.isDescendantOf(draggedCardId, cardId);
-        if (isDescendant) {
-          console.log(`Rejecting drop: circular nesting. Parent ${draggedCardId} into child ${cardId}.`);
-          return false;
-        }
+
+        // Cannot drop a card into itself
+        if (cardId === draggedCardId) return false;
+
+        // Cannot drop a card into any of its own descendants
+        return !this.elementService.isDescendantOf(draggedCardId, cardId);
       }
 
-      console.log(`Allowing drop into ${rowId} for item:`, itemData.id || itemData.type);
       return true;
     };
   }

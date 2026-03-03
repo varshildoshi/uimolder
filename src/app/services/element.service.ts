@@ -75,6 +75,10 @@ export class ElementService {
     ]);
   }
 
+  getConnectedIds(excludeId: string): string[] {
+    return this.allContainerIds().filter(id => id !== excludeId).concat('element-selector');
+  }
+
   isDescendantOf(parentId: string, targetId: string): boolean {
     const rows = this.rowsSignal() || [];
     // 1. Find the parent element globally
