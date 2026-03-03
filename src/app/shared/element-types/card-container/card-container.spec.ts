@@ -85,4 +85,56 @@ describe('CardContainerComponent', () => {
     expect(updatedCard?.nestedRows?.[0].elements.length).toBe(1);
     expect(updatedCard?.nestedRows?.[0].elements[0].id).toBe(elementId);
   });
+
+  it('should correctly handle moving an element between two nested rows', () => {
+    const rootRowId = 'root-row';
+    const nestedRow1Id = 'nested-row-1';
+    const nestedRow2Id = 'nested-row-2';
+    const elementId = 'element-1';
+
+    const elementToMove: FormElement = {
+      id: elementId,
+      type: 'text',
+      label: 'To Move',
+      required: false
+    };
+
+    const cardElement: FormElement = {
+      id: 'card-1',
+      type: 'card',
+      label: 'Card',
+      required: false,
+      nestedRows: [
+        { id: nestedRow1Id, elements: [elementToMove] },
+        { id: nestedRow2Id, elements: [] }
+      ]
+    };
+
+    // Initialize service state
+    (elementService as any).rowsSignal.set([
+      { id: rootRowId, elements: [cardElement] }
+    ]);
+
+    fixture.componentRef.setInput('element', cardElement);
+    fixture.detectChanges();
+
+    // Mock CdkDragDrop event: Move from row 1 to row 2
+    const mockEvent: Partial<CdkDragDrop<string>> = {
+      container: { id: nestedRow2Id, data: nestedRow2Id } as any,
+      previousContainer: { id: nestedRow1Id, data: nestedRow1Id } as any,
+      item: { data: elementToMove } as any,
+      currentIndex: 0,
+      previousIndex: 0
+    };
+
+    component.onDropInside(mockEvent as CdkDragDrop<string>, nestedRow2Id);
+
+    const updatedRows = elementService.rows();
+    const updatedCard = updatedRows[0].elements[0];
+    
+    expect(updatedCard.nestedRows?.[0].elements.length).toBe(0);
+    expect(updatedCard.nestedRows?.[1].elements.length).toBe(1);
+    expect(updatedCard.nestedRows?.[1].elements[0].id).toBe(elementId);
+  });
 });
+
