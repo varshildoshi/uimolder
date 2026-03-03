@@ -19,10 +19,10 @@
 - [ ] Task: Conductor - User Manual Verification 'Advanced Drag-and-Drop Engine' (Protocol in workflow.md)
 
 ## Phase 3: Visual Feedback & UI Polish
-- [ ] Task: Implement Z-Index & Isolation Fixes
-    - [ ] Update `ElementEditor.scss` and `CardContainer.scss` for elevation during drag.
-    - [ ] Ensure nested drop zones are physically reachable in the DOM.
-- [ ] Task: Final Recursive Nesting Verification
-    - [ ] Perform "Infinite Cards" test (nesting 3+ levels deep).
-    - [ ] Verify state integrity and code generation for deeply nested structures.
+- [x] Task: Implement Z-Index & Isolation Fixes
+    - [x] Update `ElementEditor.scss` and `CardContainer.scss` for elevation during drag.
+    - [x] Ensure nested drop zones are physically reachable in the DOM.
+- [x] Task: Final Recursive Nesting Verification
+    - [x] Perform "Infinite Cards" test (nesting 3+ levels deep).
+    - [x] Verify state integrity and code generation for deeply nested structures.
 - [ ] Task: Conductor - User Manual Verification 'Visual Feedback & UI Polish' (Protocol in workflow.md)

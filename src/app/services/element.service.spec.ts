@@ -229,7 +229,44 @@ describe('ElementService', () => {
     expect(service.isDescendantOf(leafId, card1Id)).toBeFalse();
     expect(service.isDescendantOf(card2Id, row1Id)).toBeFalse();
   });
+
+  it('should support 4 levels of nesting and maintain ID priority', () => {
+    // Row 0 -> Card 1 -> Row 1 -> Card 2 -> Row 2 -> Card 3 -> Row 3 -> Leaf
+    const leafId = 'leaf';
+    const row3Id = 'row-3';
+    const card3Id = 'card-3';
+    const row2Id = 'row-2';
+    const card2Id = 'card-2';
+    const row1Id = 'row-1';
+    const card1Id = 'card-1';
+    const row0Id = 'row-0';
+
+    const leaf: FormElement = { id: leafId, type: 'text', label: 'Leaf', required: false };
+    const row3: ElementRow = { id: row3Id, elements: [leaf] };
+    const card3: FormElement = { id: card3Id, type: 'card', label: 'C3', required: false, nestedRows: [row3] };
+    const row2: ElementRow = { id: row2Id, elements: [card3] };
+    const card2: FormElement = { id: card2Id, type: 'card', label: 'C2', required: false, nestedRows: [row2] };
+    const row1: ElementRow = { id: row1Id, elements: [card2] };
+    const card1: FormElement = { id: card1Id, type: 'card', label: 'C1', required: false, nestedRows: [row1] };
+
+    (service as any)._rows.set([{ id: row0Id, elements: [card1] }]);
+
+    expect(service.isDescendantOf(card1Id, leafId)).toBeTrue();
+    expect(service.isDescendantOf(card3Id, leafId)).toBeTrue();
+
+    const ids = service.allContainerIds();
+    // Post-order: row3, row2, row1, row0
+    const idx0 = ids.indexOf(row0Id);
+    const idx1 = ids.indexOf(row1Id);
+    const idx2 = ids.indexOf(row2Id);
+    const idx3 = ids.indexOf(row3Id);
+
+    expect(idx3).toBeLessThan(idx2);
+    expect(idx2).toBeLessThan(idx1);
+    expect(idx1).toBeLessThan(idx0);
+  });
 });
+
 
 
 
