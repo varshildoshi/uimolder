@@ -1,6 +1,6 @@
 # Implementation Plan: Nested Card Container Layout
 
-## Phase 1: Core Recursive Architecture
+## Phase 1: Core Recursive Architecture [checkpoint: fd3d634]
 - [x] Task: Harden Recursive Data Models
     - [x] Write failing tests for deep tree structure validation.
     - [x] Ensure `FormElement` and `ElementRow` models are correctly typed for `nestedRows`.
