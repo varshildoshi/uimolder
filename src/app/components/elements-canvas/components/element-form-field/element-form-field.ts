@@ -7,7 +7,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-element-form-field',
-  imports: [TitleCasePipe, FieldPreview, DragDropModule],
+  imports: [FieldPreview, DragDropModule],
   templateUrl: './element-form-field.html',
   styleUrl: './element-form-field.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

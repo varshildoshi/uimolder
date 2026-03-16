@@ -24,8 +24,8 @@ export class CardContainerComponent {
   layoutService = inject(LayoutService);
   elementService = inject(ElementService);
 
-  public readonly flavor = this.layoutService.activeFlavor;
-  public readonly viewMode = this.layoutService.viewMode;
+  readonly flavor = this.layoutService.activeFlavor;
+  readonly viewMode = this.layoutService.viewMode;
 
   isRejectingCard(rowId: string) {
     const item = this.elementService.currentlyDraggedItem();
@@ -33,7 +33,7 @@ export class CardContainerComponent {
     if (hoveredRowId !== rowId || !item) return false;
 
     // Block only if the dragged item is a card and it's either this card or one of its parents
-    if (item.type === 'card') {
+    if (item.type === 'card' && 'id' in item) {
       const cardId = this.element().id;
       // Cannot drop a card into itself or into its own descendants
       return item.id === cardId || this.elementService.isDescendantOf(item.id, cardId);

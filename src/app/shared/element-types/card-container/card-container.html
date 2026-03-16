@@ -2,11 +2,8 @@
 @case ('material') {
 <div class="flex w-full" [class.justify-start]="cardAlignment() === 'left'"
     [class.justify-center]="cardAlignment() === 'center'" [class.justify-end]="cardAlignment() === 'right'">
-    <mat-card class="!bg-[var(--uim-bg-input)] !border !border-[var(--uim-border-color)]" [ngClass]="{
-            'w-full': cardSize() === 'lg',
-            'w-2/3': cardSize() === 'md',
-            'w-1/3': cardSize() === 'sm'
-        }">
+    <mat-card class="!bg-[var(--uim-bg-input)] !border !border-[var(--uim-border-color)]"
+        [class.w-full]="cardSize() === 'lg'" [class.w-2/3]="cardSize() === 'md'" [class.w-1/3]="cardSize() === 'sm'">
         <div
             class="w-full border-b border-(--uim-border-color) px-4 py-3 bg-white/5 font-['Tomorrow'] relative group/header">
             @if (element().label) {
@@ -122,11 +119,7 @@
 <div class="flex w-full" [class.justify-start]="cardAlignment() === 'left'"
     [class.justify-center]="cardAlignment() === 'center'" [class.justify-end]="cardAlignment() === 'right'">
     <div class="bg-[var(--uim-bg-input)] border border-[var(--uim-border-color)] rounded-[var(--uim-radius)] overflow-hidden shadow-xl flex flex-col"
-        [ngClass]="{
-            'w-full': cardSize() === 'lg',
-            'w-2/3': cardSize() === 'md',
-            'w-1/3': cardSize() === 'sm'
-        }">
+        [class.w-full]="cardSize() === 'lg'" [class.w-2/3]="cardSize() === 'md'" [class.w-1/3]="cardSize() === 'sm'">
         <div
             class="px-4 py-3 border-b border-[var(--uim-border-color)] bg-white/5 font-['Tomorrow'] w-full relative group/header">
             @if (element().label) {

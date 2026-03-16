@@ -1,13 +1,13 @@
 import { Injectable, signal } from '@angular/core';
+import { FlavorName } from '../models/element';
 
-export type FlavorName = 'html' | 'tailwind' | 'material';
 export type ViewMode = 'editor' | 'preview';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayoutService {
-  public readonly headerHeight = signal(128);
-  public readonly activeFlavor = signal<FlavorName>('material');
-  public readonly viewMode = signal<ViewMode>('editor');
+  readonly headerHeight = signal(128);
+  readonly activeFlavor = signal<FlavorName>('material');
+  readonly viewMode = signal<ViewMode>('editor');
 }

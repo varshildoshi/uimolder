@@ -4,18 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { LayoutService, FlavorName } from '../../services/layout.service';
+import { LayoutService } from '../../services/layout.service';
 import { ElementsMenu } from '../elements-menu/elements-menu';
 import { ElementsCanvas } from '../elements-canvas/elements-canvas';
 import { ElementsSettings } from '../elements-settings/elements-settings';
 import { ExportModal } from '../../shared/export-modal/export-modal';
-
-export interface Flavor {
-  name: FlavorName;
-  label: string;
-  iconPath: string;
-  color: string;
-}
+import { Flavor } from '../../models/flavor';
 
 @Component({
   selector: 'app-layout-builder',

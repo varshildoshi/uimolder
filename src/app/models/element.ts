@@ -3,6 +3,8 @@ import { ElementRow } from "./element-row";
 
 export type FlavorName = 'html' | 'tailwind' | 'material';
 
+export type DraggedItem = FormElement | ElementTypeDefinition;
+
 export interface ElementTypeDefinition {
     type: string;
     elementType: string; // 'formField' or 'layoutField'

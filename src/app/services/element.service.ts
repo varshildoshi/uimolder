@@ -1,6 +1,6 @@
 import { ApplicationRef, computed, inject, Injectable, signal } from '@angular/core';
 import { ElementRow } from '../models/element-row';
-import { FormElement } from '../models/element';
+import { FormElement, ElementTypeDefinition, DraggedItem } from '../models/element';
 import { startViewTransition } from '../utils/view-transition';
 
 @Injectable({
@@ -10,7 +10,7 @@ export class ElementService {
 
   private rowsSignal = signal<ElementRow[]>([]);
   private selectedElementIdSignal = signal<string | null>(null);
-  readonly currentlyDraggedItem = signal<any | null>(null);
+  readonly currentlyDraggedItem = signal<DraggedItem | null>(null);
   readonly currentlyHoveredRowId = signal<string | null>(null);
   readonly rows = this.rowsSignal.asReadonly();
 

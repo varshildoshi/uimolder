@@ -14,21 +14,21 @@
     - [x] Implement `cdkDropList` for the Toolbox (source) and Canvas (target).
     - [x] Implement `onDrop` logic to handle adding new items and reordering existing ones.
     - [x] Write tests to verify adding and reordering items.
-- [~] Task: Conductor - User Manual Verification 'Core Architecture & Drag-and-Drop Engine' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Core Architecture & Drag-and-Drop Engine' (Protocol in workflow.md)
 
 ## Phase 2: Expanded Component Library & Nested Layouts
-- [ ] Task: Implement Form Elements
-    - [ ] Add `Textarea`, `Checkbox`, `Radio Group`, `Select`, `Datepicker`, `Toggle` to the toolbox.
-    - [ ] Create render logic in the canvas for each new element type.
-    - [ ] Write tests for rendering each form element.
-- [ ] Task: Implement Layout Containers (Recursive)
-    - [ ] Add `Card` and `Row/Grid` container elements.
-    - [ ] Update `ComponentNode` interface to support `children` property.
-    - [ ] Implement recursive rendering logic (e.g., a helper component or `ng-template`) to allow dropping elements *inside* containers.
-    - [ ] Write tests for nested element insertion.
-- [ ] Task: Implement Display & Advanced Elements
-    - [ ] Add `Heading`, `Text`, `Badge`, `Icon`, `Button Group`.
-    - [ ] Add `Modal Trigger`, `Bottom Sheet Trigger`, `Autocomplete`.
+- [x] Task: Implement Form Elements
+    - [x] Add `Textarea`, `Checkbox`, `Radio Group`, `Select`, `Datepicker`, `Toggle` to the toolbox.
+    - [x] Create render logic in the canvas for each new element type.
+    - [x] Write tests for rendering each form element.
+- [x] Task: Implement Layout Containers (Recursive)
+    - [x] Add `Card` and `Row/Grid` container elements.
+    - [x] Update `ComponentNode` interface to support `children` property.
+    - [x] Implement recursive rendering logic (e.g., a helper component or `ng-template`) to allow dropping elements *inside* containers.
+    - [x] Write tests for nested element insertion.
+- [~] Task: Implement Display & Advanced Elements
+    - [~] Add `Heading`, `Text`, `Badge`, `Icon`, `Button Group`.
+    - [~] Add `Modal Trigger`, `Bottom Sheet Trigger`, `Autocomplete`.
     - [ ] Write tests for rendering these elements.
 - [ ] Task: Conductor - User Manual Verification 'Expanded Component Library & Nested Layouts' (Protocol in workflow.md)
 
