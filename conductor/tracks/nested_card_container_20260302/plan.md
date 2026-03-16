@@ -34,4 +34,4 @@
 - [x] Task: Fix issue where parent row captures drag over child and causes reordering jitter 2486e1b
 
 ## Phase: Review Fixes
-- [x] Task: Apply review suggestions 00b2492
+- [x] Task: Synchronize View Transitions with state updates in ElementService d3eb0b0
