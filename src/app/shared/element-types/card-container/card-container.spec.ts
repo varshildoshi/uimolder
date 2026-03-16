@@ -12,6 +12,17 @@ describe('CardContainerComponent', () => {
   let elementService: ElementService;
 
   beforeEach(async () => {
+    // Mock startViewTransition to be synchronous
+    (window as any).document.startViewTransition = (callback: () => void) => {
+      callback();
+      return {
+        finished: Promise.resolve(),
+        ready: Promise.resolve(),
+        updateCallbackDone: Promise.resolve(),
+        skipTransition: () => {}
+      };
+    };
+
     await TestBed.configureTestingModule({
       imports: [CardContainerComponent, DragDropModule],
       providers: [

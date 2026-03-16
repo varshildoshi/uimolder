@@ -167,16 +167,15 @@ export class ElementService {
   }
 
   addRow() {
-    startViewTransition(() => {
-      this.appRef.tick();
-    });
-
     const newRow: ElementRow = {
       id: crypto.randomUUID(),
       elements: []
     };
-    this.rowsSignal.set([...this.rowsSignal(), newRow]);
-    this.appRef.tick();
+
+    startViewTransition(() => {
+      this.rowsSignal.set([...this.rowsSignal(), newRow]);
+      this.appRef.tick();
+    });
   }
 
   addRowToElement(elementId: string) {
@@ -492,11 +491,9 @@ export class ElementService {
     });
 
     startViewTransition(() => {
+      this.rowsSignal.set(finalRows);
       this.appRef.tick();
     });
-
-    this.rowsSignal.set(finalRows);
-    this.appRef.tick();
   }
 
   private removeDeep(elements: FormElement[] | undefined, id: string, onFound: (el: FormElement) => void): FormElement[] {
