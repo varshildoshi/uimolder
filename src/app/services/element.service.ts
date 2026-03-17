@@ -784,4 +784,51 @@ export class ElementService {
     return anyElementChanged ? newElements : elements;
   }
 
+  getNestingDepth(elementId: string): number {
+    let depth = 0;
+    let currentId: string | null = elementId;
+    while(currentId) {
+      const parent = this.findParentOf(currentId);
+      if (parent) {
+        if (parent.type === 'card') {
+          depth++;
+        }
+        currentId = parent.id;
+      } else {
+        currentId = null;
+      }
+    }
+    return depth;
+  }
+
+  findParentOf(childId: string): FormElement | null {
+    const rows = this.rowsSignal();
+    for (const row of rows) {
+      const parent = this.findParentInElements(row.elements, childId);
+      if (parent) return parent;
+    }
+    return null;
+  }
+
+  private findParentInElements(elements: FormElement[], childId: string): FormElement | null {
+    for (const el of elements) {
+      if (el.nestedRows) {
+        for (const row of el.nestedRows) {
+          if (row.elements.some(child => child.id === childId)) {
+            return el;
+          }
+          const parent = this.findParentInElements(row.elements, childId);
+          if (parent) return parent;
+        }
+      }
+      if (el.children) {
+        if (el.children.some(child => child.id === childId)) {
+          return el;
+        }
+        const parent = this.findParentInElements(el.children, childId);
+        if (parent) return parent;
+      }
+    }
+    return null;
+  }
 }

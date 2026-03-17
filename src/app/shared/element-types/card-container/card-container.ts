@@ -27,6 +27,29 @@ export class CardContainerComponent {
   readonly flavor = this.layoutService.activeFlavor;
   readonly viewMode = this.layoutService.viewMode;
 
+  nestingDepth = computed(() => {
+    return this.elementService.getNestingDepth(this.element().id);
+  });
+
+  isRejectingCard(rowId: string) {
+    const item = this.elementService.currentlyDraggedItem();
+    const hoveredRowId = this.elementService.currentlyHoveredRowId();
+    if (hoveredRowId !== rowId || !item || item.type !== 'card') return false;
+
+    // Block nesting beyond 4 levels
+    if (this.nestingDepth() >= 4) {
+      return true;
+    }
+
+    // Block dropping a card into itself or its own descendants
+    if ('id' in item) {
+      const cardId = this.element().id;
+      return item.id === cardId || this.elementService.isDescendantOf(item.id, cardId);
+    }
+
+    return false;
+  }
+
   onRowMouseEnter(rowId: string) {
     if (this.elementService.currentlyDraggedItem()) {
       this.elementService.currentlyHoveredRowId.set(rowId);
@@ -41,6 +64,11 @@ export class CardContainerComponent {
     return (drag: CdkDrag) => {
       // 1. If any child row of this row is currently hovered, this row should not accept the drop
       if (this.elementService.isAnyChildHovered(rowId)) {
+        return false;
+      }
+
+      const item = drag.data;
+      if (item && item.type === 'card' && this.nestingDepth() >= 4) {
         return false;
       }
 

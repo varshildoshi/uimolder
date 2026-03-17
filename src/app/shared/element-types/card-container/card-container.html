@@ -62,7 +62,8 @@
                 <div class="flex flex-wrap gap-4" cdkDropList [id]="row.id" [cdkDropListData]="row.id"
                     (cdkDropListDropped)="onDropInside($event, row.id)"
                     [cdkDropListConnectedTo]="elementService.getConnectedIds(row.id)"
-                    [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDropInRow(row.id)">
+                    [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDropInRow(row.id)"
+                    [class.animate-rejection]="isRejectingCard(row.id)">
 
                     @for (child of row.elements; track child.id) {
                     @if (viewMode() === 'editor') {
@@ -76,10 +77,16 @@
                     }
                     } @empty {
                     @if(viewMode() === 'editor') {
-                    <div
-                        class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full">
+                    <div class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full"
+                        [class.!border-red-500/30]="isRejectingCard(row.id)">
+                        @if (isRejectingCard(row.id)) {
+                        <span
+                            class="text-[10px] text-red-400 italic uppercase tracking-widest font-['Tomorrow']">Nesting
+                            limit of 5 reached</span>
+                        } @else {
                         <span class="text-[10px] text-slate-500 italic uppercase tracking-widest font-['Tomorrow']">Drop
                             elements here</span>
+                        }
                     </div>
                     } @else {
                     <div
