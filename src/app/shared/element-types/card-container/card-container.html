@@ -67,7 +67,7 @@
                     @for (child of row.elements; track child.id) {
                     @if (viewMode() === 'editor') {
                     <app-element-form-field cdkDrag [cdkDragData]="child"
-                        (cdkDragStarted)="elementService.currentlyDraggedItem.set(child)"
+                        (cdkDragStarted)="elementService.currentlyDraggedItem.set(child); elementService.currentlyHoveredRowId.set(row.id)"
                         (cdkDragEnded)="elementService.currentlyDraggedItem.set(null); elementService.currentlyHoveredRowId.set(null)"
                         class="flex-1 cursor-pointer min-w-[150px]" [style.view-transition-name]="'element-' + child.id"
                         [element]="child" />
@@ -178,7 +178,7 @@
                     @for (child of row.elements; track child.id) {
                     @if (viewMode() === 'editor') {
                     <app-element-form-field cdkDrag [cdkDragData]="child"
-                        (cdkDragStarted)="elementService.currentlyDraggedItem.set(child)"
+                        (cdkDragStarted)="elementService.currentlyDraggedItem.set(child); elementService.currentlyHoveredRowId.set(row.id)"
                         (cdkDragEnded)="elementService.currentlyDraggedItem.set(null); elementService.currentlyHoveredRowId.set(null)"
                         class="flex-1 cursor-pointer min-w-[150px]" [style.view-transition-name]="'element-' + child.id"
                         [element]="child" />
@@ -295,7 +295,7 @@
                     @for (child of row.elements; track child.id) {
                     @if (viewMode() === 'editor') {
                     <app-element-form-field cdkDrag [cdkDragData]="child"
-                        (cdkDragStarted)="elementService.currentlyDraggedItem.set(child)"
+                        (cdkDragStarted)="elementService.currentlyDraggedItem.set(child); elementService.currentlyHoveredRowId.set(row.id)"
                         (cdkDragEnded)="elementService.currentlyDraggedItem.set(null); elementService.currentlyHoveredRowId.set(null)"
                         [style.view-transition-name]="'element-' + child.id"
                         style="flex: 1; min-width: 150px; cursor: pointer;" [element]="child" />
