@@ -96,7 +96,6 @@ export const CARD_ELEMENT_DEFINITION: ElementTypeDefinition = {
         {
             type: 'select', key: 'size', label: 'Card Size',
             options: [
-                { label: 'Small', value: 'sm' },
                 { label: 'Medium', value: 'md' },
                 { label: 'Large (Full)', value: 'lg' },
             ]
