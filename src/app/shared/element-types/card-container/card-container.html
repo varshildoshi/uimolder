@@ -37,7 +37,7 @@
             }
         </div>
 
-        <mat-card-content class="!p-0 min-h-[100px] flex flex-col">
+        <mat-card-content class="!p-0 flex flex-col">
             @for (row of element().nestedRows; track row.id) {
             <div class="flex-1 p-4 relative group/nested-row" [ngClass]="viewMode() === 'editor' ? 'ps-10' : ''"
                 (mouseenter)="onRowMouseEnter(row.id)" (mouseleave)="onRowMouseLeave()"
@@ -59,11 +59,10 @@
                 </div>
                 }
 
-                <div class="flex flex-wrap gap-4 min-h-[80px]" cdkDropList [id]="row.id" [cdkDropListData]="row.id"
+                <div class="flex flex-wrap gap-4" cdkDropList [id]="row.id" [cdkDropListData]="row.id"
                     (cdkDropListDropped)="onDropInside($event, row.id)"
                     [cdkDropListConnectedTo]="elementService.getConnectedIds(row.id)"
-                    [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDropInRow(row.id)"
-                    [class.animate-rejection]="isRejectingCard(row.id)">
+                    [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDropInRow(row.id)">
 
                     @for (child of row.elements; track child.id) {
                     @if (viewMode() === 'editor') {
@@ -76,16 +75,20 @@
                     <app-field-preview class="flex-1 min-w-[150px]" [element]="child" />
                     }
                     } @empty {
-                    <div class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full"
-                        [class.!border-red-500/30]="isRejectingCard(row.id)">
-                        @if (isRejectingCard(row.id)) {
-                        <span class="text-[10px] text-red-400 italic uppercase tracking-widest font-['Tomorrow']">Card
-                            Nesting Not Allowed</span>
-                        } @else {
+                    @if(viewMode() === 'editor') {
+                    <div
+                        class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full">
                         <span class="text-[10px] text-slate-500 italic uppercase tracking-widest font-['Tomorrow']">Drop
                             elements here</span>
-                        }
                     </div>
+                    } @else {
+                    <div
+                        class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full">
+                        <span
+                            class="text-[10px] text-slate-500 italic uppercase tracking-widest font-['Tomorrow']">Empty
+                            Row</span>
+                    </div>
+                    }
                     }
                 </div>
 
@@ -159,8 +162,9 @@
 
         <div class="flex flex-col">
             @for (row of element().nestedRows; track row.id) {
-            <div class="p-4 ps-10 relative group/nested-row" (mouseenter)="onRowMouseEnter(row.id)"
-                (mouseleave)="onRowMouseLeave()" [style.view-transition-name]="'row-' + row.id">
+            <div class="p-4 relative group/nested-row" [ngClass]="viewMode() === 'editor' ? 'ps-10' : ''"
+                (mouseenter)="onRowMouseEnter(row.id)" (mouseleave)="onRowMouseLeave()"
+                [style.view-transition-name]="'row-' + row.id">
 
                 @if (viewMode() === 'editor') {
                 <div class="flex justify-between items-center mb-2">
@@ -178,11 +182,10 @@
                 </div>
                 }
 
-                <div class="min-h-[80px] flex-1 flex flex-wrap gap-4" cdkDropList [id]="row.id"
-                    [cdkDropListData]="row.id" (cdkDropListDropped)="onDropInside($event, row.id)"
+                <div class="flex-1 flex flex-wrap gap-4" cdkDropList [id]="row.id" [cdkDropListData]="row.id"
+                    (cdkDropListDropped)="onDropInside($event, row.id)"
                     [cdkDropListConnectedTo]="elementService.getConnectedIds(row.id)"
-                    [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDropInRow(row.id)"
-                    [class.animate-rejection]="isRejectingCard(row.id)">
+                    [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDropInRow(row.id)">
 
                     @for (child of row.elements; track child.id) {
                     @if (viewMode() === 'editor') {
@@ -195,17 +198,20 @@
                     <app-field-preview class="flex-1 min-w-[150px]" [element]="child" />
                     }
                     } @empty {
-                    <div class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full"
-                        [class.!border-red-500/30]="isRejectingCard(row.id)">
-                        @if (isRejectingCard(row.id)) {
-                        <span class="text-[10px] text-red-400 italic font-['Tomorrow'] uppercase tracking-widest">Card
-                            Nesting Not Allowed</span>
-                        } @else {
-                        <span
-                            class="text-[10px] text-slate-500 italic font-['Tomorrow'] uppercase tracking-widest">Empty
-                            Row</span>
-                        }
+                    @if(viewMode() === 'editor') {
+                    <div
+                        class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full">
+                        <span class="text-[10px] text-slate-500 italic uppercase tracking-widest font-['Tomorrow']">Drop
+                            elements here</span>
                     </div>
+                    } @else {
+                    <div
+                        class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full">
+                        <span
+                            class="text-[10px] text-slate-500 italic uppercase tracking-widest font-['Tomorrow']">Empty
+                            Row</span>
+                    </div>
+                    }
                     }
                 </div>
 
@@ -272,7 +278,8 @@
 
         <div style="display: flex; flex-direction: column;">
             @for (row of element().nestedRows; track row.id) {
-            <div style="padding: 16px; padding-left: 40px; position: relative;" class="group/nested-row"
+            <div style="padding: 16px; padding-left: 40px; position: relative;"
+                [style.padding-left]="viewMode() === 'editor' ? '40px' : '16px'" class="group/nested-row"
                 (mouseenter)="onRowMouseEnter(row.id)" (mouseleave)="onRowMouseLeave()"
                 [style.view-transition-name]="'row-' + row.id">
 
@@ -299,9 +306,7 @@
                 <div style="display: flex; flex-wrap: wrap; gap: 16px;" cdkDropList [id]="row.id"
                     [cdkDropListData]="row.id" (cdkDropListDropped)="onDropInside($event, row.id)"
                     [cdkDropListConnectedTo]="elementService.getConnectedIds(row.id)"
-                    [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDropInRow(row.id)"
-                    [class.animate-rejection]="isRejectingCard(row.id)"
-                    [style.border]="isRejectingCard(row.id) ? '2px dashed rgba(239, 68, 68, 0.5)' : ''">
+                    [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDropInRow(row.id)">
                     @for (child of row.elements; track child.id) {
                     @if (viewMode() === 'editor') {
                     <app-element-form-field cdkDrag [cdkDragData]="child"
@@ -313,10 +318,20 @@
                     <app-field-preview style="flex: 1; min-width: 150px;" [element]="child" />
                     }
                     } @empty {
+                    @if(viewMode() === 'editor') {
                     <div
-                        style="flex: 1; border: 2px dashed #334155; border-radius: 8px; padding: 24px; text-align: center; color: #475569; font-size: 10px; font-style: italic; text-transform: uppercase; width: 100%; box-sizing: border-box;">
-                        Empty Row
+                        class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full">
+                        <span class="text-[10px] text-slate-500 italic uppercase tracking-widest font-['Tomorrow']">Drop
+                            elements here</span>
                     </div>
+                    } @else {
+                    <div
+                        class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full">
+                        <span
+                            class="text-[10px] text-slate-500 italic uppercase tracking-widest font-['Tomorrow']">Empty
+                            Row</span>
+                    </div>
+                    }
                     }
                 </div>
 

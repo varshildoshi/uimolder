@@ -27,20 +27,6 @@ export class CardContainerComponent {
   readonly flavor = this.layoutService.activeFlavor;
   readonly viewMode = this.layoutService.viewMode;
 
-  isRejectingCard(rowId: string) {
-    const item = this.elementService.currentlyDraggedItem();
-    const hoveredRowId = this.elementService.currentlyHoveredRowId();
-    if (hoveredRowId !== rowId || !item) return false;
-
-    // Block only if the dragged item is a card and it's either this card or one of its parents
-    if (item.type === 'card' && 'id' in item) {
-      const cardId = this.element().id;
-      // Cannot drop a card into itself or into its own descendants
-      return item.id === cardId || this.elementService.isDescendantOf(item.id, cardId);
-    }
-    return false;
-  }
-
   onRowMouseEnter(rowId: string) {
     if (this.elementService.currentlyDraggedItem()) {
       this.elementService.currentlyHoveredRowId.set(rowId);
@@ -56,21 +42,6 @@ export class CardContainerComponent {
       // 1. If any child row of this row is currently hovered, this row should not accept the drop
       if (this.elementService.isAnyChildHovered(rowId)) {
         return false;
-      }
-
-      // 2. Original card rejection logic
-      const itemData = drag.data;
-      if (!itemData) return true;
-
-      if (itemData.type === 'card') {
-        const cardId = this.element().id;
-        const draggedCardId = itemData.id;
-
-        // Cannot drop a card into itself
-        if (cardId === draggedCardId) return false;
-
-        // Cannot drop a card into any of its own descendants
-        return !this.elementService.isDescendantOf(draggedCardId, cardId);
       }
 
       return true;
