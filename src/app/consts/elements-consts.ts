@@ -65,7 +65,6 @@ export const CARD_ELEMENT_DEFINITION: ElementTypeDefinition = {
     defaultConfig: {
         label: 'Card Header',
         level: 'h4',
-        textAlign: 'left',
         alignment: 'center',
         size: 'lg',
         required: false,
@@ -84,14 +83,6 @@ export const CARD_ELEMENT_DEFINITION: ElementTypeDefinition = {
                 { label: 'H4', value: 'h4' },
                 { label: 'H5', value: 'h5' },
                 { label: 'H6', value: 'h6' },
-            ]
-        },
-        {
-            type: 'select', key: 'textAlign', label: 'Header Alignment',
-            options: [
-                { label: 'Left', value: 'left' },
-                { label: 'Center', value: 'center' },
-                { label: 'Right', value: 'right' },
             ]
         },
         {

@@ -7,7 +7,7 @@
         <div
             class="w-full border-b border-(--uim-border-color) px-4 py-3 bg-white/5 font-['Tomorrow'] relative group/header">
             @if (element().label) {
-            <div class="w-full" [style.text-align]="headerTextAlign()">
+            <div class="w-full">
                 @switch (level()) {
                 @case ('h1') { <h1 class="text-4xl font-extrabold m-0! !text-[var(--uim-accent-color)] tracking-tight">
                     {{element().label}}</h1> }
@@ -39,8 +39,9 @@
 
         <mat-card-content class="!p-0 min-h-[100px] flex flex-col">
             @for (row of element().nestedRows; track row.id) {
-            <div class="flex-1 p-4 ps-10 relative group/nested-row" (mouseenter)="onRowMouseEnter(row.id)"
-                (mouseleave)="onRowMouseLeave()" [style.view-transition-name]="'row-' + row.id">
+            <div class="flex-1 p-4 relative group/nested-row" [ngClass]="viewMode() === 'editor' ? 'ps-10' : ''"
+                (mouseenter)="onRowMouseEnter(row.id)" (mouseleave)="onRowMouseLeave()"
+                [style.view-transition-name]="'row-' + row.id">
 
                 @if (viewMode() === 'editor') {
                 <div class="flex justify-between items-center mb-2">
@@ -89,21 +90,25 @@
                 </div>
 
                 @if (viewMode() === 'editor') {
-                <div class="absolute left-1 flex flex-col gap-2 top-1/2 -translate-y-1/2">
+                <div class="absolute left-1 flex flex-col gap-3 top-1/2 -translate-y-1/2">
                     <button [disabled]="$first" (click)="elementService.moveRowUp(row.id)" class="p-1 rounded-full transition-colors 
            hover:bg-slate-500/30 
            disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 15l-6-6-6 6" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-up">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M6 15l6 -6l6 6" />
                         </svg>
                     </button>
                     <button [disabled]="$last" (click)="elementService.moveRowDown(row.id)" class="p-1 rounded-full transition-colors 
            hover:bg-slate-500/30 
            disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 9l6 6 6-6" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-down">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M6 9l6 6l6 -6" />
                         </svg>
                     </button>
                 </div>
@@ -123,7 +128,7 @@
         <div
             class="px-4 py-3 border-b border-[var(--uim-border-color)] bg-white/5 font-['Tomorrow'] w-full relative group/header">
             @if (element().label) {
-            <div class="w-full" [style.text-align]="headerTextAlign()">
+            <div class="w-full">
                 @switch (level()) {
                 @case ('h1') { <h1 class="text-4xl font-extrabold tracking-tight text-[var(--uim-accent-color)]">
                     {{element().label}}</h1> }
@@ -141,9 +146,13 @@
             }
 
             @if (viewMode() === 'editor') {
-            <button (click)="elementService.addRowToElement(element().id)"
-                class="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/header:opacity-100 px-2 py-1 border border-white/10 rounded-md text-[8px] font-bold uppercase tracking-wider bg-white/5 hover:bg-brand-gold hover:text-black transition-all">
-                Add Row
+            <button (click)="elementService.addRowToElement(element().id)" class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-md btn-outline 
+                !rounded-lg !py-1 !px-2 gap-1 !text-[10px]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5l0 14" />
+                    <path d="M5 12l14 0" />
+                </svg> Add Row
             </button>
             }
         </div>
@@ -201,8 +210,7 @@
                 </div>
 
                 @if (viewMode() === 'editor') {
-                <div
-                    class="absolute left-1 flex flex-col gap-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/nested-row:opacity-100 transition-opacity">
+                <div class="absolute left-1 flex flex-col gap-2 top-1/2 -translate-y-1/2">
                     <button [disabled]="$first" (click)="elementService.moveRowUp(row.id)"
                         class="p-1 rounded-full hover:bg-slate-500/30 disabled:opacity-30">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -235,7 +243,7 @@
         <div style="padding: 12px 16px; border-bottom: 1px solid var(--uim-border-color); color: var(--uim-accent-color); width: 100%; box-sizing: border-box; position: relative;"
             class="group/header">
             @if (element().label) {
-            <div [style.text-align]="headerTextAlign()">
+            <div class="w-full">
                 @switch (level()) {
                 @case ('h1') { <h1 style="margin: 0; font-size: 36px; font-weight: 800; letter-spacing: -0.025em;">
                     {{element().label}}</h1> }
@@ -251,10 +259,13 @@
             }
 
             @if (viewMode() === 'editor') {
-            <button (click)="elementService.addRowToElement(element().id)"
-                style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); padding: 4px 8px; font-size: 8px; cursor: pointer; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;"
-                class="opacity-0 group-hover/header:opacity-100">
-                ADD ROW
+            <button (click)="elementService.addRowToElement(element().id)" class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-md btn-outline 
+                !rounded-lg !py-1 !px-2 gap-1 !text-[10px]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5l0 14" />
+                    <path d="M5 12l14 0" />
+                </svg> Add Row
             </button>
             }
         </div>
@@ -285,9 +296,8 @@
                 </div>
                 }
 
-                <div style="display: flex; flex-wrap: wrap; gap: 16px; width: 100%; height: 100%; min-height: 60px;"
-                    cdkDropList [id]="row.id" [cdkDropListData]="row.id"
-                    (cdkDropListDropped)="onDropInside($event, row.id)"
+                <div style="display: flex; flex-wrap: wrap; gap: 16px;" cdkDropList [id]="row.id"
+                    [cdkDropListData]="row.id" (cdkDropListDropped)="onDropInside($event, row.id)"
                     [cdkDropListConnectedTo]="elementService.getConnectedIds(row.id)"
                     [cdkDropListOrientation]="'horizontal'" [cdkDropListEnterPredicate]="canDropInRow(row.id)"
                     [class.animate-rejection]="isRejectingCard(row.id)"
@@ -311,10 +321,10 @@
                 </div>
 
                 @if (viewMode() === 'editor') {
-                <div style="position: absolute; left: 4px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px;"
-                    class="opacity-0 group-hover/nested-row:opacity-100 transition-opacity">
+                <div
+                    style="position: absolute; left: 4px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px;">
                     <button [disabled]="$first" (click)="elementService.moveRowUp(row.id)"
-                        style="padding: 4px; border-radius: 50%; cursor: pointer; background: transparent; color: #64748b; border: none;"
+                        class="p-1 rounded-full hover:bg-slate-500/30 disabled:opacity-30"
                         onmouseover="this.style.backgroundColor='rgba(100, 116, 139, 0.15)'"
                         onmouseout="this.style.backgroundColor='transparent'">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -323,7 +333,7 @@
                         </svg>
                     </button>
                     <button [disabled]="$last" (click)="elementService.moveRowDown(row.id)"
-                        style="padding: 4px; border-radius: 50%; cursor: pointer; background: transparent; color: #64748b; border: none;"
+                        class="p-1 rounded-full hover:bg-slate-500/30 disabled:opacity-30"
                         onmouseover="this.style.backgroundColor='rgba(100, 116, 139, 0.15)'"
                         onmouseout="this.style.backgroundColor='transparent'">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
