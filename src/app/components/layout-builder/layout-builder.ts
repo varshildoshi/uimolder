@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -10,6 +10,7 @@ import { ElementsCanvas } from '../elements-canvas/elements-canvas';
 import { ElementsSettings } from '../elements-settings/elements-settings';
 import { ExportModal } from '../../shared/export-modal/export-modal';
 import { Flavor } from '../../models/flavor';
+import { ElementService } from '../../services/element.service';
 
 @Component({
   selector: 'app-layout-builder',
@@ -29,8 +30,9 @@ import { Flavor } from '../../models/flavor';
   styleUrl: './layout-builder.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LayoutBuilder {
+export class LayoutBuilder implements OnDestroy {
   private readonly layoutService = inject(LayoutService);
+  private readonly elementService = inject(ElementService);
   readonly headerHeight = this.layoutService.headerHeight;
   readonly isExportOpen = signal(false);
   readonly viewMode = this.layoutService.viewMode;
@@ -59,5 +61,9 @@ export class LayoutBuilder {
 
   exportLayout() {
     this.isExportOpen.set(true);
+  }
+
+  ngOnDestroy() {
+    this.elementService.reset();
   }
 }

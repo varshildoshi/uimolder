@@ -67,12 +67,17 @@ export class ElementService {
   });
 
   constructor() {
+    this.reset();
+  }
+
+  reset() {
     this.rowsSignal.set([
       {
         id: crypto.randomUUID(),
         elements: []
       }
     ]);
+    this.selectedElementIdSignal.set(null);
   }
 
   getConnectedIds(excludeId: string): string[] {
