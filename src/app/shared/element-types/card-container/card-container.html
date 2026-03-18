@@ -82,7 +82,7 @@
                         @if (isRejectingCard(row.id)) {
                         <span
                             class="text-[10px] text-red-400 italic uppercase tracking-widest font-['Tomorrow']">Nesting
-                            limit of 5 reached</span>
+                            limit of {{nestingLimit + 1}} reached</span>
                         } @else {
                         <span class="text-[10px] text-slate-500 italic uppercase tracking-widest font-['Tomorrow']">Drop
                             elements here</span>

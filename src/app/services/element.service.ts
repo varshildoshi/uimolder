@@ -1,7 +1,6 @@
 import { ApplicationRef, computed, inject, Injectable, signal } from '@angular/core';
 import { ElementRow } from '../models/element-row';
-import { FormElement, ElementTypeDefinition, DraggedItem } from '../models/element';
-import { startViewTransition } from '../utils/view-transition';
+import { FormElement, DraggedItem } from '../models/element';
 
 @Injectable({
   providedIn: 'root',
@@ -28,9 +27,7 @@ export class ElementService {
         if (el.nestedRows) {
           el.nestedRows.forEach(r => {
             if (r) {
-              // Recurse first (deeper children first)
               getDeepIds(r.elements);
-              // Then push the row ID (post-order)
               nestedIds.push(r.id);
             }
           });
@@ -48,7 +45,6 @@ export class ElementService {
       }
     });
 
-    // Return nested IDs first so CDK hit testing prioritizes them over top-level containers
     return [...nestedIds, ...topLevelIds];
   });
 
@@ -86,7 +82,6 @@ export class ElementService {
 
   isDescendantOf(parentId: string, targetId: string): boolean {
     const rows = this.rowsSignal() || [];
-    // 1. Find the parent element globally
     let parentElement: FormElement | undefined;
     for (const row of rows) {
       parentElement = this.findDeep(row.elements, parentId);
@@ -94,8 +89,6 @@ export class ElementService {
     }
 
     if (!parentElement) return false;
-
-    // 2. Check if targetId (element or row) is a descendant of parentElement
     return this.isInside(parentElement, targetId);
   }
 
@@ -176,11 +169,7 @@ export class ElementService {
       id: crypto.randomUUID(),
       elements: []
     };
-
-    startViewTransition(() => {
-      this.rowsSignal.set([...this.rowsSignal(), newRow]);
-      this.appRef.tick();
-    });
+    this.rowsSignal.set([...this.rowsSignal(), newRow]);
   }
 
   addRowToElement(elementId: string) {
@@ -197,10 +186,7 @@ export class ElementService {
     });
 
     if (changed) {
-      startViewTransition(() => {
-        this.rowsSignal.set(newRows);
-        this.appRef.tick();
-      });
+      this.rowsSignal.set(newRows);
     }
   }
 
@@ -231,7 +217,6 @@ export class ElementService {
           return { ...el, nestedRows: newNestedRows };
         }
       }
-      // Add recursion for children if needed
       if (el.children) {
         const updatedChildren = this.updateDeepAddRow(el.children, targetId);
         if (updatedChildren !== el.children) {
@@ -248,10 +233,7 @@ export class ElementService {
     const rows = this.rowsSignal() || [];
     if (rows.some(r => r && r.id === rowId)) {
       if (rows.length === 1) return;
-      startViewTransition(() => {
-        this.rowsSignal.set(rows.filter(row => row && row.id !== rowId));
-        this.appRef.tick();
-      });
+      this.rowsSignal.set(rows.filter(row => row && row.id !== rowId));
       return;
     }
 
@@ -267,10 +249,7 @@ export class ElementService {
     });
 
     if (changed) {
-      startViewTransition(() => {
-        this.rowsSignal.set(newRows);
-        this.appRef.tick();
-      });
+      this.rowsSignal.set(newRows);
     }
   }
 
@@ -339,10 +318,7 @@ export class ElementService {
     });
 
     if (changed) {
-      startViewTransition(() => {
-        this.rowsSignal.set(newRows);
-        this.appRef.tick();
-      });
+      this.rowsSignal.set(newRows);
     }
   }
 
@@ -407,10 +383,7 @@ export class ElementService {
     });
 
     if (changed) {
-      startViewTransition(() => {
-        this.rowsSignal.set(newRows);
-        this.appRef.tick();
-      });
+      this.rowsSignal.set(newRows);
     }
   }
 
@@ -418,7 +391,6 @@ export class ElementService {
     if (!elements) return [];
     let anyChanged = false;
 
-    // First, check if any element at this level should be filtered out
     const filteredElements = elements.filter(el => el && el.id !== id);
     if (filteredElements.length !== elements.length) {
       anyChanged = true;
@@ -464,7 +436,6 @@ export class ElementService {
     let elementToMove: FormElement | undefined;
     const rows = this.rowsSignal() || [];
 
-    // 1. Globally find and remove the element (ignore sourceContainerId if not found there)
     const rowsAfterRemoval = rows.map(row => {
       if (!row || !row.elements) return row;
       const updatedElements = this.removeDeep(row.elements, elementId, (found) => {
@@ -478,7 +449,6 @@ export class ElementService {
 
     if (!elementToMove) return;
 
-    // 2. Globally find the target container and insert
     const finalRows = rowsAfterRemoval.map(row => {
       if (!row) return row;
       if (row.id === targetContainerId) {
@@ -495,17 +465,13 @@ export class ElementService {
       return row;
     });
 
-    startViewTransition(() => {
-      this.rowsSignal.set(finalRows);
-      this.appRef.tick();
-    });
+    this.rowsSignal.set(finalRows);
   }
 
   private removeDeep(elements: FormElement[] | undefined, id: string, onFound: (el: FormElement) => void): FormElement[] {
     if (!elements) return [];
     let anyChanged = false;
 
-    // Check if element is at this level
     const idx = elements.findIndex(el => el && el.id === id);
     if (idx !== -1) {
       onFound(elements[idx]);
@@ -601,10 +567,7 @@ export class ElementService {
 
   setSelectedElement(elementId: string | null) {
     if (this.selectedElementIdSignal() === elementId) return;
-    startViewTransition(() => {
-      this.selectedElementIdSignal.set(elementId);
-      this.appRef.tick();
-    });
+    this.selectedElementIdSignal.set(elementId);
   }
 
   updateElement(elementId: string, data: Partial<FormElement>) {
@@ -621,10 +584,7 @@ export class ElementService {
     });
 
     if (changed) {
-      startViewTransition(() => {
-        this.rowsSignal.set(newRows);
-        this.appRef.tick();
-      });
+      this.rowsSignal.set(newRows);
     }
   }
 
@@ -677,12 +637,9 @@ export class ElementService {
     const index = rows.findIndex(r => r && r.id === rowId);
 
     if (index > 0) {
-      startViewTransition(() => {
-        const newRows = [...rows];
-        [newRows[index - 1], newRows[index]] = [newRows[index], newRows[index - 1]];
-        this.rowsSignal.set(newRows);
-        this.appRef.tick();
-      });
+      const newRows = [...rows];
+      [newRows[index - 1], newRows[index]] = [newRows[index], newRows[index - 1]];
+      this.rowsSignal.set(newRows);
       return;
     }
 
@@ -698,10 +655,7 @@ export class ElementService {
     });
 
     if (changed) {
-      startViewTransition(() => {
-        this.rowsSignal.set(newRows);
-        this.appRef.tick();
-      });
+      this.rowsSignal.set(newRows);
     }
   }
 
@@ -710,12 +664,9 @@ export class ElementService {
     const index = rows.findIndex(r => r && r.id === rowId);
 
     if (index !== -1 && index < rows.length - 1) {
-      startViewTransition(() => {
-        const newRows = [...rows];
-        [newRows[index], newRows[index + 1]] = [newRows[index + 1], newRows[index]];
-        this.rowsSignal.set(newRows);
-        this.appRef.tick();
-      });
+      const newRows = [...rows];
+      [newRows[index], newRows[index + 1]] = [newRows[index + 1], newRows[index]];
+      this.rowsSignal.set(newRows);
       return;
     }
 
@@ -731,10 +682,7 @@ export class ElementService {
     });
 
     if (changed) {
-      startViewTransition(() => {
-        this.rowsSignal.set(newRows);
-        this.appRef.tick();
-      });
+      this.rowsSignal.set(newRows);
     }
   }
 

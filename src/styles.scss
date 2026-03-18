@@ -304,15 +304,15 @@ body {
   animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
+/* Disable default cross-fade to prevent full-page flicker "artifacts" */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 /* Ensure individual elements and rows also transition smoothly */
 ::view-transition-group(*) {
   animation-duration: 0.3s;
   animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
-}
-
-/* Prevent cross-fade "ghosting" for morphing elements */
-::view-transition-old(.row-transition),
-::view-transition-new(.row-transition) {
-  mix-blend-mode: normal;
-  animation-duration: 0.3s;
 }

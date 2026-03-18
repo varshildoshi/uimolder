@@ -6,7 +6,7 @@
     <!-- View Toggle (Left Aligned) -->
     <div class="w-48 flex justify-start">
       <div class="flex items-center gap-1 bg-white/5 p-1 rounded-xl border border-white/10 backdrop-blur-md">
-        <button (click)="viewMode.set('editor')" [class.bg-brand-gold]="viewMode() === 'editor'"
+        <button (click)="setViewMode('editor')" [class.bg-brand-gold]="viewMode() === 'editor'"
           [class.text-black]="viewMode() === 'editor'"
           class="px-4 py-1.5 rounded-lg text-[12px] font-medium transition-all flex items-center gap-2 tracking-widest">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -20,7 +20,7 @@
           </svg>
           Editor
         </button>
-        <button (click)="viewMode.set('preview')" [class.bg-brand-gold]="viewMode() === 'preview'"
+        <button (click)="setViewMode('preview')" [class.bg-brand-gold]="viewMode() === 'preview'"
           [class.text-black]="viewMode() === 'preview'"
           class="px-4 py-1.5 rounded-lg text-[12px] font-medium transition-all flex items-center gap-2 tracking-widest">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -41,7 +41,7 @@
       <div
         class="flex items-center gap-4 px-4 py-2 rounded-xl border border-white/10 bg-white/5 backdrop-blur-xl animate-in fade-in duration-300">
         @for (flavor of flavors; track flavor.name) {
-        <button (click)="activeFlavor.set(flavor.name)"
+        <button (click)="setActiveFlavor(flavor.name)"
           class="flex items-center gap-2 text-sm font-medium transition-all px-3 py-1 rounded-lg"
           [class.bg-white/10]="activeFlavor() === flavor.name"
           [class.backdrop-blur-md]="activeFlavor() === flavor.name">

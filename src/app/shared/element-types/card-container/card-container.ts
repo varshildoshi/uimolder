@@ -27,6 +27,8 @@ export class CardContainerComponent {
   readonly flavor = this.layoutService.activeFlavor;
   readonly viewMode = this.layoutService.viewMode;
 
+  readonly nestingLimit = 2;
+
   nestingDepth = computed(() => {
     return this.elementService.getNestingDepth(this.element().id);
   });
@@ -37,7 +39,7 @@ export class CardContainerComponent {
     if (hoveredRowId !== rowId || !item || item.type !== 'card') return false;
 
     // Block nesting beyond 4 levels
-    if (this.nestingDepth() >= 4) {
+    if (this.nestingDepth() >= this.nestingLimit) {
       return true;
     }
 
@@ -68,7 +70,7 @@ export class CardContainerComponent {
       }
 
       const item = drag.data;
-      if (item && item.type === 'card' && this.nestingDepth() >= 4) {
+      if (item && item.type === 'card' && this.nestingDepth() >= this.nestingLimit) {
         return false;
       }
 

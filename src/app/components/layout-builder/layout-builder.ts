@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, inject, OnDestroy, ApplicationRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -11,6 +11,8 @@ import { ElementsSettings } from '../elements-settings/elements-settings';
 import { ExportModal } from '../../shared/export-modal/export-modal';
 import { Flavor } from '../../models/flavor';
 import { ElementService } from '../../services/element.service';
+import { startViewTransition } from '../../utils/view-transition';
+import { FlavorName } from '../../models/element';
 
 @Component({
   selector: 'app-layout-builder',
@@ -33,6 +35,7 @@ import { ElementService } from '../../services/element.service';
 export class LayoutBuilder implements OnDestroy {
   private readonly layoutService = inject(LayoutService);
   private readonly elementService = inject(ElementService);
+  private readonly appRef = inject(ApplicationRef);
   readonly headerHeight = this.layoutService.headerHeight;
   readonly isExportOpen = signal(false);
   readonly viewMode = this.layoutService.viewMode;
@@ -58,6 +61,22 @@ export class LayoutBuilder implements OnDestroy {
       iconPath: 'M12 2L3.8 4.9l1.2 10.9L12 21l7-5.2 1.2-10.9L12 2zm0 2l5.1 11.5h-1.9l-1-2.6H9.8l-1 2.6H6.9L12 4zm1.5 7.4L12 7.8l-1.5 3.6h3z'
     }
   ];
+
+  setViewMode(mode: 'editor' | 'preview') {
+    if (this.viewMode() === mode) return;
+    startViewTransition(() => {
+      this.layoutService.viewMode.set(mode);
+      this.appRef.tick();
+    });
+  }
+
+  setActiveFlavor(flavor: FlavorName) {
+    if (this.activeFlavor() === flavor) return;
+    startViewTransition(() => {
+      this.layoutService.activeFlavor.set(flavor);
+      this.appRef.tick();
+    });
+  }
 
   exportLayout() {
     this.isExportOpen.set(true);
