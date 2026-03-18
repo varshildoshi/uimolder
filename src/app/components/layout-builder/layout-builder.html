@@ -12,8 +12,7 @@
       @for (flavor of flavors; track flavor.name) {
       <button (click)="activeFlavor.set(flavor.name)"
         class="flex items-center gap-2 text-sm font-medium transition-all px-3 py-1 rounded-lg"
-        [class.bg-white/10]="activeFlavor() === flavor.name"
-        [class.backdrop-blur-md]="activeFlavor() === flavor.name">
+        [class.bg-white/10]="activeFlavor() === flavor.name" [class.backdrop-blur-md]="activeFlavor() === flavor.name">
         <svg width="20" height="20" viewBox="0 0 24 24">
           <path [attr.fill]="activeFlavor() === flavor.name ? flavor.color : 'rgba(255,255,255,0.5)'"
             [attr.d]="flavor.iconPath" />
@@ -50,6 +49,15 @@
     <!-- Modular Right Sidebar / Settings -->
     <app-elements-settings class="shrink-0" />
   </div>
+
+  <footer class="flex items-center justify-center h-12 border-t border-white/5 bg-canvas/60 text-sm text-slate-500">
+    Made with <svg xmlns="http://www.w3.org/2000/svg"
+      class="icon icon-tabler icon-tabler-heart filled text-red-500 mx-1" width="16" height="16" viewBox="0 0 24 24"
+      stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+      <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path>
+    </svg> for a better UI
+  </footer>
 
   <app-export-modal [isOpen]="isExportOpen()" (close)="isExportOpen.set(false)" />
 </div>

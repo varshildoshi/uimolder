@@ -1,4 +1,4 @@
-<div class="py-5">
+<div class="px-8">
     @for(row of elementService.rows(); track row.id) {
     <div cdkDropList [id]="row.id" [cdkDropListData]="row.id" (cdkDropListDropped)="onDropInRow($event, row.id)"
         [cdkDropListOrientation]="'horizontal'" [cdkDropListConnectedTo]="elementService.getConnectedIds(row.id)"
@@ -26,7 +26,8 @@
             @for (element of row.elements; track element.id) {
             <app-element-form-field cdkDrag [cdkDragData]="element"
                 (cdkDragStarted)="elementService.currentlyDraggedItem.set(element); elementService.currentlyHoveredRowId.set(row.id)"
-                (cdkDragEnded)="elementService.currentlyDraggedItem.set(null); elementService.currentlyHoveredRowId.set(null)"                class="flex-1 cursor-pointer min-w-50" [style.view-transition-name]="'element-' + element.id"
+                (cdkDragEnded)="elementService.currentlyDraggedItem.set(null); elementService.currentlyHoveredRowId.set(null)"
+                class="flex-1 cursor-pointer min-w-50" [style.view-transition-name]="'element-' + element.id"
                 [style.view-transition-class]="'element-transition'" [element]="element" />
             } @empty{
             <div
