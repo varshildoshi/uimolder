@@ -4,6 +4,7 @@ import { TitleCasePipe } from '@angular/common';
 import { ElementService } from '../../../../services/element.service';
 import { FieldPreview } from '../field-preview/field-preview';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { LayoutService } from '../../../../services/layout.service';
 
 @Component({
   selector: 'app-element-form-field',
@@ -16,6 +17,7 @@ export class ElementFormField {
 
   element = input.required<FormElement>();
   elementService = inject(ElementService);
+  viewMode = inject(LayoutService).viewMode;
 
   selectElement(e: Event) {
     e.stopPropagation();

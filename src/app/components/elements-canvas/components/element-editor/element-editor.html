@@ -24,7 +24,7 @@
         </div>
         <div class="flex flex-wrap gap-4 min-h-20">
             @for (element of row.elements; track element.id) {
-            <app-element-form-field cdkDrag [cdkDragData]="element"
+            <app-element-form-field cdkDrag [cdkDragDisabled]="viewMode() === 'preview'" [cdkDragData]="element"
                 (cdkDragStarted)="elementService.currentlyDraggedItem.set(element); elementService.currentlyHoveredRowId.set(row.id)"
                 (cdkDragEnded)="elementService.currentlyDraggedItem.set(null); elementService.currentlyHoveredRowId.set(null)"
                 class="flex-1 cursor-pointer min-w-50" [style.view-transition-name]="'element-' + element.id"

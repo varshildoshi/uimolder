@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ElementFormField } from '../element-form-field/element-form-field';
 import { ElementService } from '../../../../services/element.service';
 import { ElementTypeDefinition, FormElement } from '../../../../models/element';
+import { LayoutService } from '../../../../services/layout.service';
 
 @Component({
   selector: 'app-element-editor',
@@ -15,6 +16,7 @@ import { ElementTypeDefinition, FormElement } from '../../../../models/element';
 export class ElementEditor {
 
   elementService = inject(ElementService);
+  viewMode = inject(LayoutService).viewMode;
 
   canDrop = (rowId: string) => {
     return (drag: CdkDrag) => {

@@ -3,24 +3,57 @@
 
   <header
     class="h-16 border-b border-white/5 bg-canvas/60 backdrop-blur-xl flex items-center justify-between px-8 shrink-0 relative [view-transition-name:top-header] z-100">
-    <!-- Left Placeholder for centering -->
-    <div class="w-48 hidden md:block"></div>
+    <!-- View Toggle (Left Aligned) -->
+    <div class="w-48 flex justify-start">
+      <div class="flex items-center gap-1 bg-white/5 p-1 rounded-xl border border-white/10 backdrop-blur-md">
+        <button (click)="viewMode.set('editor')" [class.bg-brand-gold]="viewMode() === 'editor'"
+          [class.text-black]="viewMode() === 'editor'"
+          class="px-4 py-1.5 rounded-lg text-[12px] font-medium transition-all flex items-center gap-2 tracking-widest">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="icon icon-tabler icons-tabler-outline icon-tabler-geometry text-[16px]">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M7 21l4 -12m2 0l1.48 4.439m.949 2.847l1.571 4.714" />
+            <path d="M10 7a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+            <path d="M4 12c1.526 2.955 4.588 5 8 5c3.41 0 6.473 -2.048 8 -5" />
+            <path d="M12 5v-2" />
+          </svg>
+          Editor
+        </button>
+        <button (click)="viewMode.set('preview')" [class.bg-brand-gold]="viewMode() === 'preview'"
+          [class.text-black]="viewMode() === 'preview'"
+          class="px-4 py-1.5 rounded-lg text-[12px] font-medium transition-all flex items-center gap-2 tracking-widest">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="icon icon-tabler icons-tabler-outline icon-tabler-eye text-[16px]">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+            <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+          </svg>
+          Preview
+        </button>
+      </div>
+    </div>
 
-    <!-- Centered Flavor Selector -->
-    <div
-      class="flex items-center gap-4 px-4 py-2 rounded-xl border border-white/10 bg-white/5 backdrop-blur-xl animate-in fade-in duration-300">
-      @for (flavor of flavors; track flavor.name) {
-      <button (click)="activeFlavor.set(flavor.name)"
-        class="flex items-center gap-2 text-sm font-medium transition-all px-3 py-1 rounded-lg"
-        [class.bg-white/10]="activeFlavor() === flavor.name" [class.backdrop-blur-md]="activeFlavor() === flavor.name">
-        <svg width="20" height="20" viewBox="0 0 24 24">
-          <path [attr.fill]="activeFlavor() === flavor.name ? flavor.color : 'rgba(255,255,255,0.5)'"
-            [attr.d]="flavor.iconPath" />
-        </svg>
-        <span [style.color]="activeFlavor() === flavor.name ? flavor.color : 'rgb(148 163 184)'">{{
-          flavor.label }}</span>
-      </button>
-      }
+    <!-- Centered Controls -->
+    <div class="flex items-center gap-8">
+      <!-- Centered Flavor Selector -->
+      <div
+        class="flex items-center gap-4 px-4 py-2 rounded-xl border border-white/10 bg-white/5 backdrop-blur-xl animate-in fade-in duration-300">
+        @for (flavor of flavors; track flavor.name) {
+        <button (click)="activeFlavor.set(flavor.name)"
+          class="flex items-center gap-2 text-sm font-medium transition-all px-3 py-1 rounded-lg"
+          [class.bg-white/10]="activeFlavor() === flavor.name"
+          [class.backdrop-blur-md]="activeFlavor() === flavor.name">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path [attr.fill]="activeFlavor() === flavor.name ? flavor.color : 'rgba(255,255,255,0.5)'"
+              [attr.d]="flavor.iconPath" />
+          </svg>
+          <span [style.color]="activeFlavor() === flavor.name ? flavor.color : 'rgb(148 163 184)'">{{
+            flavor.label }}</span>
+        </button>
+        }
+      </div>
     </div>
 
     <!-- Right Side Export -->
@@ -41,22 +74,26 @@
 
   <div class="flex flex-1 overflow-hidden">
     <!-- Modular Sidebar Menu -->
+    @if (viewMode() === 'editor') {
     <app-elements-menu class="shrink-0" />
+    }
 
     <!-- Modular Canvas area -->
     <app-elements-canvas class="flex-1 overflow-hidden" />
 
     <!-- Modular Right Sidebar / Settings -->
+    @if (viewMode() === 'editor') {
     <app-elements-settings class="shrink-0" />
+    }
   </div>
 
   <footer class="flex items-center justify-center h-12 border-t border-white/5 bg-canvas/60 text-sm text-slate-500">
-    Made with <svg xmlns="http://www.w3.org/2000/svg"
-      class="icon icon-tabler icon-tabler-heart filled text-red-500 mx-1" width="16" height="16" viewBox="0 0 24 24"
-      stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-      <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path>
-    </svg> for a better UI
+    Molding the future of UI with <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+      fill="#e30000" class="icon icon-tabler icons-tabler-filled icon-tabler-heart mx-1">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path
+        d="M6.979 3.074a6 6 0 0 1 4.988 1.425l.037 .033l.034 -.03a6 6 0 0 1 4.733 -1.44l.246 .036a6 6 0 0 1 3.364 10.008l-.18 .185l-.048 .041l-7.45 7.379a1 1 0 0 1 -1.313 .082l-.094 -.082l-7.493 -7.422a6 6 0 0 1 3.176 -10.215z" />
+    </svg> for a better experience
   </footer>
 
   <app-export-modal [isOpen]="isExportOpen()" (close)="isExportOpen.set(false)" />

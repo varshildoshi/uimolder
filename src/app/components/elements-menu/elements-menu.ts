@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ElementTypesService } from '../../services/element-types.service';
 import { ElementService } from '../../services/element.service';
 import { ElementButton } from "./element-button/element-button";
+import { LayoutService } from '../../services/layout.service';
 
 @Component({
   selector: 'app-elements-menu',
@@ -21,6 +22,7 @@ export class ElementsMenu {
   elementTypesService = inject(ElementTypesService);
   elementService = inject(ElementService);
   elementTypes = this.elementTypesService.getAllElementsTypes();
+  viewMode = inject(LayoutService).viewMode;
 
   public readonly rowIds = input<string[]>([]);
 

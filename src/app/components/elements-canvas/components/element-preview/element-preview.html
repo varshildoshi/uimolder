@@ -6,7 +6,13 @@
     @for (row of elementService.rows(); track row.id) {
     <div class="flex gap-4 flex-wrap">
         @for (element of row.elements; track element.id) {
-            <app-field-preview class="flex-1 min-w-50" [element]="element" />
+        <app-field-preview class="flex-1 min-w-50" [element]="element" />
+        } @empty {
+        <div
+            class="flex-1 border-2 border-dashed border-slate-700 rounded-lg p-8 flex items-center justify-center pointer-events-none w-full">
+            <span class="text-[10px] text-slate-500 italic uppercase tracking-widest font-['Tomorrow']">Empty
+                Row</span>
+        </div>
         }
 
     </div>

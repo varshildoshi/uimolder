@@ -3,6 +3,7 @@ import { ElementTypeDefinition, DraggedItem } from '../../../models/element';
 import { MatIconModule } from '@angular/material/icon';
 import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ElementService } from '../../../services/element.service';
+import { LayoutService } from '../../../services/layout.service';
 
 @Component({
   selector: 'app-element-button',
@@ -13,6 +14,7 @@ import { ElementService } from '../../../services/element.service';
 export class ElementButton {
   element = input.required<ElementTypeDefinition>();
   elementService = inject(ElementService);
+  viewMode = inject(LayoutService).viewMode;
   whileDragging = signal(false);
 
   onDragStarted() {
