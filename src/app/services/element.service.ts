@@ -1,6 +1,7 @@
 import { ApplicationRef, computed, inject, Injectable, signal } from '@angular/core';
 import { ElementRow } from '../models/element-row';
 import { FormElement, DraggedItem } from '../models/element';
+import { startViewTransition } from '../utils/view-transition';
 
 @Injectable({
   providedIn: 'root',
@@ -67,13 +68,16 @@ export class ElementService {
   }
 
   reset() {
-    this.rowsSignal.set([
-      {
-        id: crypto.randomUUID(),
-        elements: []
-      }
-    ]);
-    this.selectedElementIdSignal.set(null);
+    startViewTransition(() => {
+      this.rowsSignal.set([
+        {
+          id: crypto.randomUUID(),
+          elements: []
+        }
+      ]);
+      this.selectedElementIdSignal.set(null);
+      this.appRef.tick();
+    });
   }
 
   getConnectedIds(excludeId: string): string[] {
@@ -169,7 +173,10 @@ export class ElementService {
       id: crypto.randomUUID(),
       elements: []
     };
-    this.rowsSignal.set([...this.rowsSignal(), newRow]);
+    startViewTransition(() => {
+      this.rowsSignal.set([...this.rowsSignal(), newRow]);
+      this.appRef.tick();
+    });
   }
 
   addRowToElement(elementId: string) {
@@ -186,7 +193,10 @@ export class ElementService {
     });
 
     if (changed) {
-      this.rowsSignal.set(newRows);
+      startViewTransition(() => {
+        this.rowsSignal.set(newRows);
+        this.appRef.tick();
+      });
     }
   }
 
@@ -233,7 +243,10 @@ export class ElementService {
     const rows = this.rowsSignal() || [];
     if (rows.some(r => r && r.id === rowId)) {
       if (rows.length === 1) return;
-      this.rowsSignal.set(rows.filter(row => row && row.id !== rowId));
+      startViewTransition(() => {
+        this.rowsSignal.set(rows.filter(row => row && row.id !== rowId));
+        this.appRef.tick();
+      });
       return;
     }
 
@@ -249,7 +262,10 @@ export class ElementService {
     });
 
     if (changed) {
-      this.rowsSignal.set(newRows);
+      startViewTransition(() => {
+        this.rowsSignal.set(newRows);
+        this.appRef.tick();
+      });
     }
   }
 
@@ -318,7 +334,10 @@ export class ElementService {
     });
 
     if (changed) {
-      this.rowsSignal.set(newRows);
+      startViewTransition(() => {
+        this.rowsSignal.set(newRows);
+        this.appRef.tick();
+      });
     }
   }
 
@@ -383,7 +402,10 @@ export class ElementService {
     });
 
     if (changed) {
-      this.rowsSignal.set(newRows);
+      startViewTransition(() => {
+        this.rowsSignal.set(newRows);
+        this.appRef.tick();
+      });
     }
   }
 
@@ -465,7 +487,10 @@ export class ElementService {
       return row;
     });
 
-    this.rowsSignal.set(finalRows);
+    startViewTransition(() => {
+      this.rowsSignal.set(finalRows);
+      this.appRef.tick();
+    });
   }
 
   private removeDeep(elements: FormElement[] | undefined, id: string, onFound: (el: FormElement) => void): FormElement[] {
@@ -567,7 +592,10 @@ export class ElementService {
 
   setSelectedElement(elementId: string | null) {
     if (this.selectedElementIdSignal() === elementId) return;
-    this.selectedElementIdSignal.set(elementId);
+    startViewTransition(() => {
+      this.selectedElementIdSignal.set(elementId);
+      this.appRef.tick();
+    });
   }
 
   updateElement(elementId: string, data: Partial<FormElement>) {
@@ -584,7 +612,10 @@ export class ElementService {
     });
 
     if (changed) {
-      this.rowsSignal.set(newRows);
+      startViewTransition(() => {
+        this.rowsSignal.set(newRows);
+        this.appRef.tick();
+      });
     }
   }
 
@@ -637,9 +668,12 @@ export class ElementService {
     const index = rows.findIndex(r => r && r.id === rowId);
 
     if (index > 0) {
-      const newRows = [...rows];
-      [newRows[index - 1], newRows[index]] = [newRows[index], newRows[index - 1]];
-      this.rowsSignal.set(newRows);
+      startViewTransition(() => {
+        const newRows = [...rows];
+        [newRows[index - 1], newRows[index]] = [newRows[index], newRows[index - 1]];
+        this.rowsSignal.set(newRows);
+        this.appRef.tick();
+      });
       return;
     }
 
@@ -655,7 +689,10 @@ export class ElementService {
     });
 
     if (changed) {
-      this.rowsSignal.set(newRows);
+      startViewTransition(() => {
+        this.rowsSignal.set(newRows);
+        this.appRef.tick();
+      });
     }
   }
 
@@ -664,9 +701,12 @@ export class ElementService {
     const index = rows.findIndex(r => r && r.id === rowId);
 
     if (index !== -1 && index < rows.length - 1) {
-      const newRows = [...rows];
-      [newRows[index], newRows[index + 1]] = [newRows[index + 1], newRows[index]];
-      this.rowsSignal.set(newRows);
+      startViewTransition(() => {
+        const newRows = [...rows];
+        [newRows[index], newRows[index + 1]] = [newRows[index + 1], newRows[index]];
+        this.rowsSignal.set(newRows);
+        this.appRef.tick();
+      });
       return;
     }
 
@@ -682,7 +722,10 @@ export class ElementService {
     });
 
     if (changed) {
-      this.rowsSignal.set(newRows);
+      startViewTransition(() => {
+        this.rowsSignal.set(newRows);
+        this.appRef.tick();
+      });
     }
   }
 
@@ -740,7 +783,7 @@ export class ElementService {
   getNestingDepth(elementId: string): number {
     let depth = 0;
     let currentId: string | null = elementId;
-    while(currentId) {
+    while (currentId) {
       const parent = this.findParentOf(currentId);
       if (parent) {
         if (parent.type === 'card') {

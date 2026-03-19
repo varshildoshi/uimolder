@@ -3,7 +3,7 @@
     <div cdkDropList [id]="row.id" [cdkDropListData]="row.id" (cdkDropListDropped)="onDropInRow($event, row.id)"
         [cdkDropListOrientation]="'horizontal'" [cdkDropListConnectedTo]="elementService.getConnectedIds(row.id)"
         [cdkDropListEnterPredicate]="canDrop(row.id)" (mouseenter)="onRowMouseEnter(row.id)"
-        (mouseleave)="onRowMouseLeave()"
+        (mouseleave)="onRowMouseLeave()" [style.view-transition-name]="'row-' + row.id"
         class="relative p-5 mb-4 ps-10 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] bg-size[30px_30px] rounded-lg border-2 border-dashed border-slate-800"
         [class.animate-rejection]="isRejectingCard(row.id)">
 
@@ -27,7 +27,9 @@
             <app-element-form-field cdkDrag [cdkDragDisabled]="viewMode() === 'preview'" [cdkDragData]="element"
                 (cdkDragStarted)="elementService.currentlyDraggedItem.set(element); elementService.currentlyHoveredRowId.set(row.id)"
                 (cdkDragEnded)="elementService.currentlyDraggedItem.set(null); elementService.currentlyHoveredRowId.set(null)"
-                class="flex-1 cursor-pointer min-w-50" [element]="element" />
+                class="flex-1 cursor-pointer min-w-50" [element]="element"
+                [style.view-transition-name]="'element-' + element.id"
+                [style.view-transition-class]="'element-transition'" />
             } @empty{
             <div
                 class="w-full p-4 border border-dashed border-slate-700 rounded-xl flex items-center justify-center pointer-events-none">

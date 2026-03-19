@@ -71,6 +71,7 @@
                         (cdkDragStarted)="elementService.currentlyDraggedItem.set(child); elementService.currentlyHoveredRowId.set(row.id)"
                         (cdkDragEnded)="elementService.currentlyDraggedItem.set(null); elementService.currentlyHoveredRowId.set(null)"
                         class="flex-1 cursor-pointer min-w-[150px]" [style.view-transition-name]="'element-' + child.id"
+                        [style.view-transition-class]="'element-transition'"
                         [element]="child" />
                     } @else {
                     <app-field-preview class="flex-1 min-w-[150px]" [element]="child" />
@@ -200,6 +201,7 @@
                         (cdkDragStarted)="elementService.currentlyDraggedItem.set(child); elementService.currentlyHoveredRowId.set(row.id)"
                         (cdkDragEnded)="elementService.currentlyDraggedItem.set(null); elementService.currentlyHoveredRowId.set(null)"
                         class="flex-1 cursor-pointer min-w-[150px]" [style.view-transition-name]="'element-' + child.id"
+                        [style.view-transition-class]="'element-transition'"
                         [element]="child" />
                     } @else {
                     <app-field-preview class="flex-1 min-w-[150px]" [element]="child" />
@@ -320,6 +322,7 @@
                         (cdkDragStarted)="elementService.currentlyDraggedItem.set(child); elementService.currentlyHoveredRowId.set(row.id)"
                         (cdkDragEnded)="elementService.currentlyDraggedItem.set(null); elementService.currentlyHoveredRowId.set(null)"
                         [style.view-transition-name]="'element-' + child.id"
+                        [style.view-transition-class]="'element-transition'"
                         style="flex: 1; min-width: 150px; cursor: pointer;" [element]="child" />
                     } @else {
                     <app-field-preview style="flex: 1; min-width: 150px;" [element]="child" />

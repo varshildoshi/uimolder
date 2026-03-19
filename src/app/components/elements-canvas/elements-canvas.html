@@ -5,7 +5,8 @@
 
     <!-- Canvas Controls -->
     @if (viewMode() === 'editor') {
-    <div class="sticky top-0 z-20 bg-[#020617]/95 backdrop-blur-md px-8 py-8 border-b border-white/5">
+    <div class="sticky top-0 z-20 bg-[#020617]/95 backdrop-blur-md px-8 py-8 border-b border-white/5"
+      [style.view-transition-name]="'canvas-controls'">
       <div class="max-w-6xl mx-auto w-full flex items-center justify-end shrink-0">
         <!-- Add Row Button (Right, Only in Editor) -->
         <button (click)="elementService.addRow()" class="flex items-center gap-2 btn btn-primary btn-sm">
